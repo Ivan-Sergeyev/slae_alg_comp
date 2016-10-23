@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdio.h>
 
 
@@ -22,24 +23,80 @@ private:
 	int _size;
 	double *_value;
 
-public:
-	Vector(const int size) {
-		_size = size;
-		_value = new double [_size];
-		for (int i = 0; i < _size; ++i) {
-			_value[i] = 0;
-		}
+	void _delete() {
+		_size = 0;
+		delete[] _value;
+		_value = 0;
 	}
 
-	Vector(const int size, double *value) {
-		_size = size;
-		_value = new double [_size];
+	void _deep_copy(const int size, double *value) {
+		if (_size != size) {
+			_delete();
+			_size = size;
+			_value = new double [_size];
+		}
 		for (int i = 0; i < _size; ++i) {
 			_value[i] = value[i];
 		}
 	}
 
+	void _deep_copy(Vector v) {
+		if (_size != v.getSize()) {
+			_delete();
+			_size = v.getSize();
+			_value = new double [_size];
+		}
+		for (int i = 0; i < _size; ++i) {
+			_value[i] = v[i];
+		}
+	}
+
+	void _fill_zero() {
+		for (int i = 0; i < _size; ++i) {
+			_value[i] = 0;
+		}
+	}
+
+	void _bounds_check(const int idx) const {
+		assert(idx >= 0);
+		assert(idx < _size);
+	}
+
+public:
+// constructors
+	Vector(const int size) {
+		_size = size;
+		_value = new double [_size];
+		_fill_zero();
+	}
+
+	Vector(const int size, double *value) {
+		assert(value);
+		_deep_copy(size, value);
+	}
+
+// destructor
+	~Vector() {
+		_delete();
+	}
+
+// access to properties
+	int getSize() const {
+		return _size;
+	}
+
+	double& operator [] (const int idx) {
+		_bounds_check(idx);
+		return _value[idx];
+	}
+
+	const double& operator [] (const int idx) const {
+		_bounds_check(idx);
+		return _value[idx];
+	}
+
 	double norm() const {
+		assert(_value);
 		double n = abs(_value[0]);
 		for (int i = 1; i < _size; ++i) {
 			n = max(abs(_value[i]), n);
@@ -47,14 +104,64 @@ public:
 		return n;
 	}
 
-	int getSize() const {
-		return _size;
+// deep copy
+	Vector& operator = (const Vector &v) {
+		if (this != &v) {
+			_deep_copy(v);
+		}
+		return *this;
 	}
 
-	double & operator [] (const int idx) const {
-		return _value[idx];
+// arithmetic
+	Vector& operator += (const Vector &v) {
+		assert(_size == v.getSize());
+		for (int i = 0; i < _size; ++i) {
+			_value[i] += v[i];
+		}
+		return *this;
 	}
 
+	Vector& operator -= (const Vector &v) {
+		assert(_size == v.getSize());
+		for (int i = 0; i < _size; ++i) {
+			_value[i] -= v[i];
+		}
+		return *this;
+	}
+
+	friend Vector operator + (Vector lhs, const Vector& rhs) {
+		lhs += rhs;
+		return lhs;
+	}
+
+	friend Vector operator - (Vector lhs, const Vector &rhs) {
+		lhs -= rhs;
+		return lhs;
+	}
+
+	friend Vector operator - (const Vector &v) {
+		Vector *neg = new Vector(v.getSize());
+		(*neg) -= v;
+		return *neg;
+	}
+
+	Vector& operator *= (const double &a) {
+		for (int i = 0; i < _size; ++i) {
+			_value[i] *= a;
+		}
+		return *this;
+	}
+
+	friend Vector operator * (const double &a, Vector rhs) {
+		rhs *= a;
+		return rhs;
+	}
+
+	friend Vector operator * (Vector lhs, const double &a) {
+		return a * lhs;
+	}
+
+// relation
 	bool operator == (const Vector &v) const {
 		for (int i = 0; i < _size; ++i) {
 			if (_value[i] != v[i]) {
@@ -70,6 +177,13 @@ class Matrix {
 private:
 	int _size;
 	double **_value;
+
+	void _bounds_check(const int row, const int col) const {
+		assert(row >= 0);
+		assert(row < _size);
+		assert(col >= 0);
+		assert(col < _size);
+	}
 
 public:
 	Matrix(const int size) {
@@ -91,6 +205,23 @@ public:
 		}
 	}
 
+	int getSize () const {
+		return _size;
+	}
+
+	double& operator ()(const int row, const int col) {
+		_bounds_check(row, col);
+		return _value[row][col];
+	}
+
+	const double& operator ()(const int row, const int col) const {
+		assert(row >= 0);
+		assert(row < _size);
+		assert(col >= 0);
+		assert(col < _size);
+		return _value[row][col];
+	}
+
 	double norm() const {
 		double n = 0;
 		for (int i = 0; i < _size; ++i) {
@@ -103,20 +234,16 @@ public:
 		return n;
 	}
 
-	Vector operator * (const Vector &v) const {
-		if (v.getSize() != _size) {
-			return Vector(0, 0);
-		}
-
-		Vector result = Vector(_size);
-
-		for (int i = 0; i < _size; ++i) {
-			for (int j = 0; j < _size; ++j) {
-				result[i] += _value[i][j] * v[j];
+	friend Vector operator * (const Matrix &a, const Vector &v) {
+		int size = a.getSize();
+		assert(v.getSize() == size);
+		Vector *result = new Vector(size);
+		for (int i = 0; i < size; ++i) {
+			for (int j = 0; j < size; ++j) {
+				(*result)[i] += a(i, j) * v[j];
 			}
 		}
-
-		return result;
+		return *result;
 	}
 };
 
