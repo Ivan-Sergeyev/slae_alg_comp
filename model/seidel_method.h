@@ -1,14 +1,14 @@
-#ifndef __JACOBI_METHOD__
-#define __JACOBI_METHOD__
+#ifndef SEIDEL_METHOD__
+#define SEIDEL_METHOD__
 
 #include <cmath>
 
 #include "generic_method.h"
 
 
-class JacobiMethod : public GenericMethod {
+class SeidelMethod : public GenericMethod {
 public:
-	JacobiMethod() : GenericMethod("Jacobi Method") {}
+	SeidelMethod() : GenericMethod("Seidel Method") {}
 
 	Vector step(const int n, const Matrix &A,
 				const Vector &f, const Vector &u) const {
@@ -16,7 +16,7 @@ public:
 		for (int i = 0; i < n; ++i) {
 			(*u_next)[i] = f[i];
 			for (int j = 0; j < i; ++j) {
-				(*u_next)[i] -= A(i, j) * u[j];
+				(*u_next)[i] -= A(i, j) * (*u_next)[j];
 			}
 			for (int j = i + 1; j < n; ++j) {
 				(*u_next)[i] -= A(i, j) * u[j];
@@ -61,4 +61,4 @@ public:
 	}
 };
 
-#endif  // __JACOBI_METHOD__
+#endif  // SEIDEL_METHOD__

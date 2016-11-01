@@ -1,21 +1,9 @@
+#ifndef __LINEAR_ALGEBRA__
+#define __LINEAR_ALGEBRA__
+
 #include <assert.h>
+#include <cmath>
 #include <stdio.h>
-
-
-double abs(const double &a) {
-	if (a > 0.0) {
-		return a;
-	}
-	return -a;
-}
-
-
-template <typename T> T max (const T &a, const T &b) {
-	if (a < b) {
-		return b;
-	}
-	return a;
-}
 
 
 class Vector {
@@ -99,7 +87,10 @@ public:
 		assert(_value);
 		double n = abs(_value[0]);
 		for (int i = 1; i < _size; ++i) {
-			n = max(abs(_value[i]), n);
+			double aval = abs(_value[i]);
+			if (aval > n) {
+				n = aval;
+			}
 		}
 		return n;
 	}
@@ -205,6 +196,12 @@ public:
 		}
 	}
 
+	~Matrix() {
+		_size = 0;
+		delete[] _value;
+		_value = 0;
+	}
+
 	int getSize () const {
 		return _size;
 	}
@@ -229,7 +226,9 @@ public:
 			for (int j = 0; j < _size; ++j) {
 				s += abs(_value[i][j]);
 			}
-			n = max(n, s);
+			if (s > n) {
+				n = s;
+			}
 		}
 		return n;
 	}
@@ -275,3 +274,5 @@ int linear_algebra_test() {
 	return num_fails;
 }
 */
+
+#endif  // __LINEAR_ALGEBRA__
