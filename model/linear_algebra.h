@@ -5,7 +5,7 @@
 #include <cmath>
 #include <stdio.h>
 
-
+#define abs(A)  ((A) > 0 ? (A) : -(A) ) 
 class Vector {
 private:
 	int _size;
@@ -19,7 +19,7 @@ private:
 
 	void _deep_copy(const int size, double *value) {
 		if (_size != size) {
-			_delete();
+			if (_size) _delete();  
 			_size = size;
 			_value = new double [_size];
 		}
@@ -30,7 +30,7 @@ private:
 
 	void _deep_copy(Vector v) {
 		if (_size != v.getSize()) {
-			_delete();
+			if (_size) _delete();
 			_size = v.getSize();
 			_value = new double [_size];
 		}
@@ -60,6 +60,7 @@ public:
 
 	Vector(const int size, double *value) {
 		assert(value);
+		_size = 0;
 		_deep_copy(size, value);
 	}
 
@@ -160,6 +161,13 @@ public:
 			}
 		}
 		return 1;
+	}
+//print vector to file
+	void print() {
+		for( int i = 0; i < _size; i++) printf("%f ", _value[i]);
+	}
+	void print(FILE *fp) {
+		for( int i = 0; i < _size; i++) fprintf(fp, "%.2f ", _value[i]);
 	}
 };
 
