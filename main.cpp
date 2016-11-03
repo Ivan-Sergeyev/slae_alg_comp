@@ -6,6 +6,8 @@
 #include "model/jacobi_method.h"
 #include "model/seidel_method.h"
 
+#include "model/linear_algebra_test.h"
+
 
 void generate_plot_file() {
 	const char plot_preamble[] =
@@ -25,11 +27,24 @@ void generate_plot_file() {
 }
 
 
+void test() {
+	int total_fails = 0;
+	int num_fails = 0;
+
+	printf("testing linear_algebra\n");
+	num_fails = linear_algebra_test::test();
+	if (num_fails) {
+		printf("%d fails in linear_algebra_test\n", num_fails);
+		total_fails += num_fails;
+	}
+
+	printf("\ntotal fails: %d\n", total_fails);
+}
+
+
 int main(int argc, char **argv) {
 	if (argc == 2 && !strcmp(argv[1], "test")) {
-	// run tests
-		printf("test\n");
-		// TODO
+		test();
 		return 0;
 	}
 
@@ -60,15 +75,15 @@ int main(int argc, char **argv) {
 	methods[1] = SeidelMethod();
 	printf("added %s\n", methods[1].getName());
 
-// measurements
+// perform measurements
 	printf("measurements\n");
 	// TODO
 
-// plot
+// prepare plot and run gnuplot
 	printf("plot\n");
 	// TODO
 
-// cleanup
+// perform cleanup
 	printf("cleanup\n");
 	delete[] list_sizes;
 

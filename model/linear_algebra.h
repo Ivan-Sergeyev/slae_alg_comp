@@ -38,7 +38,7 @@ private:
 	}
 
 // make a copy of an array of coordinates
-	void _deep_copy(const int size, double *value) {
+	void _deep_copy(const int size, const double *value) {
 		assert(!size || value);
 		_resize(size);
 		for (int i = 0; i < _size; ++i) {
@@ -77,7 +77,7 @@ public:
 		_fill_zero();
 	}
 
-	Vector(const int size, double *value) : _size(0), _coord(0) {
+	Vector(const int size, const double *value) : _size(0), _coord(0) {
 		_deep_copy(size, value);
 	}
 
@@ -226,7 +226,7 @@ public:
 		int delta;
 
 		*s = 0;
-		for(int i = 0; i < _size; ++i) {
+		for(int i = 0; i < _size - 1; ++i) {
 			delta = sprintf(s, "%lf ", _coord[i]);
 			if (delta > 0) {  // success : delta characters appended
 				s += delta;
@@ -235,6 +235,7 @@ public:
 				return string;
 			}
 		}
+		sprintf(s, "%lf", _coord[_size - 1]);
 		return string;
 	}
 };

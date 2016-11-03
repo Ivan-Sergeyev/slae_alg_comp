@@ -14,14 +14,14 @@ public:
 				const Vector &f, const Vector &u) const {
 		Vector *u_next = new Vector(n);
 		for (int i = 0; i < n; ++i) {
-			(*u_next)[i] = f[i];
+			(*u_next)(i) = f(i);
 			for (int j = 0; j < i; ++j) {
-				(*u_next)[i] -= A(i, j) * (*u_next)[j];
+				(*u_next)(i) -= A(i, j) * (*u_next)(j);
 			}
 			for (int j = i + 1; j < n; ++j) {
-				(*u_next)[i] -= A(i, j) * u[j];
+				(*u_next)(i) -= A(i, j) * u(j);
 			}
-			(*u_next)[i] = (*u_next)[i] / A(i, i);
+			(*u_next)(i) = (*u_next)(i) / A(i, i);
 		}
 		return *u_next;
 	}
