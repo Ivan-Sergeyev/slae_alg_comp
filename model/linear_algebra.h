@@ -28,13 +28,14 @@ private:
 
 // change vector's size, coordinates might change
 	void _resize(const int size) {
-		if (_size != size) {
-			if (_size) {  // TODO: check redundancy (unix specific?)
-				_delete();
-			}
-			_size = size;
-			_coord = new double [_size];
+		if (_size == size) {
+			return;
 		}
+		if (_size) {  // TODO: check redundancy (unix specific?)
+			_delete();
+		}
+		_size = size;
+		_coord = new double [_size];
 	}
 
 // make a copy of an array of coordinates
@@ -187,7 +188,7 @@ public:
 		return *this;
 	}
 
-// multiplication
+// multiplication by a double
 	Vector& operator *= (const double &a) {
 		assert(_is_ok());
 		for (int i = 0; i < _size; ++i) {
@@ -196,14 +197,18 @@ public:
 		return *this;
 	}
 
-// multiplication
-	friend Vector operator * (const double &a, const Vector &vector) {
-		return vector * a;
+// multiplication (vector times double)
+	Vector& operator * (const double &a) const {
+		Vector *mul = new Vector(*this);
+		for(int i = 0; i < _size; ++i) {
+			(*mul)(i) *= a;
+		}
+		return *mul;
 	}
 
-// multiplication
-	friend Vector operator * (const Vector &vector, const double &a) {
-		return a * vector;
+// multiplication (double times vector)
+	friend Vector operator * (const double &a, const Vector &vector) {
+		return vector * a;
 	}
 
 // equality check
@@ -226,7 +231,7 @@ public:
 		int delta;
 
 		*s = 0;
-		for(int i = 0; i < _size - 1; ++i) {
+		for (int i = 0; i < _size - 1; ++i) {
 			delta = sprintf(s, "%lf ", _coord[i]);
 			if (delta > 0) {  // success : delta characters appended
 				s += delta;
@@ -251,6 +256,62 @@ private:
 		return !_size || _value;
 	}
 
+// make a copy of an array of values
+	void _deep_copy(const int size, const double *value) {
+		assert(!size || value);
+		_resize(size);
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size; ++j) {
+				_value[i][j] = value[i * _size + j];
+			}
+		}
+	}
+
+// make a copy of another matrix
+	void _deep_copy(const Matrix &other) {
+		_resize(other.getSize());
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size; ++j) {
+				_value[i][j] = other(i, j);
+			}
+		}
+	}
+
+// erase
+	void _delete() {
+		for (int i = 0; i < _size; ++i) {
+			delete[] _value[i];
+		}
+		delete[] _value;
+		_size = 0;
+		_value = 0;
+	}
+
+// fill values with zeroes
+	void _fill_zero() {
+		assert(_is_ok());
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size; ++j) {
+				_value[i][j] = 0;
+			}
+		}
+	}
+
+// change matrix' size, values might change
+	void _resize(const int size) {
+		if (_size == size) {
+			return;
+		}
+		if (_size) {  // TODO: check redundancy (unix specific?)
+			_delete();
+		}
+		_size = size;
+		_value = new double* [_size];
+		for (int i = 0; i < _size; ++i) {
+			_value[i] = new double[_size];
+		}
+	}
+
 // hard check if row and col are in bounds
 	void _bounds_check(const int row, const int col) const {
 		assert(row >= 0);
@@ -260,46 +321,49 @@ private:
 	}
 
 public:
-	Matrix(const int size) {
-		_size = size;
-		_value = new double* [_size];
-		for (int i = 0; i < _size; ++i) {
-			_value[i] = new double [_size];
-		}
+// constructors
+	Matrix() : _size(0), _value (0) {}
+
+	Matrix(const int size) : _size(0), _value(0) {
+		_resize(size);
+		_fill_zero();
 	}
 
-	Matrix(const int size, double *value) {
-		_size = size;
-		_value = new double* [_size];
-		for (int i = 0; i < _size; ++i) {
-			_value[i] = new double [_size];
-			for (int j = 0; j < _size; ++j) {
-				_value[i][j] = value[i * _size + j];
-			}
-		}
+	Matrix(const int size, const double *value) : _size(0), _value(0) {
+		_deep_copy(size, value);
 	}
 
+	Matrix(const Matrix &other) : _size(0), _value(0) {
+		_deep_copy(other);
+	}
+
+// destructor
 	~Matrix() {
-		_size = 0;
-		delete[] _value;
-		_value = 0;
+		_delete();
 	}
 
+// read access to size
 	int getSize () const {
 		return _size;
 	}
 
-	double& operator ()(const int row, const int col) {
+// read access to values
+	const double& operator () (const int row, const int col) const {
+		assert(_is_ok());
 		_bounds_check(row, col);
 		return _value[row][col];
 	}
 
-	const double& operator ()(const int row, const int col) const {
+// write access to values
+	double& operator () (const int row, const int col) {
+		assert(_is_ok());
 		_bounds_check(row, col);
 		return _value[row][col];
 	}
 
+// get matrix' norm
 	double norm() const {
+		assert(_is_ok());
 		double n = 0;
 		for (int i = 0; i < _size; ++i) {
 			double s = 0;
@@ -313,13 +377,21 @@ public:
 		return n;
 	}
 
-	friend Vector operator * (const Matrix &a, const Vector &v) {
-		int size = a.getSize();
-		assert(v.getSize() == size);
-		Vector *result = new Vector(size);
-		for (int i = 0; i < size; ++i) {
-			for (int j = 0; j < size; ++j) {
-				(*result)(i) += a(i, j) * v(j);
+// deep copy
+	Matrix& operator = (const Matrix &other) {
+		if (this != &other) {
+			_deep_copy(other);
+		}
+		return *this;
+	}
+
+// multiplication by a vector
+	Vector& operator * (const Vector &other) const {
+		assert(_size == other.getSize());
+		Vector *result = new Vector(_size);
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size; ++j) {
+				(*result)(i) += _value[i][j] * other(j);
 			}
 		}
 		return *result;
