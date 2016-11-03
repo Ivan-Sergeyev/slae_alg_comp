@@ -1,5 +1,5 @@
-#ifndef SEIDEL_METHOD__
-#define SEIDEL_METHOD__
+#ifndef __SEIDEL_METHOD__
+#define __SEIDEL_METHOD__
 
 #include <cmath>
 
@@ -61,4 +61,4 @@ public:
 	}
 };
 
-#endif  // SEIDEL_METHOD__
+#endif  // __SEIDEL_METHOD__

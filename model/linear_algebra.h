@@ -5,46 +5,64 @@
 #include <cmath>
 #include <stdio.h>
 
-#define abs(A)  ((A) > 0 ? (A) : -(A) ) 
+
+const int REPR_BUFFER_LEN = 1000;  // string representation buffer size
+
+
 class Vector {
 private:
-	int _size;
-	double *_value;
+	int _size;       // vector's size
+	double *_coord;  // vector's coordinates
 
+// hard check if vector's state is ok
+	bool _is_ok() const {
+		return !_size || _coord;
+	}
+
+// erase
 	void _delete() {
 		_size = 0;
-		delete[] _value;
-		_value = 0;
+		delete[] _coord;
+		_coord = 0;
 	}
 
-	void _deep_copy(const int size, double *value) {
+// change vector's size, coordinates might change
+	void _resize(const int size) {
 		if (_size != size) {
-			if (_size) _delete();  
+			if (_size) {  // TODO: check redundancy (unix specific?)
+				_delete();
+			}
 			_size = size;
-			_value = new double [_size];
-		}
-		for (int i = 0; i < _size; ++i) {
-			_value[i] = value[i];
+			_coord = new double [_size];
 		}
 	}
 
-	void _deep_copy(Vector v) {
-		if (_size != v.getSize()) {
-			if (_size) _delete();
-			_size = v.getSize();
-			_value = new double [_size];
-		}
+// make a copy of an array of coordinates
+	void _deep_copy(const int size, double *value) {
+		assert(!size || value);
+		_resize(size);
 		for (int i = 0; i < _size; ++i) {
-			_value[i] = v[i];
+			_coord[i] = value[i];
 		}
 	}
 
+// make a copy of another vector
+	void _deep_copy(const Vector &other) {
+		_resize(other.getSize());
+		for (int i = 0; i < _size; ++i) {
+			_coord[i] = other(i);
+		}
+	}
+
+// fill coordinates with zeroes
 	void _fill_zero() {
+		assert(_is_ok());
 		for (int i = 0; i < _size; ++i) {
-			_value[i] = 0;
+			_coord[i] = 0;
 		}
 	}
 
+// hard check if idx is in bounds
 	void _bounds_check(const int idx) const {
 		assert(idx >= 0);
 		assert(idx < _size);
@@ -52,16 +70,19 @@ private:
 
 public:
 // constructors
-	Vector(const int size) {
-		_size = size;
-		_value = new double [_size];
+	Vector() : _size(0), _coord(0) {}
+
+	Vector(const int size) : _size(0), _coord(0) {
+		_resize(size);
 		_fill_zero();
 	}
 
-	Vector(const int size, double *value) {
-		assert(value);
-		_size = 0;
+	Vector(const int size, double *value) : _size(0), _coord(0) {
 		_deep_copy(size, value);
+	}
+
+	Vector(const Vector &other) : _size(0), _coord(0) {
+		_deep_copy(other);
 	}
 
 // destructor
@@ -69,114 +90,167 @@ public:
 		_delete();
 	}
 
-// access to properties
+// read access to size
 	int getSize() const {
 		return _size;
 	}
 
-	double& operator [] (const int idx) {
+// read access to coordinates
+	const double& operator () (const int idx) const {
+		assert(_is_ok());
 		_bounds_check(idx);
-		return _value[idx];
+		return _coord[idx];
 	}
 
-	const double& operator [] (const int idx) const {
+// write access to coordinates
+	double& operator () (const int idx) {
+		assert(_is_ok());
 		_bounds_check(idx);
-		return _value[idx];
+		return _coord[idx];
 	}
 
+// get vector's norm
 	double norm() const {
-		assert(_value);
-		double n = abs(_value[0]);
+		assert(_is_ok());
+		if (!_size) {
+			return 0;
+		}
+		double n = abs(_coord[0]);
 		for (int i = 1; i < _size; ++i) {
-			double aval = abs(_value[i]);
-			if (aval > n) {
-				n = aval;
+			double abs_coord = abs(_coord[i]);
+			if (abs_coord > n) {
+				n = abs_coord;
 			}
 		}
 		return n;
 	}
 
 // deep copy
-	Vector& operator = (const Vector &v) {
-		if (this != &v) {
-			_deep_copy(v);
+	Vector& operator = (const Vector &other) {
+		if (this != &other) {
+			_deep_copy(other);
 		}
 		return *this;
 	}
 
-// arithmetic
-	Vector& operator += (const Vector &v) {
-		assert(_size == v.getSize());
+// binary plus
+	Vector& operator + (const Vector &other) {
+		assert(_is_ok());
+		assert(_size == other.getSize());
+		Vector *sum = new Vector(*this);
 		for (int i = 0; i < _size; ++i) {
-			_value[i] += v[i];
+			sum[i] += other(i);
 		}
-		return *this;
+		return *sum;
 	}
 
-	Vector& operator -= (const Vector &v) {
-		assert(_size == v.getSize());
+// binary minus
+	Vector& operator - (const Vector &other) {
+		assert(_is_ok());
+		assert(_size == other.getSize());
+		Vector *sum = new Vector(*this);
 		for (int i = 0; i < _size; ++i) {
-			_value[i] -= v[i];
+			sum[i] -= other(i);
 		}
-		return *this;
+		return *sum;
 	}
 
-	friend Vector operator + (Vector lhs, const Vector& rhs) {
-		lhs += rhs;
-		return lhs;
+// unary plus
+	friend Vector operator + (const Vector &vector) {
+		return vector;
 	}
 
-	friend Vector operator - (Vector lhs, const Vector &rhs) {
-		lhs -= rhs;
-		return lhs;
-	}
-
-	friend Vector operator - (const Vector &v) {
-		Vector *neg = new Vector(v.getSize());
-		(*neg) -= v;
+// unary minus
+	friend Vector operator - (const Vector &vector) {
+		Vector *neg = new Vector(vector.getSize());
+		(*neg) -= vector;
 		return *neg;
 	}
 
-	Vector& operator *= (const double &a) {
+// addition
+	Vector& operator += (const Vector &other) {
+		assert(_is_ok());
+		assert(_size == other.getSize());
 		for (int i = 0; i < _size; ++i) {
-			_value[i] *= a;
+			_coord[i] += other(i);
 		}
 		return *this;
 	}
 
-	friend Vector operator * (const double &a, Vector rhs) {
-		rhs *= a;
-		return rhs;
-	}
-
-	friend Vector operator * (Vector lhs, const double &a) {
-		return a * lhs;
-	}
-
-// relation
-	bool operator == (const Vector &v) const {
+// subtraction
+	Vector& operator -= (const Vector &other) {
+		assert(_is_ok());
+		assert(_size == other.getSize());
 		for (int i = 0; i < _size; ++i) {
-			if (_value[i] != v[i]) {
+			_coord[i] -= other(i);
+		}
+		return *this;
+	}
+
+// multiplication
+	Vector& operator *= (const double &a) {
+		assert(_is_ok());
+		for (int i = 0; i < _size; ++i) {
+			_coord[i] *= a;
+		}
+		return *this;
+	}
+
+// multiplication
+	friend Vector operator * (const double &a, const Vector &vector) {
+		return vector * a;
+	}
+
+// multiplication
+	friend Vector operator * (const Vector &vector, const double &a) {
+		return a * vector;
+	}
+
+// equality check
+	bool operator == (const Vector &other) const {
+		assert(_is_ok());
+		for (int i = 0; i < _size; ++i) {
+			if (_coord[i] != other(i)) {
 				return 0;
 			}
 		}
 		return 1;
 	}
-//print vector to file
-	void print() {
-		for( int i = 0; i < _size; i++) printf("%f ", _value[i]);
-	}
-	void print(FILE *fp) {
-		for( int i = 0; i < _size; i++) fprintf(fp, "%.2f ", _value[i]);
+
+// string representation
+	const char* repr() const {
+		assert(_is_ok());
+
+		char *string = new char[REPR_BUFFER_LEN];
+		char *s = string;
+		int delta;
+
+		*s = 0;
+		for(int i = 0; i < _size; ++i) {
+			delta = sprintf(s, "%lf ", _coord[i]);
+			if (delta > 0) {  // success : delta characters appended
+				s += delta;
+			} else {          // failure, return whatever
+				// TODO: indicate failure
+				return string;
+			}
+		}
+		return string;
 	}
 };
 
 
 class Matrix {
 private:
-	int _size;
-	double **_value;
+	int _size;        // matrix' size
+	double **_value;  // matrix' values
 
+// hard check if matrix' state is ok
+	bool _is_ok() const {
+		return !_size || _value;
+	}
+
+// hard check if row and col are in bounds
 	void _bounds_check(const int row, const int col) const {
 		assert(row >= 0);
 		assert(row < _size);
@@ -220,10 +294,7 @@ public:
 	}
 
 	const double& operator ()(const int row, const int col) const {
-		assert(row >= 0);
-		assert(row < _size);
-		assert(col >= 0);
-		assert(col < _size);
+		_bounds_check(row, col);
 		return _value[row][col];
 	}
 
@@ -247,40 +318,11 @@ public:
 		Vector *result = new Vector(size);
 		for (int i = 0; i < size; ++i) {
 			for (int j = 0; j < size; ++j) {
-				(*result)[i] += a(i, j) * v[j];
+				(*result)(i) += a(i, j) * v(j);
 			}
 		}
 		return *result;
 	}
 };
-
-
-/*
-int linear_algebra_test() {
-	int num_tests = 0,
-		num_fails = 0;
-
-	++num_tests;
-	double mat[4] = {1, 0, 0, 1};
-	Matrix a = Matrix(2, mat);
-	double vec[2] = {2, 3};
-	Vector v = Vector(2, vec);
-	double mul[2] = {2, 3};
-	Vector ans = Vector(2, mul);
-
-	Vector res = a * v;
-	if (res == ans) {
-		printf("test %d success\n", num_tests);
-	} else {
-		printf("test %d fail\n", num_tests);
-		printf("%lf %lf != ", res[0], res[1]);
-		printf("%lf %lf\n", mul[0], mul[1]);
-	}
-
-	printf("total number of tests: %d\n", num_tests);
-	printf("total number of fails: %d\n", num_fails);
-	return num_fails;
-}
-*/
 
 #endif  // __LINEAR_ALGEBRA__
