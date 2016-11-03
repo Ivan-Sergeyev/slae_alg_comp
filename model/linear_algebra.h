@@ -1,6 +1,7 @@
 #ifndef __LINEAR_ALGEBRA__
 #define __LINEAR_ALGEBRA__
 
+
 #include <assert.h>
 #include <cmath>
 #include <stdio.h>
@@ -16,13 +17,15 @@ private:
 
 // hard check if vector's state is ok
 	bool _is_ok() const {
-		return !_size || _coord;
+		return (!_size) || _coord;
 	}
 
 // erase
 	void _delete() {
+		if (_coord) {  // TODO: check redundancy (unix specific?)
+			delete[] _coord;
+		}
 		_size = 0;
-		delete[] _coord;
 		_coord = 0;
 	}
 
@@ -31,9 +34,7 @@ private:
 		if (_size == size) {
 			return;
 		}
-		if (_size) {  // TODO: check redundancy (unix specific?)
-			_delete();
-		}
+		_delete();
 		_size = size;
 		_coord = new double [_size];
 	}
@@ -49,7 +50,7 @@ private:
 
 // make a copy of another vector
 	void _deep_copy(const Vector &other) {
-		_resize(other.getSize());
+		_resize(other.get_size());
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] = other(i);
 		}
@@ -92,7 +93,7 @@ public:
 	}
 
 // read access to size
-	int getSize() const {
+	int get_size() const {
 		return _size;
 	}
 
@@ -137,7 +138,7 @@ public:
 // binary plus
 	Vector& operator + (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.getSize());
+		assert(_size == other.get_size());
 		Vector *sum = new Vector(*this);
 		for (int i = 0; i < _size; ++i) {
 			sum[i] += other(i);
@@ -148,7 +149,7 @@ public:
 // binary minus
 	Vector& operator - (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.getSize());
+		assert(_size == other.get_size());
 		Vector *sum = new Vector(*this);
 		for (int i = 0; i < _size; ++i) {
 			sum[i] -= other(i);
@@ -163,7 +164,7 @@ public:
 
 // unary minus
 	friend Vector operator - (const Vector &vector) {
-		Vector *neg = new Vector(vector.getSize());
+		Vector *neg = new Vector(vector.get_size());
 		(*neg) -= vector;
 		return *neg;
 	}
@@ -171,7 +172,7 @@ public:
 // addition
 	Vector& operator += (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.getSize());
+		assert(_size == other.get_size());
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] += other(i);
 		}
@@ -181,7 +182,7 @@ public:
 // subtraction
 	Vector& operator -= (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.getSize());
+		assert(_size == other.get_size());
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] -= other(i);
 		}
@@ -226,6 +227,11 @@ public:
 	const char* repr() const {
 		assert(_is_ok());
 
+		if (!_size) {  // empty vector
+			char *string = new char[1];
+			string[0] = 0;
+			return string;
+		}
 		char *string = new char[REPR_BUFFER_LEN];
 		char *s = string;
 		int delta;
@@ -269,7 +275,7 @@ private:
 
 // make a copy of another matrix
 	void _deep_copy(const Matrix &other) {
-		_resize(other.getSize());
+		_resize(other.get_size());
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
 				_value[i][j] = other(i, j);
@@ -279,10 +285,14 @@ private:
 
 // erase
 	void _delete() {
-		for (int i = 0; i < _size; ++i) {
-			delete[] _value[i];
+		if (_value) {  // TODO: check redundancy (unix specific?)
+			for (int i = 0; i < _size; ++i) {
+				if (_value[i]) {  // TODO: check redundancy (unix specific?)
+					delete[] _value[i];
+				}
+			}
+			delete[] _value;
 		}
-		delete[] _value;
 		_size = 0;
 		_value = 0;
 	}
@@ -302,9 +312,7 @@ private:
 		if (_size == size) {
 			return;
 		}
-		if (_size) {  // TODO: check redundancy (unix specific?)
-			_delete();
-		}
+		_delete();
 		_size = size;
 		_value = new double* [_size];
 		for (int i = 0; i < _size; ++i) {
@@ -343,7 +351,7 @@ public:
 	}
 
 // read access to size
-	int getSize () const {
+	int get_size () const {
 		return _size;
 	}
 
@@ -387,7 +395,7 @@ public:
 
 // multiplication by a vector
 	Vector& operator * (const Vector &other) const {
-		assert(_size == other.getSize());
+		assert(_size == other.get_size());
 		Vector *result = new Vector(_size);
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
