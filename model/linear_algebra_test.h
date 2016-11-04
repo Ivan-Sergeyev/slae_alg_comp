@@ -436,13 +436,18 @@ namespace linear_algebra_test {
 			 _test_plus_e, _test_minus_e, _test_mul_e, _test_mul_vd,
 			 _test_mul_dv,
 			 0};
+		const test_function_pointer matrix_tests[] =
+			{0};
 
-		int num_tests = 0;
 		int num_fails = 0;
 		for (int i = 0; vector_tests[i]; ++i) {
 			printf("  class Vector -- test #%d\n", i);
 			num_fails += vector_tests[i]();
-			++num_tests;
+		}
+		printf("\n");
+		for (int i = 0; matrix_tests[i]; ++i) {
+			printf("  class Matrix -- test #%d\n", i);
+			num_fails += matrix_tests[i]();
 		}
 
 		return num_fails;
