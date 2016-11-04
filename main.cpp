@@ -1,52 +1,50 @@
 #include <string.h>
 #include <stdio.h>
 
-#include "model/linear_algebra.h"
 #include "model/generic_method.h"
 #include "model/jacobi_method.h"
 #include "model/overrelaxation_method.h"
+#include "model/generate_plotfile.h"
+
+
+// #define NDEBUG  // disable tests and asserts for release
+
+#ifndef NDEBUG  // debug version
 
 #include "model/linear_algebra_test.h"
 
 
-void generate_plot_file() {
-	const char plot_preamble[] =
-		"reset\n\n"
-		"set output \"%s\"\n"
-		"set terminal pngcairo dashed enhanced font \"Sans,12\" size 1000,600\n"
-		"set encoding utf8\n\n"
-		"set key top left\n"
-		"set grid\n"
-		"set xlabel \"N\" offset 0,0.5,0\n"
-		"set ylabel \"T, s\" offset 2,0,0\n\n"
-		"set fit quiet\n\n";
-	const char method_format_string[] = "TODO";
-	const char plot_format_string[] = "TODO";
-
-	// TODO
-}
-
-
 void test() {
+	typedef int (*test_funcion_pointer)();
+
+	const int num_modules = 1;
+	const char module_name[num_modules][20] = {"linear_algebra"};
+	test_funcion_pointer module_test[num_modules] =
+		{linear_algebra_test::test};
+
 	int total_fails = 0;
-	int num_fails = 0;
-
-	printf("testing linear_algebra\n");
-	num_fails = linear_algebra_test::test();
-	if (num_fails) {
-		printf("%d fails in linear_algebra_test\n", num_fails);
-		total_fails += num_fails;
+	for (int i = 0; i < num_modules; ++i)
+	{
+		printf("testing %s\n", module_name[i]);
+		int num_fails = module_test[i]();
+		if (num_fails) {
+			printf("%d fails in %s\n", num_fails, module_name[i]);
+			total_fails += num_fails;
+		}
 	}
-
 	printf("\ntotal fails: %d\n", total_fails);
 }
 
+#endif // NDEBUG
+
 
 int main(int argc, char **argv) {
+#ifndef NDEBUG
 	if (argc == 2 && !strcmp(argv[1], "test")) {
 		test();
 		return 0;
 	}
+#endif  // NDEBUG
 
 // setup
 	printf("setup\n");
@@ -84,6 +82,7 @@ int main(int argc, char **argv) {
 	// TODO
 
 // prepare plot and run gnuplot
+	generate_plotfile();
 	printf("plot\n");
 	// TODO
 
