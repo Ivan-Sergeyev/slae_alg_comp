@@ -1,3 +1,7 @@
 # no executables
 *.exe
 *.out
+
+# no bat or batch files
+*.bat
+*.sh
