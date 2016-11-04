@@ -1,5 +1,8 @@
-#include <string.h>
+#include <cstdio>
+#include <direct.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "model/generic_method.h"
 #include "model/jacobi_method.h"
@@ -26,9 +29,9 @@ void test() {
 	for (int i = 0; i < num_modules; ++i)
 	{
 		printf("testing %s\n", module_name[i]);
-		printf("======================================================\n");
+		printf("===========================================================\n");
 		int num_fails = module_test[i]();
-		printf("======================================================\n");
+		printf("===========================================================\n");
 		printf("%d fails in %s\n\n", num_fails, module_name[i]);
 	}
 	printf("total fails: %d\n", total_fails);
@@ -47,6 +50,7 @@ int main(int argc, char **argv) {
 
 // setup
 	printf("setup\n");
+
 	const char plot_dir[] = "./gnuplot/",
 			   graphs_dir[] = "./graphs/",
 			   data_dir[] = "./data/";
@@ -55,18 +59,18 @@ int main(int argc, char **argv) {
 			   plot_filename_format[] = "plot_%s.plt",
 			   graph_filename_format[] = "graph_%s.png";
 
-	int num_sizes = 50;
+	const int num_sizes = 50;
 
 	int *list_sizes = new int [num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
 		list_sizes[i] = (i + 1) * 100;
 	}
 
-	int num_runs = 10;
-	double tolerance = 0.01;
+	const int num_runs = 10;
+	const double tolerance = 0.01;
 
-	int num_methods = 4;
-	GenericMethod methods[num_methods];
+	const int num_methods = 4;
+	GenericMethod *methods = new GenericMethod [num_methods];
 	methods[0] = JacobiMethod();
 	printf("added %s\n", methods[0].get_name());
 	methods[1] = OverrelaxationMethod(1.0);
@@ -81,9 +85,29 @@ int main(int argc, char **argv) {
 	// TODO
 
 // prepare plot and run gnuplot
-	generate_plotfile();
-	printf("plot\n");
-	// TODO
+	printf("generate plotfile\n");
+
+	// beginstab
+	const char plot_filename[] = "plot_converged.plt",
+			   graphs_reldir[] = "../graphs/",
+			   graph_filename[] = "graph_converged.png",
+			   data_reldir[] = "../data/",
+			   data_filename_result_format[] = "data_converged_%s.txt";
+	// endstab
+
+	generate_plotfile(
+		plot_filename, plot_dir, graphs_reldir, graph_filename, data_reldir,
+		data_filename_result_format, num_methods, methods);
+
+// run gnuplot with plot_dir as current directory
+	printf("plot graph\n");
+
+	_chdir(plot_dir);
+	char *gnuplot_call = new char [200];
+	sprintf(gnuplot_call, "gnuplot  %s", plot_filename);
+	system(gnuplot_call);
+	remove("fit.log");
+	_chdir("..");
 
 // perform cleanup
 	printf("cleanup\n");
