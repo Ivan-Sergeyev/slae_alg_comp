@@ -26,13 +26,12 @@ void test() {
 	for (int i = 0; i < num_modules; ++i)
 	{
 		printf("testing %s\n", module_name[i]);
+		printf("======================================================\n");
 		int num_fails = module_test[i]();
-		if (num_fails) {
-			printf("%d fails in %s\n", num_fails, module_name[i]);
-			total_fails += num_fails;
-		}
+		printf("======================================================\n");
+		printf("%d fails in %s\n\n", num_fails, module_name[i]);
 	}
-	printf("\ntotal fails: %d\n", total_fails);
+	printf("total fails: %d\n", total_fails);
 }
 
 #endif // NDEBUG

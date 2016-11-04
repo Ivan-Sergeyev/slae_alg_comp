@@ -135,13 +135,27 @@ public:
 		return *this;
 	}
 
+// equality check
+	bool operator == (const Vector &other) const {
+		assert(_is_ok());
+		if (_size != other.get_size()) {
+			return 0;
+		}
+		for (int i = 0; i < _size; ++i) {
+			if (_coord[i] != other(i)) {
+				return 0;
+			}
+		}
+		return 1;
+	}
+
 // binary plus
 	Vector& operator + (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
 		Vector *sum = new Vector(*this);
 		for (int i = 0; i < _size; ++i) {
-			sum[i] += other(i);
+			(*sum)(i) += other(i);
 		}
 		return *sum;
 	}
@@ -152,7 +166,7 @@ public:
 		assert(_size == other.get_size());
 		Vector *sum = new Vector(*this);
 		for (int i = 0; i < _size; ++i) {
-			sum[i] -= other(i);
+			(*sum)(i) -= other(i);
 		}
 		return *sum;
 	}
@@ -210,17 +224,6 @@ public:
 // multiplication (double times vector)
 	friend Vector operator * (const double &a, const Vector &vector) {
 		return vector * a;
-	}
-
-// equality check
-	bool operator == (const Vector &other) const {
-		assert(_is_ok());
-		for (int i = 0; i < _size; ++i) {
-			if (_coord[i] != other(i)) {
-				return 0;
-			}
-		}
-		return 1;
 	}
 
 // string representation
