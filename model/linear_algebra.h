@@ -117,9 +117,9 @@ public:
 		if (!_size) {
 			return 0;
 		}
-		double n = abs(_coord[0]);
+		double n = std::abs(_coord[0]);
 		for (int i = 1; i < _size; ++i) {
-			double abs_coord = abs(_coord[i]);
+			double abs_coord = std::abs(_coord[i]);
 			if (abs_coord > n) {
 				n = abs_coord;
 			}
@@ -379,7 +379,7 @@ public:
 		for (int i = 0; i < _size; ++i) {
 			double s = 0;
 			for (int j = 0; j < _size; ++j) {
-				s += abs(_value[i][j]);
+				s += std::abs(_value[i][j]);
 			}
 			if (s > n) {
 				n = s;
