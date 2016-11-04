@@ -9,7 +9,7 @@
 namespace linear_algebra_test {
 	typedef int (*test_function_pointer)();
 
-	int _test_ctor_0() {
+	int _test_v_ctor_0() {
 		printf("  | testing Vector()\n");
 		Vector x;
 
@@ -32,7 +32,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_ctor_i() {
+	int _test_v_ctor_i() {
 		printf("  | testing Vector(const int size)\n");
 		const int x_size_ref = 5;
 
@@ -50,7 +50,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_ctor_ipd() {
+	int _test_v_ctor_ipd() {
 		printf("  | testing Vector(const int size, const double *value)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -69,7 +69,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_ctor_vec() {
+	int _test_v_ctor_vec() {
 		printf("  | testing Vector(const Vector &other)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -89,7 +89,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_get_size() {
+	int _test_v_get_size() {
 		printf("  | testing int get_size()\n");
 		const int x_size_ref = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -107,7 +107,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_idx_c() {
+	int _test_v_idx_c() {
 		printf("  | testing const double& operator () (const int idx) const\n");
 		const int size = 3;
 		const int idx = 2;
@@ -127,7 +127,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_idx_v() {
+	int _test_v_idx_v() {
 		printf("  | testing double& operator () (const int idx)\n");
 		const int size = 3;
 		const int idx = 2;
@@ -148,7 +148,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_norm() {
+	int _test_v_norm() {
 		printf("  | testing double norm()\n");
 		const int size = 4;
 		const double x_coord[] = {0.0, 1.0, -2.0, 3.0};
@@ -167,7 +167,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_assignment() {
+	int _test_v_assignment() {
 		printf("  | testing Vector& operator = (const Vector &other)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -188,7 +188,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_eq() {
+	int _test_v_eq() {
 		printf("  | testing bool operator == (const Vector &other) const\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -220,7 +220,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_plus_b() {
+	int _test_v_plus_b() {
 		printf("  | testing Vector& operator + (const Vector &other)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -242,7 +242,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_minus_b() {
+	int _test_v_minus_b() {
 		printf("  | testing Vector& operator - (const Vector &other)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -264,7 +264,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_plus_u() {
+	int _test_v_plus_u() {
 		printf("  | testing friend Vector operator + (const Vector &vector)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -284,7 +284,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_minus_u() {
+	int _test_v_minus_u() {
 		printf("  | testing friend Vector operator - (const Vector &vector)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -305,7 +305,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_plus_e() {
+	int _test_v_plus_e() {
 		printf("  | testing Vector& operator += (const Vector &other)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -334,7 +334,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_minus_e() {
+	int _test_v_minus_e() {
 		printf("  | testing Vector& operator -= (const Vector &other)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -363,7 +363,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_mul_e() {
+	int _test_v_mul_e() {
 		printf("  | testing Vector& operator *= (const double &a)\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -384,7 +384,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_mul_vd() {
+	int _test_v_mul_vd() {
 		printf("  | testing Vector& operator * (const double &a) const\n");
 		const int size = 3;
 		const double x_coord[] = {1.0, 2.0, 3.0};
@@ -405,7 +405,7 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
-	int _test_mul_dv() {
+	int _test_v_mul_dv() {
 		printf("  | testing "
 		  "friend Vector operator * (const double &a, const Vector &vector)\n");
 		const int size = 3;
@@ -427,24 +427,40 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
+	int _test_m_ctor_0() {
+		printf("  | testing Matrix()\n");
+
+		Matrix m;
+
+		const int m_size = m.get_size();
+		const int m_size_ref = 0;
+
+		if (m_size != m_size_ref) {
+			printf("  | failure:\n");
+			printf("  | m_size = \"%d\", should be \"%d\"\n", m_size, m_size_ref);
+			return 1;
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
 	int test() {
 		const test_function_pointer vector_tests[] =
-			{_test_ctor_0, _test_ctor_i, _test_ctor_ipd, _test_ctor_vec,
-			 _test_get_size, _test_idx_c, _test_idx_v, _test_norm,
-			 _test_assignment, _test_eq,
-			 _test_plus_b, _test_minus_b, _test_plus_u, _test_minus_u,
-			 _test_plus_e, _test_minus_e, _test_mul_e, _test_mul_vd,
-			 _test_mul_dv,
-			 0};
+			{_test_v_ctor_0, _test_v_ctor_i, _test_v_ctor_ipd, _test_v_ctor_vec,
+			 _test_v_get_size, _test_v_idx_c, _test_v_idx_v, _test_v_norm,
+			 _test_v_assignment, _test_v_eq,
+			 _test_v_plus_b, _test_v_minus_b, _test_v_plus_u, _test_v_minus_u,
+			 _test_v_plus_e, _test_v_minus_e, _test_v_mul_e, _test_v_mul_vd,
+			 _test_v_mul_dv, 0};
 		const test_function_pointer matrix_tests[] =
-			{0};
+			{_test_m_ctor_0, 0};
 
 		int num_fails = 0;
 		for (int i = 0; vector_tests[i]; ++i) {
 			printf("  class Vector -- test #%d\n", i);
 			num_fails += vector_tests[i]();
 		}
-		printf("\n");
+		printf("-----------------------------------------------------------\n");
 		for (int i = 0; matrix_tests[i]; ++i) {
 			printf("  class Matrix -- test #%d\n", i);
 			num_fails += matrix_tests[i]();
@@ -454,4 +470,4 @@ namespace linear_algebra_test {
 	}
 }
 
-#endif // __LINEAR_ALGEBRA_TEST__
+#endif // __LINEAR_ALGEBRA_TEST_v__
