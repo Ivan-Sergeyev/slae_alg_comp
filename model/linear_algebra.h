@@ -17,7 +17,7 @@ private:
 
 // hard check if vector's state is ok
 	bool _is_ok() const {
-		return (!_size) || _coord;
+		return !_size || _coord;
 	}
 
 // erase
@@ -25,8 +25,8 @@ private:
 		if (_coord) {  // TODO: check redundancy (unix specific?)
 			delete[] _coord;
 		}
-		_size = 0;
 		_coord = 0;
+		_size = 0;
 	}
 
 // change vector's size, coordinates might change
@@ -293,8 +293,8 @@ private:
 			}
 			delete[] _value;
 		}
-		_size = 0;
 		_value = 0;
+		_size = 0;
 	}
 
 // fill values with zeroes

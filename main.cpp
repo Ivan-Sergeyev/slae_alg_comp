@@ -4,7 +4,7 @@
 #include "model/linear_algebra.h"
 #include "model/generic_method.h"
 #include "model/jacobi_method.h"
-#include "model/seidel_method.h"
+#include "model/overrelaxation_method.h"
 
 #include "model/linear_algebra_test.h"
 
@@ -68,12 +68,16 @@ int main(int argc, char **argv) {
 	int num_runs = 10;
 	double tolerance = 0.01;
 
-	int num_methods = 2;
+	int num_methods = 4;
 	GenericMethod methods[num_methods];
 	methods[0] = JacobiMethod();
-	printf("added %s\n", methods[0].getName());
-	methods[1] = SeidelMethod();
-	printf("added %s\n", methods[1].getName());
+	printf("added %s\n", methods[0].get_name());
+	methods[1] = OverrelaxationMethod(1.0);
+	printf("added %s\n", methods[1].get_name());
+	methods[2] = OverrelaxationMethod(0.5);
+	printf("added %s\n", methods[2].get_name());
+	methods[3] = OverrelaxationMethod(1.5);
+	printf("added %s\n", methods[3].get_name());
 
 // perform measurements
 	printf("measurements\n");

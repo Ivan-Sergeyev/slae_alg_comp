@@ -1,17 +1,32 @@
-#ifndef __SEIDEL_METHOD__
-#define __SEIDEL_METHOD__
+#ifndef __OVERRELAXATION_METHOD__
+#define __OVERRELAXATION_METHOD__
 
 #include <cmath>
 
 #include "generic_method.h"
 
 
-class SeidelMethod : public GenericMethod {
-public:
-	SeidelMethod() : GenericMethod("Seidel Method") {}
+class OverrelaxationMethod : public GenericMethod {
+private:
+	double _tau;  // relaxation parameter
 
-	Vector step(const int n, const Matrix &A,
-				const Vector &f, const Vector &u) const {
+public:
+	OverrelaxationMethod(const double &tau) {
+		assert(tau > 0);
+		assert(tau < 2);
+
+		if (tau == 1.0) {
+			set_name("Seidel Method");
+		} else {
+			char *name = new char[52];
+			*name = 0;
+			sprintf(name, "Overrelaxation Method with tau=%lf", tau);
+			set_name(name);
+		}
+	}
+
+	Vector& step(const int n, const Matrix &A,
+				 const Vector &f, const Vector &u) const {
 		Vector *u_next = new Vector(n);
 		for (int i = 0; i < n; ++i) {
 			(*u_next)(i) = f(i);
@@ -21,7 +36,8 @@ public:
 			for (int j = i + 1; j < n; ++j) {
 				(*u_next)(i) -= A(i, j) * u(j);
 			}
-			(*u_next)(i) = (*u_next)(i) / A(i, i);
+			(*u_next)(i) *= _tau / A(i, i);
+			(*u_next)(i) += (1 - _tau) * u(i);
 		}
 		return *u_next;
 	}
@@ -61,4 +77,4 @@ public:
 	}
 };
 
-#endif  // __SEIDEL_METHOD__
+#endif  // __OVERRELAXATION_METHOD__
