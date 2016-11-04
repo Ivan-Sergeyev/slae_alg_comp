@@ -1,11 +1,19 @@
 #ifndef __GENERATE_PLOTFILE__
 #define __GENERATE_PLOTFILE__
 
+#include "generic_method.h"
 
-void generate_plotfile() {
+
+const int FILENAME_BUFFER_LEN = 200;
+
+
+void generate_plotfile(const char *plot_filename, const char *plot_dir,
+					   const char *graphs_rdir, const char *graph_filename,
+					   const char *data_rdir, const char *data_filename_format,
+					   const int num_methods, const GenericMethod *methods) {
 	const char plot_preamble[] =
 		"reset\n\n"
-		"set output \"%0$s\"\n"
+		"set output \"%s\"\n"
 		"set terminal pngcairo dashed enhanced font \"Sans,12\" size 1000,600\n"
 		"set encoding utf8\n\n"
 		"set key top left\n"
@@ -14,19 +22,59 @@ void generate_plotfile() {
 		"set ylabel \"T, s\" offset 2,0,0\n\n"
 		"set fit quiet\n\n";
 	const char method_format_string[] =
-		"file_%0$s = \"%2$s\"\n"
-		"title_%0$s = \"%1$s\"\n"
-		"a_%0$s = 1; b_%0$s = 1; c_%0$s = 1\n"
-		"f_%0$s(x) = a_%0$s*x**2 + b_%0$s*x + c_%0$s\n"
-		"fit f_%0$s(x) file_%0$s using 1:2 "
-		"via a_%0$s, b_%0$s, c_%0$s\n\n";
+		"file_%d = \"%s\"\n"
+		"title_%d = \"%s\"\n"
+		"a_%d = 1; b_%d = 1; c_%d = 1\n"
+		"f_%d(x) = a_%d*x**2 + b_%d*x + c_%d\n"
+		"fit f_%d(x) file_%d using 1:2 "
+		"via a_%d, b_%d, c_%d\n\n";
 	const char plot_format_string[] =
-		"\tfile_%0$s using 1:2 with points "
-		"lw 1 lt 1 lc %0$s title title_%0$s,\\\n"
-		"\tf_%0$s(x) with lines "
-		"lw 1 lt 1 lc %0$s notitle";
+		"\tfile_%d using 1:2 with points "
+		"lw 1 lt 1 lc %d title title_%d,\\\n"
+		"\tf_%d(x) with lines "
+		"lw 1 lt 1 lc %d notitle";
 
-	// TODO
+	char *plot_relpath = new char [FILENAME_BUFFER_LEN];
+	char *pr = plot_relpath;
+	pr[0] = 0;
+	pr += sprintf(pr, plot_dir);
+	sprintf(pr, plot_filename);
+
+	char *graph_relpath = new char [FILENAME_BUFFER_LEN];
+	char *gr = graph_relpath;
+	gr[0] = 0;
+	gr += sprintf(gr, graphs_rdir);
+	sprintf(gr, graph_filename);
+
+	FILE *plot_file = fopen(plot_relpath, "w");
+
+	fprintf(plot_file, plot_preamble, graph_relpath);
+
+	for(int i = 0; i < num_methods; ++i) {
+		const char *method_name = methods[i].get_name();
+
+		char *data_relpath = new char [FILENAME_BUFFER_LEN];
+		char *dr = data_relpath;
+		dr[0] = 0;
+		dr += sprintf(dr, data_rdir);
+		sprintf(dr, data_filename_format, method_name);
+
+		fprintf(plot_file, method_format_string,
+			i, data_relpath, i, method_name,
+			i, i, i, i, i, i, i, i, i, i, i, i);
+	}
+
+	fprintf(plot_file, "plot \\\n");
+	for(int i = 0; i < num_methods - 1; ++i) {
+		int idx = i;
+		fprintf(plot_file, plot_format_string, idx, idx, idx, idx, idx);
+		fprintf(plot_file, ",\\\n");
+	}
+	int idx = num_methods - 1;
+	fprintf(plot_file, plot_format_string, idx, idx, idx, idx, idx);
+	fprintf(plot_file, "\n");
+
+	fclose(plot_file);
 }
 
 #endif  // __GENERATE_PLOTFILE__
