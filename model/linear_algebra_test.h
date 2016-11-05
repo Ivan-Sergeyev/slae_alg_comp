@@ -444,6 +444,215 @@ namespace linear_algebra_test {
 		return 0;
 	}
 
+	int _test_m_ctor_i() {
+		printf("  | testing Matrix(const int size)\n");
+
+		const int m_size_ref = 2;
+
+		Matrix m(m_size_ref);
+
+		const int m_size = m.get_size();
+
+		if (m_size != m_size_ref) {
+			printf("  | failure:\n");
+			printf("  | m_size = \"%d\", should be \"%d\"\n", m_size, m_size_ref);
+			return 1;
+		}
+		for(int i = 0; i < m_size; ++i) {
+			for(int j = 0; j < m_size; ++j) {
+				if (m(i, j)) {
+					printf("  | failure:\n");
+					printf("  | m(%d, %d) != 0\n", i, j);
+					return 1;
+				}
+			}
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_ctor_id() {
+		printf("  | testing Matrix(const int size, const double *value)\n");
+		// also testing const double& operator () (const int row, const int col) const
+
+		const int m_size_ref = 2;
+		const double m_value[] = {3, 5, 7, 11};
+
+		Matrix m(m_size_ref, m_value);
+
+		int m_size = m.get_size();
+
+		if (m_size != m_size_ref) {
+			printf("  | failure:\n");
+			printf("  | m_size = \"%d\", should be \"%d\"\n", m_size, m_size_ref);
+			return 1;
+		}
+		for(int i = 0; i < m_size; ++i) {
+			for(int j = 0; j < m_size; ++j) {
+				double v_ref = m_value[i * m_size + j];
+				if (m(i, j) != v_ref) {
+					printf("  | failure:\n");
+					printf("  | m(%d, %d) != %lf\n", i, j, v_ref);
+					return 1;
+				}
+			}
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_ctor_m() {
+		printf("  | testing Matrix(const Matrix &other)\n");
+
+		const int size_ref = 2;
+		const double m_value[] = {3, 5, 7, 11};
+
+		Matrix a(size_ref, m_value);
+		Matrix b(a);
+
+		int b_size = b.get_size();
+
+		if (b_size != size_ref) {
+			printf("  | failure:\n");
+			printf("  | m_size = \"%d\", should be \"%d\"\n", b_size, size_ref);
+			return 1;
+		}
+		for(int i = 0; i < b_size; ++i) {
+			for(int j = 0; j < b_size; ++j) {
+				double v_ref = a(i, j);
+				if (b(i, j) != v_ref) {
+					printf("  | failure:\n");
+					printf("  | b(%d, %d) != %lf\n", i, j, v_ref);
+					return 1;
+				}
+			}
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_get_size() {
+		printf("  | testing int get_size() const\n");
+
+		const int x_size_ref = 3;
+		const double x_coord[] = {1.0, 2.0, 3.0};
+
+		Vector x(x_size_ref, x_coord);
+
+		const int x_size = x.get_size();
+
+		if (x_size != x_size_ref) {
+			printf("  | failure\n");
+			printf("  | x_size = \"%d\", should be \"%d\"\n", x_size, x_size_ref);
+			return 1;
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_idx_v() {
+		printf("  | testing const double& operator () (const int row, const int col) const\n");
+
+		const int m_size_ref = 2;
+		const double m_value[] = {3.0, 5.0, 7.0, 11.0};
+		const double m_value_ref[] = {13.0, 25.0, 37.0, 51.0};
+
+		Matrix m(m_size_ref, m_value);
+
+		for(int i = 0; i < m_size_ref; ++i) {
+			for(int j = 0; j < m_size_ref; ++j) {
+				double v_ref = m_value_ref[i * m_size_ref + 1];
+				m(i, j) = v_ref;
+				if (m(i, j) != v_ref) {
+					printf("  | failure\n");
+					printf("  | m(%d, %d) != %lf\n", i, j, v_ref);
+					return 1;
+				}
+			}
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_norm() {
+		printf("  | testing double norm() const\n");
+		const int m_size_ref = 2;
+		const double m_value[] = {3.0, 5.0, 7.0, 11.0};
+		const double norm_ref = m_value[2] + m_value[3];
+
+		Matrix m(m_size_ref, m_value);
+		double norm = m.norm();
+		if (norm != norm_ref) {
+			printf("  | failure\n");
+			printf("  | norm = %lf != %lf\n", norm, norm_ref);
+			return 1;
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_assignment() {
+		printf("  | testing Matrix& operator = (const Matrix &other)\n");
+
+		const int size_ref = 2;
+		const double m_value[] = {3, 5, 7, 11};
+
+		Matrix a(size_ref, m_value);
+		Matrix b;
+		b = a;
+
+		int b_size = b.get_size();
+
+		if (b_size != size_ref) {
+			printf("  | failure:\n");
+			printf("  | m_size = \"%d\", should be \"%d\"\n", b_size, size_ref);
+			return 1;
+		}
+		for(int i = 0; i < b_size; ++i) {
+			for(int j = 0; j < b_size; ++j) {
+				double v_ref = a(i, j);
+				if (b(i, j) != v_ref) {
+					printf("  | failure:\n");
+					printf("  | b(%d, %d) != %lf\n", i, j, v_ref);
+					return 1;
+				}
+			}
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
+	int _test_m_mul() {
+		printf("  | testing Vector& operator * (const Vector &other) const\n");
+
+		const int size_ref = 2;
+		const double m_value[] = {3, 5, 7, 11};
+		const double v_value[] = {2, 4};
+		const double f_value_ref[] = {26, 58};
+
+		Matrix a(size_ref, m_value);
+		Vector v(size_ref, v_value);
+
+		Vector f(a * v);
+
+		int f_size = f.get_size();
+		if (f_size != size_ref) {
+			printf("  | failure:\n");
+			printf("  | f_size = \"%d\", should be \"%d\"\n", f_size, size_ref);
+			return 1;
+		}
+		for(int i = 0; i < size_ref; ++i) {
+			double v_ref = f_value_ref[i];
+			if (f(i) != v_ref) {
+				printf("  | failure:\n");
+				printf("  | f(%d) != %lf\n", i, v_ref);
+				return 1;
+			}
+		}
+		printf("  | success\n");
+		return 0;
+	}
+
 	int test() {
 		const test_function_pointer vector_tests[] =
 			{_test_v_ctor_0, _test_v_ctor_i, _test_v_ctor_ipd, _test_v_ctor_vec,
@@ -453,7 +662,8 @@ namespace linear_algebra_test {
 			 _test_v_plus_e, _test_v_minus_e, _test_v_mul_e, _test_v_mul_vd,
 			 _test_v_mul_dv, 0};
 		const test_function_pointer matrix_tests[] =
-			{_test_m_ctor_0, 0};
+			{_test_m_ctor_0, _test_m_ctor_i, _test_m_ctor_id, _test_m_ctor_m,
+			 _test_m_idx_v, _test_m_norm, _test_m_assignment, _test_m_mul, 0};
 
 		int num_fails = 0;
 		for (int i = 0; vector_tests[i]; ++i) {
