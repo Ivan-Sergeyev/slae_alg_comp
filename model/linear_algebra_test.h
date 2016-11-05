@@ -680,4 +680,4 @@ namespace linear_algebra_test {
 	}
 }
 
-#endif // __LINEAR_ALGEBRA_TEST_v__
+#endif // __LINEAR_ALGEBRA_TEST__
