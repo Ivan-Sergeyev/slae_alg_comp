@@ -68,16 +68,17 @@ int main(int argc, char **argv) {
 
 	const int num_runs = 10;
 	const double tolerance = 0.01;
+	const int max_faults = 20;
 
 	const int num_methods = 4;
 	GenericMethod *methods = new GenericMethod [num_methods];
-	methods[0] = JacobiMethod();
+	methods[0] = JacobiMethod(tolerance, max_faults);
 	printf("added %s\n", methods[0].get_name());
-	methods[1] = OverrelaxationMethod(1.0);
+	methods[1] = OverrelaxationMethod(1.0, tolerance, max_faults);
 	printf("added %s\n", methods[1].get_name());
-	methods[2] = OverrelaxationMethod(0.5);
+	methods[2] = OverrelaxationMethod(0.5, tolerance, max_faults);
 	printf("added %s\n", methods[2].get_name());
-	methods[3] = OverrelaxationMethod(1.5);
+	methods[3] = OverrelaxationMethod(1.5, tolerance, max_faults);
 	printf("added %s\n", methods[3].get_name());
 
 // perform measurements

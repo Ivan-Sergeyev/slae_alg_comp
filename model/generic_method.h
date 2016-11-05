@@ -66,8 +66,7 @@ public:
 		return *this;
 	}
 
-	virtual Vector run(int n, Matrix A, Vector f,
-					   Vector u_0, double tolerance) const {}
+	virtual Vector run(Matrix A, Vector f) const {}
 };
 
 #endif  // __GENERIC_METHOD__
