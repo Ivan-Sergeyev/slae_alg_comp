@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 // setup
 	printf("setup\n");
 
-	const int num_sizes = 50;
+	const int num_sizes = 5;
 	int *sizes = new int [num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
 		sizes[i] = (i + 1) * 100;
@@ -67,23 +67,29 @@ int main(int argc, char **argv) {
 	const double tolerance = 0.01;
 	const int max_faults = 20;
 	const int num_methods = 4;
-	GenericMethod *methods = new GenericMethod [num_methods];
-	methods[0] = JacobiMethod(tolerance, max_faults);
-	printf("added %s\n", methods[0].get_name());
-	methods[1] = OverrelaxationMethod(1.0, tolerance, max_faults);
-	printf("added %s\n", methods[1].get_name());
-	methods[2] = OverrelaxationMethod(0.5, tolerance, max_faults);
-	printf("added %s\n", methods[2].get_name());
-	methods[3] = OverrelaxationMethod(1.5, tolerance, max_faults);
-	printf("added %s\n", methods[3].get_name());
+
+	JacobiMethod jacobi_method(tolerance, max_faults);
+	OverrelaxationMethod gauss_seidel_method(1.0, tolerance, max_faults),
+						 lower_relaxation_method(0.5, tolerance, max_faults),
+						 upper_relaxation_method(1.5, tolerance, max_faults);
+
+	GenericMethod **methods = new GenericMethod* [num_methods];
+	methods[0] = &jacobi_method;
+	printf("added %s\n", methods[0]->get_name());
+	methods[1] = &gauss_seidel_method;
+	printf("added %s\n", methods[1]->get_name());
+	methods[2] = &lower_relaxation_method;
+	printf("added %s\n", methods[2]->get_name());
+	methods[3] = &upper_relaxation_method;
+	printf("added %s\n", methods[3]->get_name());
 
 // perform measurements
 	printf("measurements\n");
-	const char data_filename_format[] = "./data/data_converged_%s.txt";
+	const char data_filename_format[] = "./data/data_%s_%s.txt";
 
-	// PerformanceComparator p_comp;
-	// p_comp.run_comparison(num_methods, methods, num_sizes, sizes,
-	// 					  num_runs, data_filename_format);
+	PerformanceComparator p_comp;
+	p_comp.run_comparison(num_methods, methods, num_sizes, sizes,
+						  num_runs, data_filename_format);
 
 // prepare plot and run gnuplot
 	printf("generate plotfile\n");

@@ -9,7 +9,7 @@ const int FILENAME_BUFFER_LEN = 200;
 
 void generate_plotfile(const char *plot_filename, const char *graph_filename,
 					   const char *data_filename_format,
-					   const int num_methods, const GenericMethod *methods) {
+					   const int num_methods, GenericMethod **methods) {
 	const char plot_preamble[] =
 		"reset\n\n"
 		"set output \"%s\"\n"
@@ -39,7 +39,7 @@ void generate_plotfile(const char *plot_filename, const char *graph_filename,
 
 	char *data_relpath = new char [FILENAME_BUFFER_LEN];
 	for(int i = 0; i < num_methods; ++i) {
-		const char *method_name = methods[i].get_name();
+		const char *method_name = methods[i]->get_name();
 
 		data_relpath[0] = 0;
 		sprintf(data_relpath, data_filename_format, method_name);
