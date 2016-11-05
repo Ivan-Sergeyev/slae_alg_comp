@@ -1,7 +1,6 @@
 #ifndef __LINEAR_ALGEBRA__
 #define __LINEAR_ALGEBRA__
 
-
 #include <assert.h>
 #include <cmath>
 #include <stdio.h>
