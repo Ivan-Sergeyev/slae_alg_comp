@@ -10,11 +10,11 @@ class OverrelaxationMethod : public GenericMethod {
 private:
 	double _tolerance;  // convergence tolerance
 	int _max_faults;    // divergence criteria
-	double _tau;  // relaxation parameter
+	double _tau;        // relaxation parameter
 
 public:
 	OverrelaxationMethod(const double &tau,
-						 const double tolerance, const int max_faults) :
+						 const double &tolerance, const int &max_faults) :
 			_tolerance(tolerance), _max_faults(max_faults) {
 		assert(tau > 0);
 		assert(tau < 2);
@@ -26,10 +26,11 @@ public:
 			*name = 0;
 			sprintf(name, "Overrelaxation Method with tau=%lf", tau);
 			set_name(name);
+			delete[] name;
 		}
 	}
 
-	Vector& step(const int _n, const Matrix &A,
+	Vector& step(const int &_n, const Matrix &A,
 				 const Vector &f, const Vector &u) const {
 		Vector *u_next = new Vector(_n);
 		for (int i = 0; i < _n; ++i) {

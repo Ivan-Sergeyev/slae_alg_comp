@@ -12,11 +12,11 @@ private:
 	int _max_faults;    // divergence criteria
 
 public:
-	JacobiMethod(const double tolerance, const int max_faults) :
+	JacobiMethod(const double &tolerance, const int &max_faults) :
 		GenericMethod("Jacobi Method"),
 		_tolerance(tolerance), _max_faults(max_faults) {}
 
-	Vector& step(const int _n, const Matrix &A,
+	Vector& step(const int &_n, const Matrix &A,
 				 const Vector &f, const Vector &u) const {
 		Vector *u_next = new Vector(_n);
 		for (int i = 0; i < _n; ++i) {

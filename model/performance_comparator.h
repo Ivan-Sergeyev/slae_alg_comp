@@ -15,7 +15,7 @@ class PerformanceComparator {
 private:
 	clock_t _start_time;
 
-	void _write_log(const char *msg, const int level=0) {
+	void _write_log(const char *msg, const int &level=0) {
 		// TODO: use log file
 		if (level == 1) {
 			printf("| ");
@@ -31,13 +31,14 @@ private:
 	//  * move generators to separate files
 	//  * pass generator functions as arguments to run_comparison
 
-	Matrix& _generate_random_matrix(const int size) {
+	Matrix& _generate_random_matrix(const int &size) {
 		int n = size * size;
 		double *values = new double[n];
 		for(int i = 0; i < n; ++i) {
 			values[i] = rand();
 		}
 		Matrix *m = new Matrix(size, values);
+		delete[] values;
 		return *m;
 	}
 
@@ -54,21 +55,22 @@ private:
 		return *m;
 	}
 
-	Vector& _generate_random_vector(const int size) {
+	Vector& _generate_random_vector(const int &size) {
 		double *coords = new double[size];
 		for(int i = 0; i < size; ++i) {
 			coords[i] = rand();
 		}
 		Vector *v = new Vector(size, coords);
+		delete[] coords;
 		return *v;
 	}
 
 public:
 	PerformanceComparator() {}
 
-	void run_comparison(const int num_methods, GenericMethod **methods,
-						const int num_sizes, const int *sizes,
-						const int num_runs, const char *data_filename_format) {
+	void run_comparison(const int &num_methods, GenericMethod **methods,
+						const int &num_sizes, const int *sizes,
+						const int &num_runs, const char *data_filename_format) {
 		char *data_filename = new char[BUFFER_LEN];
 		char *verdict = new char[20];
 
