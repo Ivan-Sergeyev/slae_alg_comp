@@ -33,7 +33,7 @@ private:
 		(*b)(k) -= (*b)(l)*coeff;
 	}
 public:
-//	GaussMethod() : GenericMethod("Gauss Method") {}
+	GaussMethod() : GenericMethod("Gauss Method") {}
 
 	Vector* get_answer_from_triangle(Matrix M, Vector b) {
 		int _size = b.get_size();
