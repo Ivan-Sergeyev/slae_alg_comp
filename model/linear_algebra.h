@@ -407,6 +407,41 @@ public:
 		}
 		return *result;
 	}
+
+// string representation
+	const char* repr() const {
+		assert(_is_ok());
+
+		if (!_size) {  // empty vector
+			char *string = new char[1];
+			string[0] = 0;
+			return string;
+		}
+		char *string = new char[REPR_BUFFER_LEN*_size];
+		char *s = string;
+		int delta;
+
+		*s = 0;
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size - 1; ++j) {
+				delta = sprintf(s, "%lf ", _value[i][j]);
+				if (delta > 0) {  // success : delta characters appended
+					s += delta;
+				} else {          // failure, return whatever
+					// TODO: indicate failure
+					return string;
+				}
+			}
+			delta = sprintf(s, "%lf\n", _value[i][_size-1]);
+			if (delta > 0) {  // success : delta characters appended
+					s += delta;
+				} else {          // failure, return whatever
+					// TODO: indicate failure
+					return string;
+				}
+		}
+		return string;
+	}
 };
 
 #endif  // __LINEAR_ALGEBRA__
