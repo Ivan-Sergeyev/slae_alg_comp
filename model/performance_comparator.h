@@ -31,41 +31,36 @@ private:
 	//  * move generators to separate files
 	//  * pass generator functions as arguments to run_comparison
 
-	Matrix& _generate_random_matrix(const int &size) {
+	Matrix _generate_random_matrix(const int &size) {
 		int n = size * size;
 		double *values = new double[n];
 		for(int i = 0; i < n; ++i) {
 			values[i] = rand();
 		}
-		Matrix *m = new Matrix;
-		*m = Matrix(size, values);
+		Matrix m(size, values);
 		delete[] values;
-		return *m;
+		return m;
 	}
 
-	Matrix& _make_diagonally_dominant(const Matrix &a) {
-		int n = a.get_size();
-		Matrix *m;
-		*m = Matrix(a);
+	void _make_diagonally_dominant(Matrix &m) {
+		int n = m.get_size();
 		for(int i = 0; i < n; ++i) {
 			double sum_row = 0;
 			for(int j = 0; j < n; ++j) {
-				sum_row += (*m)(i, j);
+				sum_row += m(i, j);
 			}
-			(*m)(i, i) = sum_row;
+			m(i, i) = sum_row;
 		}
-		return *m;
 	}
 
-	Vector& _generate_random_vector(const int &size) {
+	Vector _generate_random_vector(const int &size) {
 		double *coords = new double[size];
 		for(int i = 0; i < size; ++i) {
 			coords[i] = rand();
 		}
-		Vector *v = new Vector;
-		*v = Vector(size, coords);
+		Vector v(size, coords);
 		delete[] coords;
-		return *v;
+		return v;
 	}
 
 	// // read vector from file
@@ -123,7 +118,7 @@ public:
 			int size = sizes[s_idx];
 			for(int r_idx = 0; r_idx < num_runs; ++r_idx) {
 				A = _generate_random_matrix(size);
-				A = _make_diagonally_dominant(A);
+				_make_diagonally_dominant(A);
 				f = _generate_random_vector(size);
 
 				for (int m_idx = 0; m_idx < num_methods; ++m_idx)
