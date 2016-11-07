@@ -398,13 +398,13 @@ public:
 // multiplication by a vector
 	Vector operator * (const Vector &other) const {
 		assert(_size == other.get_size());
-		Vector *result = new Vector(_size);
+		Vector result(_size);
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
-				(*result)(i) += _value[i][j] * other(j);
+				result(i) += _value[i][j] * other(j);
 			}
 		}
-		return *result;
+		return result;
 	}
 
 // string representation
