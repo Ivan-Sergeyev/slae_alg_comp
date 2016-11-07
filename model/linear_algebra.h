@@ -1,6 +1,7 @@
 #ifndef __LINEAR_ALGEBRA__
 #define __LINEAR_ALGEBRA__
 
+#include <algorithm>
 #include <assert.h>
 #include <cmath>
 #include <stdio.h>
@@ -433,16 +434,23 @@ public:
 			}
 			delta = sprintf(s, "%lf\n", _value[i][_size-1]);
 			if (delta > 0) {  // success : delta characters appended
-					s += delta;
-				} else {          // failure, return whatever
-					// TODO: indicate failure
-					return string;
-				}
+				s += delta;
+			} else {          // failure, return whatever
+				// TODO: indicate failure
+				return string;
+			}
 		}
 		return string;
 	}
 
-// specific function for gauss method
+// swap two rows
+	void swap_rows(int i, int j) {
+		for(int k = 0; k < _size; ++k) {
+			std::swap(_value[i][k], _value[j][k]);
+		}
+	}
+
+// specific function for gauss method -- pending refactor
 	void find_max_and_swap(Vector* b, int j) const {
 		int max_index = j;
 		for (int i = j+1; i < _size; i++) if (_value[i][j] > _value[max_index][j] ) max_index = i;
