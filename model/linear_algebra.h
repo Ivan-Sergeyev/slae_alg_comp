@@ -3,11 +3,13 @@
 
 #include <algorithm>
 #include <assert.h>
-#include <cmath>
-#include <stdio.h>
+#include <iostream>
+#include <string>
 
 
-const int REPR_BUFFER_LEN = 1000;  // string representation buffer size
+using std::string;
+using std::swap;
+using std::to_string;
 
 
 class Vector {
@@ -227,30 +229,19 @@ public:
 	}
 
 // string representation
-	char* repr() const {
+	string repr() const {
 		assert(_is_ok());
 
 		if (!_size) {  // empty vector
-			char *string = new char[1];
-			string[0] = 0;
-			return string;
+			return string("");
 		}
-		char *string = new char[REPR_BUFFER_LEN];
-		char *s = string;
-		int delta;
 
-		*s = 0;
+		string rep;
 		for (int i = 0; i < _size - 1; ++i) {
-			delta = sprintf(s, "%lf ", _coord[i]);
-			if (delta > 0) {  // success : delta characters appended
-				s += delta;
-			} else {          // failure, return whatever
-				// TODO: indicate failure
-				return string;
-			}
+			rep += to_string(_coord[i]) + string(" ");
 		}
-		sprintf(s, "%lf", _coord[_size - 1]);
-		return string;
+		rep += to_string(_coord[_size - 1]);
+		return rep;
 	}
 };
 
@@ -409,44 +400,28 @@ public:
 	}
 
 // string representation
-	const char* repr() const {
+	string repr() const {
 		assert(_is_ok());
 
 		if (!_size) {  // empty vector
-			char *string = new char[1];
-			string[0] = 0;
-			return string;
+			return string("");
 		}
-		char *string = new char[REPR_BUFFER_LEN*_size];
-		char *s = string;
-		int delta;
 
-		*s = 0;
+		string rep;
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size - 1; ++j) {
-				delta = sprintf(s, "%lf ", _value[i][j]);
-				if (delta > 0) {  // success : delta characters appended
-					s += delta;
-				} else {          // failure, return whatever
-					// TODO: indicate failure
-					return string;
+					rep += to_string(_value[i][j]) + string(" ");
 				}
-			}
-			delta = sprintf(s, "%lf\n", _value[i][_size-1]);
-			if (delta > 0) {  // success : delta characters appended
-				s += delta;
-			} else {          // failure, return whatever
-				// TODO: indicate failure
-				return string;
-			}
+			rep += to_string(_value[i][_size - 1]) + string("\n");
 		}
-		return string;
+
+		return rep;
 	}
 
 // swap two rows
 	void swap_rows(int i, int j) {
 		for(int k = 0; k < _size; ++k) {
-			std::swap(_value[i][k], _value[j][k]);
+			swap(_value[i][k], _value[j][k]);
 		}
 	}
 
