@@ -11,190 +11,217 @@ namespace linear_algebra_test {
 
 	int _test_v_ctor_0() {
 		printf("  | testing Vector()\n");
+		bool ret = 0;
 		Vector x;
 
-		const int x_size = x.get_size();
-		const int x_size_ref = 0;
-		const char *x_repr = x.repr();
+		int x_size = x.get_size();
+		int x_size_ref = 0;
+		char *x_repr = x.repr();
 		const char *x_repr_ref = "";
 
 		if (x_size != x_size_ref) {
 			printf("  | failure:\n");
 			printf("  | x_size = \"%d\", should be \"%d\"\n", x_size, x_size_ref);
-			return 1;
-		}
-		if (strcmp(x_repr, x_repr_ref)) {
+			ret = 1;
+		} else if (strcmp(x_repr, x_repr_ref)) {
 			printf("  | failure:\n");
 			printf("  | x_repr = \"%s\", should be \"%s\"\n", x_repr, x_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_ctor_i() {
 		printf("  | testing Vector(const int size)\n");
-		const int x_size_ref = 5;
+		bool ret = 0;
+		int x_size_ref = 5;
 
 		Vector x(x_size_ref);
 
-		const char *x_repr = x.repr();
+		char *x_repr = x.repr();
 		const char *x_repr_ref = "0.000000 0.000000 0.000000 0.000000 0.000000";
 
 		if (strcmp(x_repr, x_repr_ref)) {
 			printf("  | failure:\n");
 			printf("  | x_repr = \"%s\", should be \"%s\"\n", x_repr, x_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_ctor_ipd() {
 		printf("  | testing Vector(const int size, const double *value)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 
-		const char *x_repr = x.repr();
+		char *x_repr = x.repr();
 		const char *x_repr_ref = "1.000000 2.000000 3.000000";
 
 		if (strcmp(x_repr, x_repr_ref)) {
 			printf("  | failure:\n");
 			printf("  | x_repr = \"%s\", should be \"%s\"\n", x_repr, x_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_ctor_vec() {
 		printf("  | testing Vector(const Vector &other)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 		Vector z(x);
 
-		const char *z_repr = z.repr();
+		char *z_repr = z.repr();
 		const char *z_repr_ref = "1.000000 2.000000 3.000000";
 
 		if (strcmp(z_repr, z_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | z_repr = \"%s\", should be \"%s\"\n", z_repr, z_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_get_size() {
 		printf("  | testing int get_size()\n");
-		const int x_size_ref = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int x_size_ref = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(x_size_ref, x_coord);
 
-		const int x_size = x.get_size();
+		int x_size = x.get_size();
 
 		if (x_size != x_size_ref) {
 			printf("  | failure\n");
 			printf("  | x_size = \"%d\", should be \"%d\"\n", x_size, x_size_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_idx_c() {
 		printf("  | testing const double& operator () (const int idx) const\n");
-		const int size = 3;
-		const int idx = 2;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		int idx = 2;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 
-		const int x_val = x(idx);
-		const int x_val_ref = x_coord[idx];
+		int x_val = x(idx);
+		int x_val_ref = x_coord[idx];
 
 		if (x_val != x_val_ref) {
 			printf("  | failure\n");
 			printf("  | x[%d] = \"%d\", should be \"%d\"\n", idx, x_val, x_val_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_idx_v() {
 		printf("  | testing double& operator () (const int idx)\n");
-		const int size = 3;
-		const int idx = 2;
-		const double x_val_ref = 17.0;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		int idx = 2;
+		double x_val_ref = 17.0;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 		x(idx) = x_val_ref;
 
-		const int x_val = x(idx);
+		int x_val = x(idx);
 
 		if (x_val != x_val_ref) {
 			printf("  | failure\n");
 			printf("  | x[%d] = \"%d\", should be \"%d\"\n", idx, x_val, x_val_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_norm() {
 		printf("  | testing double norm()\n");
-		const int size = 4;
-		const double x_coord[] = {0.0, 1.0, -2.0, 3.0};
+		bool ret = 0;
+		int size = 4;
+		double x_coord[] = {0.0, 1.0, -2.0, 3.0};
 
 		Vector x(size, x_coord);
 
-		const double x_n = x.norm();
-		const double x_n_ref = 3.0;
+		double x_n = x.norm();
+		double x_n_ref = 3.0;
 
 		if (x_n != x_n_ref) {
 			printf("  | failure\n");
 			printf("  | x_norm = \"%s\", should be \"%s\"\n", x_n, x_n_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_assignment() {
 		printf("  | testing Vector& operator = (const Vector &other)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 		Vector z;
 		z = x;
 
-		const char *z_repr = z.repr();
+		char *z_repr = z.repr();
 		const char *z_repr_ref = "1.000000 2.000000 3.000000";
 
 		if (strcmp(z_repr, z_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | z_repr = \"%s\", should be \"%s\"\n", z_repr, z_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_eq() {
 		printf("  | testing bool operator == (const Vector &other) const\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double y_coord[] = {1.0, 2.0, 3.0};
-		const double z_coord[] = {1.0, 2.0, 3.1};
-		const double v_coord[] = {1.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double y_coord[] = {1.0, 2.0, 3.0};
+		double z_coord[] = {1.0, 2.0, 3.1};
+		double v_coord[] = {1.0};
 
 		Vector x(size, x_coord);
 		Vector y(size, y_coord);
@@ -204,279 +231,311 @@ namespace linear_algebra_test {
 		if (!(x == y)) {
 			printf("  | failure\n");
 			printf("  | %s should be = %s \"%s\"\n", x.repr(), y.repr());
-			return 1;
-		}
-		if (x == z) {
+			ret = 1;
+		} else if (x == z) {
 			printf("  | failure\n");
 			printf("  | %s should be != %s \"%s\"\n", x.repr(), z.repr());
-			return 1;
-		}
-		if (x == v) {
+			ret = 1;
+		} else if (x == v) {
 			printf("  | failure\n");
 			printf("  | %s should be != %s \"%s\"\n", x.repr(), v.repr());
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_plus_b() {
 		printf("  | testing Vector& operator + (const Vector &other)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double y_coord[] = {10.0, 20.0, 30.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double y_coord[] = {10.0, 20.0, 30.0};
 
 		Vector x(size, x_coord);
 		Vector y(size, y_coord);
 		Vector z = x + y;
 
-		const char *z_repr = z.repr();
+		char *z_repr = z.repr();
 		const char *z_repr_ref = "11.000000 22.000000 33.000000";
 
 		if (strcmp(z_repr, z_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | z_repr = \"%s\", should be \"%s\"\n", z_repr, z_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_minus_b() {
 		printf("  | testing Vector& operator - (const Vector &other)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double y_coord[] = {10.0, 20.0, 30.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double y_coord[] = {10.0, 20.0, 30.0};
 
 		Vector x(size, x_coord);
 		Vector y(size, y_coord);
 		Vector z = x - y;
 
-		const char *z_repr = z.repr();
+		char *z_repr = z.repr();
 		const char *z_repr_ref = "-9.000000 -18.000000 -27.000000";
 
 		if (strcmp(z_repr, z_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | z_repr = \"%s\", should be \"%s\"\n", z_repr, z_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_plus_u() {
 		printf("  | testing friend Vector operator + (const Vector &vector)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 		Vector z = +x;
 
-		const char *z_repr = z.repr();
+		char *z_repr = z.repr();
 		const char *z_repr_ref = "1.000000 2.000000 3.000000";
 
 		if (strcmp(z_repr, z_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | z_repr = \"%s\", should be \"%s\"\n", z_repr, z_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_minus_u() {
 		printf("  | testing friend Vector operator - (const Vector &vector)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(size, x_coord);
 		Vector z;
 		z = -x;
 
-		const char *z_repr = z.repr();
+		char *z_repr = z.repr();
 		const char *z_repr_ref = "-1.000000 -2.000000 -3.000000";
 
 		if (strcmp(z_repr, z_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | z_repr = \"%s\", should be \"%s\"\n", z_repr, z_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_plus_e() {
 		printf("  | testing Vector& operator += (const Vector &other)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double y_coord[] = {10.0, 20.0, 30.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double y_coord[] = {10.0, 20.0, 30.0};
 
 		Vector x(size, x_coord);
 		Vector y(size, y_coord);
 		x += y;
 
-		const char *x_repr = x.repr();
+		char *x_repr = x.repr();
 		const char *x_repr_ref = "11.000000 22.000000 33.000000";
-		const char *y_repr = y.repr();
+		char *y_repr = y.repr();
 		const char *y_repr_ref = "10.000000 20.000000 30.000000";
 
 		if (strcmp(x_repr, x_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | x_repr = \"%s\", should be \"%s\"\n", x_repr, x_repr_ref);
-			return 1;
-		}
-		if (strcmp(y_repr, y_repr_ref)) {
+			ret = 1;
+		} else if (strcmp(y_repr, y_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | y_repr = \"%s\", should be \"%s\"\n", y_repr, y_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_minus_e() {
 		printf("  | testing Vector& operator -= (const Vector &other)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double y_coord[] = {10.0, 20.0, 30.0};
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double y_coord[] = {10.0, 20.0, 30.0};
 
 		Vector x(size, x_coord);
 		Vector y(size, y_coord);
 		x -= y;
 
-		const char *x_repr = x.repr();
+		char *x_repr = x.repr();
 		const char *x_repr_ref = "-9.000000 -18.000000 -27.000000";
-		const char *y_repr = y.repr();
+		char *y_repr = y.repr();
 		const char *y_repr_ref = "10.000000 20.000000 30.000000";
 
 		if (strcmp(x_repr, x_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | x_repr = \"%s\", should be \"%s\"\n", x_repr, x_repr_ref);
-			return 1;
-		}
-		if (strcmp(y_repr, y_repr_ref)) {
+			ret = 1;
+		} else if (strcmp(y_repr, y_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | y_repr = \"%s\", should be \"%s\"\n", y_repr, y_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_mul_e() {
 		printf("  | testing Vector& operator *= (const double &a)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double a = 10;
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double a = 10;
 
 		Vector x(size, x_coord);
 		x *= a;
 
-		const char *x_repr = x.repr();
+		char *x_repr = x.repr();
 		const char *x_repr_ref = "10.000000 20.000000 30.000000";
 
 		if (strcmp(x_repr, x_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | x_repr = \"%s\", should be \"%s\"\n", x_repr, x_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_mul_vd() {
 		printf("  | testing Vector& operator * (const double &a) const\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double a = 10;
+		bool ret = 0;
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double a = 10;
 
 		Vector x(size, x_coord);
 		Vector y = x * a;
 
-		const char *y_repr = y.repr();
+		char *y_repr = y.repr();
 		const char *y_repr_ref = "10.000000 20.000000 30.000000";
 
 		if (strcmp(y_repr, y_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | y_repr = \"%s\", should be \"%s\"\n", y_repr, y_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_v_mul_dv() {
-		printf("  | testing "
-		  "friend Vector operator * (const double &a, const Vector &vector)\n");
-		const int size = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
-		const double a = 10;
+		printf("  | testing friend Vector operator * (const double &a, const Vector &vector)\n");
+		bool ret = 0;
+
+		int size = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
+		double a = 10;
 
 		Vector x(size, x_coord);
 		Vector y = a * x;
 
-		const char *y_repr = y.repr();
+		char *y_repr = y.repr();
 		const char *y_repr_ref = "10.000000 20.000000 30.000000";
 
 		if (strcmp(y_repr, y_repr_ref)) {
 			printf("  | failure\n");
 			printf("  | y_repr = \"%s\", should be \"%s\"\n", y_repr, y_repr_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_m_ctor_0() {
 		printf("  | testing Matrix()\n");
+		bool ret = 0;
 
 		Matrix m;
 
-		const int m_size = m.get_size();
-		const int m_size_ref = 0;
+		int m_size = m.get_size();
+		int m_size_ref = 0;
 
 		if (m_size != m_size_ref) {
 			printf("  | failure:\n");
 			printf("  | m_size = \"%d\", should be \"%d\"\n", m_size, m_size_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_m_ctor_i() {
 		printf("  | testing Matrix(const int size)\n");
+		bool ret = 0;
 
-		const int m_size_ref = 2;
+		int m_size_ref = 2;
 
 		Matrix m(m_size_ref);
 
-		const int m_size = m.get_size();
+		int m_size = m.get_size();
 
 		if (m_size != m_size_ref) {
 			printf("  | failure:\n");
 			printf("  | m_size = \"%d\", should be \"%d\"\n", m_size, m_size_ref);
-			return 1;
+			ret = 1;
 		}
 		for(int i = 0; i < m_size; ++i) {
 			for(int j = 0; j < m_size; ++j) {
 				if (m(i, j)) {
 					printf("  | failure:\n");
 					printf("  | m(%d, %d) != 0\n", i, j);
-					return 1;
+					ret = 1;
 				}
 			}
 		}
-		printf("  | success\n");
-		return 0;
+		if (!ret) {
+			printf("  | success\n");
+		}
+		return ret;
 	}
 
 	int _test_m_ctor_id() {
 		printf("  | testing Matrix(const int size, const double *value)\n");
+		bool ret = 0;
 		// also testing const double& operator () (const int row, const int col) const
 
-		const int m_size_ref = 2;
-		const double m_value[] = {3, 5, 7, 11};
+		int m_size_ref = 2;
+		double m_value[] = {3, 5, 7, 11};
 
 		Matrix m(m_size_ref, m_value);
 
@@ -485,7 +544,7 @@ namespace linear_algebra_test {
 		if (m_size != m_size_ref) {
 			printf("  | failure:\n");
 			printf("  | m_size = \"%d\", should be \"%d\"\n", m_size, m_size_ref);
-			return 1;
+			ret = 1;
 		}
 		for(int i = 0; i < m_size; ++i) {
 			for(int j = 0; j < m_size; ++j) {
@@ -493,19 +552,22 @@ namespace linear_algebra_test {
 				if (m(i, j) != v_ref) {
 					printf("  | failure:\n");
 					printf("  | m(%d, %d) != %lf\n", i, j, v_ref);
-					return 1;
+					ret = 1;
 				}
 			}
 		}
-		printf("  | success\n");
-		return 0;
+		if (!ret) {
+			printf("  | success\n");
+		}
+		return ret;
 	}
 
 	int _test_m_ctor_m() {
 		printf("  | testing Matrix(const Matrix &other)\n");
+		bool ret = 0;
 
-		const int size_ref = 2;
-		const double m_value[] = {3, 5, 7, 11};
+		int size_ref = 2;
+		double m_value[] = {3, 5, 7, 11};
 
 		Matrix a(size_ref, m_value);
 		Matrix b(a);
@@ -515,7 +577,7 @@ namespace linear_algebra_test {
 		if (b_size != size_ref) {
 			printf("  | failure:\n");
 			printf("  | m_size = \"%d\", should be \"%d\"\n", b_size, size_ref);
-			return 1;
+			ret = 1;
 		}
 		for(int i = 0; i < b_size; ++i) {
 			for(int j = 0; j < b_size; ++j) {
@@ -523,39 +585,45 @@ namespace linear_algebra_test {
 				if (b(i, j) != v_ref) {
 					printf("  | failure:\n");
 					printf("  | b(%d, %d) != %lf\n", i, j, v_ref);
-					return 1;
+					ret = 1;
 				}
 			}
 		}
-		printf("  | success\n");
-		return 0;
+		if (!ret) {
+			printf("  | success\n");
+		}
+		return ret;
 	}
 
 	int _test_m_get_size() {
 		printf("  | testing int get_size() const\n");
+		bool ret = 0;
 
-		const int x_size_ref = 3;
-		const double x_coord[] = {1.0, 2.0, 3.0};
+		int x_size_ref = 3;
+		double x_coord[] = {1.0, 2.0, 3.0};
 
 		Vector x(x_size_ref, x_coord);
 
-		const int x_size = x.get_size();
+		int x_size = x.get_size();
 
 		if (x_size != x_size_ref) {
 			printf("  | failure\n");
 			printf("  | x_size = \"%d\", should be \"%d\"\n", x_size, x_size_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_m_idx_v() {
 		printf("  | testing const double& operator () (const int row, const int col) const\n");
+		bool ret = 0;
 
-		const int m_size_ref = 2;
-		const double m_value[] = {3.0, 5.0, 7.0, 11.0};
-		const double m_value_ref[] = {13.0, 25.0, 37.0, 51.0};
+		int m_size_ref = 2;
+		double m_value[] = {3.0, 5.0, 7.0, 11.0};
+		double m_value_ref[] = {13.0, 25.0, 37.0, 51.0};
 
 		Matrix m(m_size_ref, m_value);
 
@@ -566,36 +634,42 @@ namespace linear_algebra_test {
 				if (m(i, j) != v_ref) {
 					printf("  | failure\n");
 					printf("  | m(%d, %d) != %lf\n", i, j, v_ref);
-					return 1;
+					ret = 1;
 				}
 			}
 		}
-		printf("  | success\n");
-		return 0;
+		if (!ret) {
+			printf("  | success\n");
+		}
+		return ret;
 	}
 
 	int _test_m_norm() {
 		printf("  | testing double norm() const\n");
-		const int m_size_ref = 2;
-		const double m_value[] = {3.0, 5.0, 7.0, 11.0};
-		const double norm_ref = m_value[2] + m_value[3];
+		bool ret = 0;
+		int m_size_ref = 2;
+		double m_value[] = {3.0, 5.0, 7.0, 11.0};
+		double norm_ref = m_value[2] + m_value[3];
 
 		Matrix m(m_size_ref, m_value);
 		double norm = m.norm();
 		if (norm != norm_ref) {
 			printf("  | failure\n");
 			printf("  | norm = %lf != %lf\n", norm, norm_ref);
-			return 1;
+			ret = 1;
+		} else {
+			printf("  | success\n");
+			ret = 0;
 		}
-		printf("  | success\n");
-		return 0;
+		return ret;
 	}
 
 	int _test_m_assignment() {
 		printf("  | testing Matrix& operator = (const Matrix &other)\n");
+		bool ret = 0;
 
-		const int size_ref = 2;
-		const double m_value[] = {3, 5, 7, 11};
+		int size_ref = 2;
+		double m_value[] = {3, 5, 7, 11};
 
 		Matrix a(size_ref, m_value);
 		Matrix b;
@@ -606,7 +680,7 @@ namespace linear_algebra_test {
 		if (b_size != size_ref) {
 			printf("  | failure:\n");
 			printf("  | m_size = \"%d\", should be \"%d\"\n", b_size, size_ref);
-			return 1;
+			ret = 1;
 		}
 		for(int i = 0; i < b_size; ++i) {
 			for(int j = 0; j < b_size; ++j) {
@@ -614,21 +688,24 @@ namespace linear_algebra_test {
 				if (b(i, j) != v_ref) {
 					printf("  | failure:\n");
 					printf("  | b(%d, %d) != %lf\n", i, j, v_ref);
-					return 1;
+					ret = 1;
 				}
 			}
 		}
-		printf("  | success\n");
-		return 0;
+		if (!ret) {
+			printf("  | success\n");
+		}
+		return ret;
 	}
 
 	int _test_m_mul() {
 		printf("  | testing Vector& operator * (const Vector &other) const\n");
+		bool ret = 0;
 
-		const int size_ref = 2;
-		const double m_value[] = {3, 5, 7, 11};
-		const double v_value[] = {2, 4};
-		const double f_value_ref[] = {26, 58};
+		int size_ref = 2;
+		double m_value[] = {3, 5, 7, 11};
+		double v_value[] = {2, 4};
+		double f_value_ref[] = {26, 58};
 
 		Matrix a(size_ref, m_value);
 		Vector v(size_ref, v_value);
@@ -639,18 +716,20 @@ namespace linear_algebra_test {
 		if (f_size != size_ref) {
 			printf("  | failure:\n");
 			printf("  | f_size = \"%d\", should be \"%d\"\n", f_size, size_ref);
-			return 1;
+			ret = 1;
 		}
 		for(int i = 0; i < size_ref; ++i) {
 			double v_ref = f_value_ref[i];
 			if (f(i) != v_ref) {
 				printf("  | failure:\n");
 				printf("  | f(%d) != %lf\n", i, v_ref);
-				return 1;
+				ret = 1;
 			}
 		}
-		printf("  | success\n");
-		return 0;
+		if (!ret) {
+			printf("  | success\n");
+		}
+		return ret;
 	}
 
 	int test() {

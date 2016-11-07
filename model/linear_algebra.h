@@ -152,22 +152,22 @@ public:
 	Vector operator + (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
-		Vector *sum = new Vector(*this);
+		Vector sum(*this);
 		for (int i = 0; i < _size; ++i) {
-			(*sum)(i) += other(i);
+			sum(i) += other(i);
 		}
-		return *sum;
+		return sum;
 	}
 
 // binary minus
 	Vector operator - (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
-		Vector *sum = new Vector(*this);
+		Vector sum(*this);
 		for (int i = 0; i < _size; ++i) {
-			(*sum)(i) -= other(i);
+			sum(i) -= other(i);
 		}
-		return *sum;
+		return sum;
 	}
 
 // unary plus
@@ -177,9 +177,9 @@ public:
 
 // unary minus
 	friend Vector operator - (const Vector &vector) {
-		Vector *neg = new Vector(vector.get_size());
-		(*neg) -= vector;
-		return *neg;
+		Vector neg(vector.get_size());
+		neg -= vector;
+		return neg;
 	}
 
 // addition
@@ -213,11 +213,11 @@ public:
 
 // multiplication (vector times double)
 	Vector operator * (const double &a) const {
-		Vector *mul = new Vector(*this);
+		Vector mul(*this);
 		for(int i = 0; i < _size; ++i) {
-			(*mul)(i) *= a;
+			mul(i) *= a;
 		}
-		return *mul;
+		return mul;
 	}
 
 // multiplication (double times vector)
@@ -226,7 +226,7 @@ public:
 	}
 
 // string representation
-	const char* repr() const {
+	char* repr() const {
 		assert(_is_ok());
 
 		if (!_size) {  // empty vector
