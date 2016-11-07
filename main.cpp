@@ -38,6 +38,7 @@ void test() {
 		int num_fails = module_test[i]();
 		cout << "===========================================================\n";
 		cout << num_fails << " fails in " << module_name[i] << "\n\n";
+		total_fails += num_fails;
 	}
 	cout << "total fails: " << total_fails << "\n";
 }
