@@ -676,7 +676,7 @@ namespace linear_algebra_test {
 
 		if (norm != norm_ref) {
 			cout << "  | failure\n";
-			cout << "  | norm = %lf != %lf\n", norm, norm_ref;
+			cout << "  | norm = " << norm << " != " << norm_ref << "\n";
 			ret = 1;
 		} else {
 			cout << "  | success\n";
@@ -791,12 +791,12 @@ namespace linear_algebra_test {
 
 		int num_fails = 0;
 		for (int i = 0; vector_tests[i]; ++i) {
-			cout << "  class Vector -- test #%d\n", i;
+			cout << "  class Vector -- test #" << i << "\n";
 			num_fails += vector_tests[i]();
 		}
 		cout << "-----------------------------------------------------------\n";
 		for (int i = 0; matrix_tests[i]; ++i) {
-			cout << "  class Matrix -- test #%d\n", i;
+			cout << "  class Matrix -- test #" << i << "\n";
 			num_fails += matrix_tests[i]();
 		}
 

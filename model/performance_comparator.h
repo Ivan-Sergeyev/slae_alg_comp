@@ -24,7 +24,7 @@ private:
 		}
 		// TODO: add timestamp using _log_start_time
 		// printf("[]: ", _log_start_time);
-		printf("%s");
+		printf("%s", msg);
 	}
 
 	// TODO:
