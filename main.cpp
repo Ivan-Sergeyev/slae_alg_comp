@@ -1,10 +1,10 @@
 #include <cstdio>
-#include <direct.h>
+//#include <direct.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-
+#include <unistd.h>
 #include "model/generic_method.h"
 #include "model/gauss_method.h"
 #include "model/jacobi_method.h"
@@ -107,10 +107,10 @@ int main(int argc, char **argv) {
 	printf("plot graph\n");
 	const char gnuplot_call[] = "gnuplot plot_converged.plt";
 
-	_chdir("./gnuplot/");
+	chdir("./gnuplot/");
 	system(gnuplot_call);
 	remove("fit.log");
-	_chdir("..");
+	chdir("..");
 
 // perform cleanup
 	printf("cleanup\n");
