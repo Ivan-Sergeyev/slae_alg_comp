@@ -127,7 +127,7 @@ public:
 	}
 
 // deep copy
-	Vector& operator = (const Vector &other) {
+	Vector operator = (const Vector &other) {
 		if (this != &other) {
 			_deep_copy(other);
 		}
@@ -149,7 +149,7 @@ public:
 	}
 
 // binary plus
-	Vector& operator + (const Vector &other) {
+	Vector operator + (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
 		Vector *sum = new Vector(*this);
@@ -160,7 +160,7 @@ public:
 	}
 
 // binary minus
-	Vector& operator - (const Vector &other) {
+	Vector operator - (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
 		Vector *sum = new Vector(*this);
@@ -183,7 +183,7 @@ public:
 	}
 
 // addition
-	Vector& operator += (const Vector &other) {
+	Vector operator += (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
 		for (int i = 0; i < _size; ++i) {
@@ -193,7 +193,7 @@ public:
 	}
 
 // subtraction
-	Vector& operator -= (const Vector &other) {
+	Vector operator -= (const Vector &other) {
 		assert(_is_ok());
 		assert(_size == other.get_size());
 		for (int i = 0; i < _size; ++i) {
@@ -203,7 +203,7 @@ public:
 	}
 
 // multiplication by a double
-	Vector& operator *= (const double &a) {
+	Vector operator *= (const double &a) {
 		assert(_is_ok());
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] *= a;
@@ -212,7 +212,7 @@ public:
 	}
 
 // multiplication (vector times double)
-	Vector& operator * (const double &a) const {
+	Vector operator * (const double &a) const {
 		Vector *mul = new Vector(*this);
 		for(int i = 0; i < _size; ++i) {
 			(*mul)(i) *= a;
@@ -388,7 +388,7 @@ public:
 	}
 
 // deep copy
-	Matrix& operator = (const Matrix &other) {
+	Matrix operator = (const Matrix &other) {
 		if (this != &other) {
 			_deep_copy(other);
 		}
@@ -396,7 +396,7 @@ public:
 	}
 
 // multiplication by a vector
-	Vector& operator * (const Vector &other) const {
+	Vector operator * (const Vector &other) const {
 		assert(_size == other.get_size());
 		Vector *result = new Vector(_size);
 		for (int i = 0; i < _size; ++i) {
@@ -460,15 +460,15 @@ public:
 		(*b)(k) -= (*b)(l)*coeff;
 	}
 
-	Vector& get_answer_from_triangle(Vector b) {
-		Vector* result = new Vector(_size);
+	Vector get_answer_from_triangle(const Vector &b) {
+		Vector result(_size);
 		double cash;
 		for (int j = _size-1; j >=0; j--){
 			cash = b(j);
-			for (int i = j+1; i < _size; i++) cash -= _value[j][i]*(*result)(i);
-			(*result)(j) = cash/_value[j][j];
+			for (int i = j+1; i < _size; i++) cash -= _value[j][i] * result(i);
+			result(j) = cash/_value[j][j];
 		}
-		return (*result);
+		return result;
 	}
 };
 

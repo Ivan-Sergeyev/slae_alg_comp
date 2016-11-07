@@ -56,7 +56,7 @@ int main(int argc, char **argv) {
 // setup
 	printf("setup\n");
 
-	const int num_sizes = 0;
+	const int num_sizes = 1;
 	int *sizes = new int [num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
 		sizes[i] = (i + 1) * 100 + 4000;

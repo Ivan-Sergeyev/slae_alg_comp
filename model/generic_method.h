@@ -17,7 +17,7 @@ private:
 
 	void _set_name(const char *name) {
 		assert(name);
-		int new_len = strlen(name);
+		int new_len = strlen(name) + 1;
 		if (_name_len != new_len) {
 			_delete();
 			_name = new char [new_len];
@@ -59,14 +59,14 @@ public:
 		return _name;
 	}
 
-	GenericMethod& operator = (const GenericMethod &other) {
+	GenericMethod operator = (const GenericMethod &other) {
 		if (this != &other) {
 			_deep_copy(other);
 		}
 		return *this;
 	}
 
-	virtual Vector& run(const Matrix &A, const Vector &f) const {}
+	virtual Vector run(const Matrix &A, const Vector &f) const {}
 };
 
 #endif  // __GENERIC_METHOD__
