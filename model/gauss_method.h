@@ -13,7 +13,7 @@ class GaussMethod : public GenericMethod {
 public:
 	GaussMethod() : GenericMethod("Gauss Method") {}
 
-	Vector& run(Matrix A, Vector f) const {
+	Vector& run(const Matrix &A, const Vector &f) const {
 		Matrix *M = new Matrix(A);
 		Vector *b = new Vector(f);
 		double coeff;
