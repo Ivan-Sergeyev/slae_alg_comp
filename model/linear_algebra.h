@@ -29,7 +29,7 @@ private:
 	}
 
 // change vector's size, coordinates might change
-	void _resize(const int size) {
+	void _resize(const int &size) {
 		if (_size == size) {
 			return;
 		}
@@ -39,7 +39,7 @@ private:
 	}
 
 // make a copy of an array of coordinates
-	void _deep_copy(const int size, const double *value) {
+	void _deep_copy(const int &size, const double *value) {
 		assert(!size || value);
 		_resize(size);
 		for (int i = 0; i < _size; ++i) {
@@ -64,7 +64,7 @@ private:
 	}
 
 // hard check if idx is in bounds
-	void _bounds_check(const int idx) const {
+	void _bounds_check(const int &idx) const {
 		assert(idx >= 0);
 		assert(idx < _size);
 	}
@@ -73,12 +73,12 @@ public:
 // constructors
 	Vector() : _size(0), _coord(0) {}
 
-	Vector(const int size) : _size(0), _coord(0) {
+	Vector(const int &size) : _size(0), _coord(0) {
 		_resize(size);
 		_fill_zero();
 	}
 
-	Vector(const int size, const double *value) : _size(0), _coord(0) {
+	Vector(const int &size, const double *value) : _size(0), _coord(0) {
 		_deep_copy(size, value);
 	}
 
@@ -97,14 +97,14 @@ public:
 	}
 
 // read access to coordinates
-	const double& operator () (const int idx) const {
+	const double& operator () (const int &idx) const {
 		assert(_is_ok());
 		_bounds_check(idx);
 		return _coord[idx];
 	}
 
 // write access to coordinates
-	double& operator () (const int idx) {
+	double& operator () (const int &idx) {
 		assert(_is_ok());
 		_bounds_check(idx);
 		return _coord[idx];
@@ -265,7 +265,7 @@ private:
 	}
 
 // make a copy of an array of values
-	void _deep_copy(const int size, const double *value) {
+	void _deep_copy(const int &size, const double *value) {
 		assert(!size || value);
 		_resize(size);
 		for (int i = 0; i < _size; ++i) {
@@ -310,7 +310,7 @@ private:
 	}
 
 // change matrix' size, values might change
-	void _resize(const int size) {
+	void _resize(const int &size) {
 		if (_size == size) {
 			return;
 		}
@@ -323,7 +323,7 @@ private:
 	}
 
 // hard check if row and col are in bounds
-	void _bounds_check(const int row, const int col) const {
+	void _bounds_check(const int &row, const int &col) const {
 		assert(row >= 0);
 		assert(row < _size);
 		assert(col >= 0);
@@ -339,7 +339,7 @@ public:
 		_fill_zero();
 	}
 
-	Matrix(const int size, const double *value) : _size(0), _value(0) {
+	Matrix(const int &size, const double *value) : _size(0), _value(0) {
 		_deep_copy(size, value);
 	}
 
@@ -358,14 +358,14 @@ public:
 	}
 
 // read access to values
-	const double& operator () (const int row, const int col) const {
+	const double& operator () (const int &row, const int &col) const {
 		assert(_is_ok());
 		_bounds_check(row, col);
 		return _value[row][col];
 	}
 
 // write access to values
-	double& operator () (const int row, const int col) {
+	double& operator () (const int &row, const int &col) {
 		assert(_is_ok());
 		_bounds_check(row, col);
 		return _value[row][col];
