@@ -1,37 +1,42 @@
 #ifndef __PERFORMANCE_COMPARATOR__
 #define __PERFORMANCE_COMPARATOR__
 
+#include <algorithm>
+#include <iostream>
+#include <fstream>
 #include <stdlib.h>
+#include <string>
 #include <time.h>
 
 #include "generic_method.h"
 #include "linear_algebra.h"
 
 
-const int BUFFER_LEN = 200;
-
+using std::cout;
+using std::fstream;
+using std::string;
+using std::to_string;
 
 class PerformanceComparator {
 private:
 	clock_t _log_start_time;
 
-	void _write_log(const char *msg, const int &level=0) {
-		// TODO: use log file
+	void _write_log(string msg, int level=0) {
+		// TODO: use log file (fstream)
 		if (level == 1) {
-			printf("| ");
+			cout << "| ";
 		} else if (level == 2) {
-			printf("|-");
+			cout << "|-";
 		}
 		// TODO: add timestamp using _log_start_time
-		// printf("[]: ", _log_start_time);
-		printf("%s", msg);
+		cout << msg;
 	}
 
 	// TODO:
 	//  * move generators to separate files
 	//  * pass generator functions as arguments to run_comparison
 
-	Matrix _generate_random_matrix(const int &size) {
+	Matrix _generate_random_matrix(int size) {
 		int n = size * size;
 		double *values = new double[n];
 		for(int i = 0; i < n; ++i) {
@@ -53,7 +58,7 @@ private:
 		}
 	}
 
-	Vector _generate_random_vector(const int &size) {
+	Vector _generate_random_vector(int size) {
 		double *coords = new double[size];
 		for(int i = 0; i < size; ++i) {
 			coords[i] = rand();
@@ -64,7 +69,7 @@ private:
 	}
 
 	// // read vector from file
-	// Vector& _read_vector(FILE* file, const int &size){ // check for work
+	// Vector& _read_vector(FILE* file, int size){ // check for work
 	// 	double *coords = new double[size];
 	// 	int errc;
  //    	for (int j = 0; j < size; j++) {
@@ -77,7 +82,7 @@ private:
 	// }
 
 	// //read matrix from file
-	// Matrix& _read_matrix(FILE* file, const int &size) { //check for work
+	// Matrix& _read_matrix(FILE* file, int size) { //check for work
 	// 	int n = size * size;
 	// 	double *values = new double[n];
 	// 	for(int i = 0; i < n; ++i) {
@@ -102,12 +107,9 @@ private:
 public:
 	PerformanceComparator() {}
 
-	void run_comparison(const int &num_methods, GenericMethod **methods,
-						const int &num_sizes, const int *sizes,
-						const int &num_runs, const char *data_filename_format) {
-		char *data_filename = new char[BUFFER_LEN];
-		char *verdict = new char[20];
-
+	void run_comparison(int num_methods, GenericMethod **methods,
+						int num_sizes, const int *sizes,
+						int num_runs, const char *data_filename_format) {
 		Matrix A;
 		Vector f;
 		Vector res;
@@ -123,32 +125,35 @@ public:
 
 				for (int m_idx = 0; m_idx < num_methods; ++m_idx)
 				{
-					printf("- running %s on matrix size %d\n",
-						methods[m_idx]->get_name(), size);
+					string msg =
+						string("- running ") + methods[m_idx]->get_name() +
+						" on matrix size " + to_string(size) + "\n";
+					_write_log(msg, 1);
+
 					time_t time = -clock();
 					res = methods[m_idx]->run(A, f);
 					time += clock();
 					double dtime = ((double) time) / CLOCKS_PER_SEC;
 
-					verdict[0] = 0;
+					string verdict;
 					if (res.get_size() == size) {
-						sprintf(verdict, "converged");
+						verdict = string("converged");
 					} else {
-						sprintf(verdict, "diverged");
+						verdict = string("diverged");
 					}
 
-					data_filename[0] = 0;
-					sprintf(data_filename, data_filename_format,
-							verdict, methods[m_idx]->get_name());
+					// todo: use data_filename_format
+					string data_filename =
+						string("./data/data_") + verdict + string("_") +
+						methods[m_idx]->get_name() + string(".txt");
 
-					FILE *data_file = fopen(data_filename, "a");
-					fprintf(data_file, "%d %lf\n", size, dtime);
-					fclose(data_file);
+					fstream data_file;
+					data_file.open(data_filename, fstream::out | fstream::app);
+					data_file << size << " " << dtime << "\n";
+					data_file.close();
 				}
 			}
 		}
-		delete[] data_filename;
-		delete[] verdict;
 	}
 };
 

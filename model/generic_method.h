@@ -1,48 +1,40 @@
 #ifndef __GENERIC_METHOD__
 #define __GENERIC_METHOD__
 
-#include <string.h>
+#include <algorithm>
+#include <string>
 
 #include "linear_algebra.h"
 
 
+using std::string;
+using std::to_string;
+
+
 class GenericMethod {
 private:
-	int _name_len;
-	char *_name;
+	string _name;
 
 	bool _is_ok() const {
-		return !_name_len || _name;
+		return _name.length() >= 0;
 	}
 
-	void _set_name(const char *name) {
-		assert(name);
-		int new_len = strlen(name) + 1;
-		if (_name_len != new_len) {
-			_delete();
-			_name = new char [new_len];
-		}
-		strcpy(_name, name);
-		_name_len = new_len;
+	void _set_name(string name) {
+		_name = name;
 	}
 
 	void _deep_copy(const GenericMethod &other) {
-		const char *new_name = other.get_name();
-		_set_name(new_name);
+		_set_name(other.get_name());
 	}
 
 	void _delete() {
-		if (_name) {
-			delete[] _name;
-		}
-		_name = 0;
-		_name_len = 0;
+		_name = string();
 	}
 
 public:
-	GenericMethod() : _name_len(0), _name(0) {}
+	GenericMethod() : _name() {}
 
-	GenericMethod(const char *name) : _name_len(0), _name(0) {
+	GenericMethod(string name) : _name() {
 		_set_name(name);
 	}
 
@@ -50,11 +42,11 @@ public:
 		_delete();
 	}
 
-	void set_name(const char *name) {
+	void set_name(string name) {
 		_set_name(name);
 	}
 
-	const char* get_name() const {
+	string get_name() const {
 		assert(_is_ok());
 		return _name;
 	}
@@ -66,7 +58,9 @@ public:
 		return *this;
 	}
 
-	virtual Vector run(const Matrix &A, const Vector &f) const {}
+	virtual Vector run(const Matrix &A, const Vector &f) const {
+		return Vector();
+	}
 };
 
 #endif  // __GENERIC_METHOD__

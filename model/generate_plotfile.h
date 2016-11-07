@@ -39,7 +39,7 @@ void generate_plotfile(const char *plot_filename, const char *graph_filename,
 
 	char *data_relpath = new char [FILENAME_BUFFER_LEN];
 	for(int i = 0; i < num_methods; ++i) {
-		const char *method_name = methods[i]->get_name();
+		const char *method_name = methods[i]->get_name().c_str();
 
 		data_relpath[0] = 0;
 		sprintf(data_relpath, data_filename_format, method_name);

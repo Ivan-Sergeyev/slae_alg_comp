@@ -3,8 +3,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
 #include <unistd.h>
+
 #include "model/generic_method.h"
 #include "model/gauss_method.h"
 #include "model/jacobi_method.h"
@@ -26,20 +26,20 @@ void test() {
 	typedef int (*test_funcion_pointer)();
 
 	const int num_modules = 1;
-	const char module_name[num_modules][20] = {"linear_algebra"};
+	string module_name[num_modules] = {string("linear_algebra")};
 	test_funcion_pointer module_test[num_modules] =
 		{linear_algebra_test::test};
 
 	int total_fails = 0;
 	for (int i = 0; i < num_modules; ++i)
 	{
-		printf("testing %s\n", module_name[i]);
-		printf("===========================================================\n");
+		cout << "testing " << module_name[i] << "\n";
+		cout << "===========================================================\n";
 		int num_fails = module_test[i]();
-		printf("===========================================================\n");
-		printf("%d fails in %s\n\n", num_fails, module_name[i]);
+		cout << "===========================================================\n";
+		cout << num_fails << " fails in " << module_name[i] << "\n\n";
 	}
-	printf("total fails: %d\n", total_fails);
+	cout << "total fails: " << total_fails << "\n";
 }
 
 #endif // NDEBUG
@@ -75,13 +75,13 @@ int main(int argc, char **argv) {
 
 	GenericMethod **methods = new GenericMethod* [num_methods];
 	methods[0] = &jacobi_method;
-	printf("added %s\n", methods[0]->get_name());
+	cout << "added " << methods[0]->get_name() << "\n";
 	methods[1] = &gauss_seidel_method;
-	printf("added %s\n", methods[1]->get_name());
+	cout << "added " << methods[1]->get_name() << "\n";
 	methods[2] = &lower_relaxation_method;
-	printf("added %s\n", methods[2]->get_name());
+	cout << "added " << methods[2]->get_name() << "\n";
 	methods[3] = &upper_relaxation_method;
-	printf("added %s\n", methods[3]->get_name());
+	cout << "added " << methods[3]->get_name() << "\n";
 
 // perform measurements
 	printf("measurements\n");
