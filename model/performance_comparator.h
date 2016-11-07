@@ -65,6 +65,43 @@ private:
 		return *v;
 	}
 
+	// read vector from file
+	Vector& _read_vector(FILE* file, const int &size){ // check for work
+		double *coords = new double[size];
+		int errc;
+    	for (int j = 0; j < size; j++) {
+    		errc = fscanf(file, "%lf", &coords[j]);
+    		if ((errc == EOF) || (errc == 0)) return 1;
+    	}
+    	Vector *v = new Vector(size, coords);
+    	delete[] coords;
+    	return *v;
+	}
+
+	//read matrix from file
+	Matrix& _read_matrix(FILE* file, const int &size) { //check for work
+		int n = size * size;
+		double *values = new double[n];
+		for(int i = 0; i < n; ++i) {
+			errc = fscanf(file, &value[i]);
+			if ((errc == EOF) || (errc == 0)) return 1;
+		}
+		Matrix *m = new Matrix(size, values);
+		delete[] values;
+		return *m;
+	}
+
+	// check that A•answer=b with accurace epsilon (max delta = epsilon)      1 - good; 0 - bad
+	int _check_answer(const Vector &answer, const Matrix &M, const Vector &b, const double &epsilon){
+    Vector check = M * answer;
+    double max = 0;
+    for (int i = 0; i < result.get_size(); i++) if (std::abs(check(i)-result(i)) > max) max = std::abs(check(i)-result(i));
+    delete &check;
+    if (max < epsilon) return 1;
+    return 0;
+}
+
+
 public:
 	PerformanceComparator() {}
 
@@ -78,7 +115,7 @@ public:
 		Vector f;
 		Vector res;
 
-		_start_time = clock();
+		// _start_time = clock(); // for what?
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
 			int size = sizes[s_idx];
