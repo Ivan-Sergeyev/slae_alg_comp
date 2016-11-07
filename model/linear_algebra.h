@@ -97,7 +97,7 @@ public:
 	}
 
 // read access to coordinates
-	const double& operator () (const int &idx) const {
+	const double operator () (const int &idx) const {
 		assert(_is_ok());
 		_bounds_check(idx);
 		return _coord[idx];
@@ -358,7 +358,7 @@ public:
 	}
 
 // read access to values
-	const double& operator () (const int &row, const int &col) const {
+	const double operator () (const int &row, const int &col) const {
 		assert(_is_ok());
 		_bounds_check(row, col);
 		return _value[row][col];

@@ -29,8 +29,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] x_repr;
 		return ret;
 	}
 
@@ -50,8 +51,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] x_repr;
 		return ret;
 	}
 
@@ -72,8 +74,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] x_repr;
 		return ret;
 	}
 
@@ -95,8 +98,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] z_repr;
 		return ret;
 	}
 
@@ -116,7 +120,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -139,7 +142,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -163,7 +165,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -185,7 +186,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -209,8 +209,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] z_repr;
 		return ret;
 	}
 
@@ -242,7 +243,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -267,8 +267,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] z_repr;
 		return ret;
 	}
 
@@ -292,8 +293,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] z_repr;
 		return ret;
 	}
 
@@ -315,8 +317,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] z_repr;
 		return ret;
 	}
 
@@ -339,8 +342,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] z_repr;
 		return ret;
 	}
 
@@ -370,8 +374,10 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] x_repr;
+		delete[] y_repr;
 		return ret;
 	}
 
@@ -401,8 +407,10 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] x_repr;
+		delete[] y_repr;
 		return ret;
 	}
 
@@ -425,8 +433,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] x_repr;
 		return ret;
 	}
 
@@ -449,8 +458,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] y_repr;
 		return ret;
 	}
 
@@ -474,8 +484,9 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
+
+		delete[] y_repr;
 		return ret;
 	}
 
@@ -494,7 +505,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -612,7 +622,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -659,7 +668,6 @@ namespace linear_algebra_test {
 			ret = 1;
 		} else {
 			printf("  | success\n");
-			ret = 0;
 		}
 		return ret;
 	}
@@ -705,12 +713,14 @@ namespace linear_algebra_test {
 		int size_ref = 2;
 		double m_value[] = {3, 5, 7, 11};
 		double v_value[] = {2, 4};
-		double f_value_ref[] = {26, 58};
 
 		Matrix a(size_ref, m_value);
 		Vector v(size_ref, v_value);
 
 		Vector f(a * v);
+
+		char *f_repr = f.repr();
+		const char *f_repr_ref = "26.000000 58.000000";
 
 		int f_size = f.get_size();
 		if (f_size != size_ref) {
@@ -718,17 +728,16 @@ namespace linear_algebra_test {
 			printf("  | f_size = \"%d\", should be \"%d\"\n", f_size, size_ref);
 			ret = 1;
 		}
-		for(int i = 0; i < size_ref; ++i) {
-			double v_ref = f_value_ref[i];
-			if (f(i) != v_ref) {
-				printf("  | failure:\n");
-				printf("  | f(%d) != %lf\n", i, v_ref);
-				ret = 1;
-			}
+		if (strcmp(f_repr, f_repr_ref)) {
+			printf("  | failure:\n");
+			printf("  | f = %s != %s\n", f_repr, f_repr_ref);
+			ret = 1;
 		}
 		if (!ret) {
 			printf("  | success\n");
 		}
+
+		delete[] f_repr;
 		return ret;
 	}
 
