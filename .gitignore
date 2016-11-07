@@ -5,3 +5,8 @@
 # no bat or batch files
 *.bat
 *.sh
+
+# no results
+gnuplot/
+data/
+graphs/

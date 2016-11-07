@@ -66,7 +66,7 @@ public:
 		return *this;
 	}
 
-	virtual Vector run(Matrix A, Vector f) const {}
+	virtual Vector& run(const Matrix &A, const Vector &f) const {}
 };
 
 #endif  // __GENERIC_METHOD__

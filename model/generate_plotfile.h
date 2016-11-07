@@ -7,10 +7,9 @@
 const int FILENAME_BUFFER_LEN = 200;
 
 
-void generate_plotfile(const char *plot_filename, const char *plot_dir,
-					   const char *graphs_rdir, const char *graph_filename,
-					   const char *data_rdir, const char *data_filename_format,
-					   const int num_methods, const GenericMethod *methods) {
+void generate_plotfile(const char *plot_filename, const char *graph_filename,
+					   const char *data_filename_format,
+					   const int num_methods, GenericMethod **methods) {
 	const char plot_preamble[] =
 		"reset\n\n"
 		"set output \"%s\"\n"
@@ -34,35 +33,22 @@ void generate_plotfile(const char *plot_filename, const char *plot_dir,
 		"\tf_%d(x) with lines "
 		"lw 1 lt 1 lc %d notitle";
 
-	char *plot_relpath = new char [FILENAME_BUFFER_LEN];
-	char *pr = plot_relpath;
-	pr[0] = 0;
-	pr += sprintf(pr, plot_dir);
-	sprintf(pr, plot_filename);
+	FILE *plot_file = fopen(plot_filename, "w");
 
-	char *graph_relpath = new char [FILENAME_BUFFER_LEN];
-	char *gr = graph_relpath;
-	gr[0] = 0;
-	gr += sprintf(gr, graphs_rdir);
-	sprintf(gr, graph_filename);
+	fprintf(plot_file, plot_preamble, graph_filename);
 
-	FILE *plot_file = fopen(plot_relpath, "w");
-
-	fprintf(plot_file, plot_preamble, graph_relpath);
-
+	char *data_relpath = new char [FILENAME_BUFFER_LEN];
 	for(int i = 0; i < num_methods; ++i) {
-		const char *method_name = methods[i].get_name();
+		const char *method_name = methods[i]->get_name();
 
-		char *data_relpath = new char [FILENAME_BUFFER_LEN];
-		char *dr = data_relpath;
-		dr[0] = 0;
-		dr += sprintf(dr, data_rdir);
-		sprintf(dr, data_filename_format, method_name);
+		data_relpath[0] = 0;
+		sprintf(data_relpath, data_filename_format, method_name);
 
 		fprintf(plot_file, method_format_string,
 			i, data_relpath, i, method_name,
 			i, i, i, i, i, i, i, i, i, i, i, i);
 	}
+	delete[] data_relpath;
 
 	fprintf(plot_file, "plot \\\n");
 	for(int i = 0; i < num_methods - 1; ++i) {
