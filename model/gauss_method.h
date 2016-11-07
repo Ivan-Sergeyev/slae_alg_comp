@@ -26,7 +26,10 @@ public:
 				M->sub(b, i, j, coeff);
 			}
 		}
-		return M->get_answer_from_triangle(*b);
+		Vector* answer = &M->get_answer_from_triangle(*b);
+		delete M;
+		delete b;
+		return *answer;
 	}
 };
 
