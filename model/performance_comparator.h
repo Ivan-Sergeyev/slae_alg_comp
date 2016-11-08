@@ -68,7 +68,7 @@ private:
 		delete[] coords;
 		return v;
 	}
-
+/*
 	 // read vector from file
 	 Vector& _read_vector(FILE* file, int size){ // check for work
 	 	double *coords = new double[size];
@@ -104,7 +104,7 @@ private:
     	if (max < epsilon) return 1;
     	return 0;
 	}
-
+*/
 public:
 	PerformanceComparator() {}
 
