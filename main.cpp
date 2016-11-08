@@ -55,9 +55,9 @@ int main(int argc, char **argv) {
 #endif  // NDEBUG
 
 // setup
-	printf("setup\n");
+	printf("perform setup\n");
 
-	const int num_sizes = 1;
+	const int num_sizes = 4;
 	int sizes[num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
 		sizes[i] = i * 100 + 100;
@@ -86,9 +86,9 @@ int main(int argc, char **argv) {
 	cout << "added " << methods[3]->get_name() << "\n";
 	methods[4] = &gauss_method;
 	cout << "added " << methods[4]->get_name() << "\n";
-	
+
 // perform measurements
-	printf("measurements\n");
+	printf("perform measurements\n");
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
 	PerformanceComparator p_comp;
@@ -96,28 +96,36 @@ int main(int argc, char **argv) {
 						  num_runs, data_filename_format);
 
 // prepare plot and run gnuplot
-	printf("generate plotfile\n");
+	printf("generate plotfiles\n");
 
 	// beginstab
-	string plot_full_path = string("./gnuplot/plot_converged.plt"),
-		   graph_rel_path = string("../graphs/graph_converged.png"),
-		   data_filename_relformat = string("../data/data_converged_%s.txt");
+	string plot_all = string("./gnuplot/plot_all.plt"),
+		   graph_all_rel = string("../graphs/graph_all.png"),
+		   data_format_rel = string("../data/data_converged_%s.txt");
 	// endstab
 
-	generate_plotfile(plot_full_path, graph_rel_path,
-					  data_filename_relformat, num_methods, methods);
+	generate_plotfile(plot_all, graph_all_rel,
+					  data_format_rel, num_methods, methods);
+
+	string plot_num = string("./gnuplot/plot_num.plt"),
+		   graph_num_rel = string("../graphs/graph_num.png");
+
+	generate_plotfile(plot_num, graph_num_rel,
+					  data_format_rel, num_methods - 1, methods);
 
 // run gnuplot with plot_dir as current directory
-	printf("plot graph\n");
-	const char gnuplot_call[] = "gnuplot plot_converged.plt";
+	printf("plot graphs\n");
+	const char gnuplot_call_all[] = "gnuplot plot_all.plt";
+	const char gnuplot_call_num[] = "gnuplot plot_num.plt";
 
 	chdir("./gnuplot/");
-	system(gnuplot_call);
+	system(gnuplot_call_all);
+	system(gnuplot_call_num);
 	remove("fit.log");
 	chdir("..");
 
 // perform cleanup
-	printf("cleanup\n");
+	printf("perform cleanup\n");
 	delete[] methods;
 
 	printf("done\n");
