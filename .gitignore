@@ -7,6 +7,11 @@
 *.sh
 
 # no results
-gnuplot/
-data/
-graphs/
+gnuplot/*
+data/*
+graphs/*
+
+# but keep folders for results
+!gnuplot/.gitkeep
+!data/.gitkeep
+!graphs/.gitkeep
