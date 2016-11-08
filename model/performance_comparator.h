@@ -148,8 +148,12 @@ public:
 						string("./data/data_") + verdict + string("_") +
 						methods[m_idx]->get_name() + string(".txt");
 
-					fstream data_file;
-					data_file.open(data_filename, fstream::out | fstream::app);
+					fstream data_file(data_filename, fstream::out | fstream::app);
+					if (!(data_file.is_open())) {
+						cout << "Error opening data file \"" << data_filename << "\"\n";
+						cout << "Aborting\n";
+						return;
+					}
 					data_file << size << " " << dtime << "\n";
 					data_file.close();
 				}

@@ -14,8 +14,12 @@ using std::string;
 void generate_plotfile(string plot_filename, string graph_filename,
 					   string data_filename_format,
 					   const int num_methods, GenericMethod **methods) {
-	fstream plot_file;
-	plot_file.open(plot_filename, fstream::out);
+	fstream plot_file(plot_filename, fstream::out);
+	if (!plot_file.is_open()) {
+		cout << "Error opening plot file \"" << plot_filename << "\"\n";
+		cout << "Aborting\n";
+		return;
+	}
 
 	plot_file <<
 		"reset\n\n"
