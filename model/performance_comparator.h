@@ -17,6 +17,7 @@ using std::fstream;
 using std::string;
 using std::to_string;
 
+
 class PerformanceComparator {
 private:
 	clock_t _log_start_time;
@@ -109,7 +110,7 @@ public:
 
 	void run_comparison(int num_methods, GenericMethod **methods,
 						int num_sizes, const int *sizes,
-						int num_runs, const char *data_filename_format) {
+						int num_runs, string data_filename_format) {
 		Matrix A;
 		Vector f;
 		Vector res;

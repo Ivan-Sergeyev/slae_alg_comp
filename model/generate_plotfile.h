@@ -1,18 +1,25 @@
 #ifndef __GENERATE_PLOTFILE__
 #define __GENERATE_PLOTFILE__
 
+#include <fstream>
+#include <string>
+
 #include "generic_method.h"
 
 
-const int FILENAME_BUFFER_LEN = 200;
+using std::fstream;
+using std::string;
 
 
-void generate_plotfile(const char *plot_filename, const char *graph_filename,
-					   const char *data_filename_format,
+void generate_plotfile(string plot_filename, string graph_filename,
+					   string data_filename_format,
 					   const int num_methods, GenericMethod **methods) {
-	const char plot_preamble[] =
+	fstream plot_file;
+	plot_file.open(plot_filename, fstream::out);
+
+	plot_file <<
 		"reset\n\n"
-		"set output \"%s\"\n"
+		"set output \"" << graph_filename << "\"\n"
 		"set terminal pngcairo dashed enhanced font \"Sans,12\" size 1000,600\n"
 		"set encoding utf8\n\n"
 		"set key top left\n"
@@ -20,47 +27,38 @@ void generate_plotfile(const char *plot_filename, const char *graph_filename,
 		"set xlabel \"N\" offset 0,0.5,0\n"
 		"set ylabel \"T, s\" offset 2,0,0\n\n"
 		"set fit quiet\n\n";
-	const char method_format_string[] =
-		"file_%d = \"%s\"\n"
-		"title_%d = \"%s\"\n"
-		"a_%d = 1; b_%d = 1; c_%d = 1\n"
-		"f_%d(x) = a_%d*x**2 + b_%d*x + c_%d\n"
-		"fit f_%d(x) file_%d using 1:2 "
-		"via a_%d, b_%d, c_%d\n\n";
-	const char plot_format_string[] =
-		"\tfile_%d using 1:2 with points "
-		"lw 1 lt 1 lc %d title title_%d,\\\n"
-		"\tf_%d(x) with lines "
-		"lw 1 lt 1 lc %d notitle";
 
-	FILE *plot_file = fopen(plot_filename, "w");
-
-	fprintf(plot_file, plot_preamble, graph_filename);
-
-	char *data_relpath = new char [FILENAME_BUFFER_LEN];
 	for(int i = 0; i < num_methods; ++i) {
-		const char *method_name = methods[i]->get_name().c_str();
+		string method_name = methods[i]->get_name();
 
-		data_relpath[0] = 0;
-		sprintf(data_relpath, data_filename_format, method_name);
+		// TODO: use format string
+		string data_relpath = string("../data/data_converged_") +
+							  method_name + string(".txt");
 
-		fprintf(plot_file, method_format_string,
-			i, data_relpath, i, method_name,
-			i, i, i, i, i, i, i, i, i, i, i, i);
+		plot_file <<
+			"file_" << i << " = \"" << data_relpath << "\"\n"
+			"title_" << i << " = \"" << method_name << "\"\n"
+			"a_" << i << " = 1; b_" << i << " = 1; c_" << i << " = 1\n"
+			"f_" << i << "(x) = a_" << i << "*x**2 + b_" << i << "*x + c_" << i << "\n"
+			"fit f_" << i << "(x) file_" << i << " using 1:2 "
+			"via a_" << i << ", b_" << i << ", c_" << i << "\n\n";
 	}
-	delete[] data_relpath;
 
-	fprintf(plot_file, "plot \\\n");
-	for(int i = 0; i < num_methods - 1; ++i) {
+	plot_file << "plot \\\n";
+	for(int i = 0; i < num_methods; ++i) {
 		int idx = i;
-		fprintf(plot_file, plot_format_string, idx, idx, idx, idx, idx);
-		fprintf(plot_file, ",\\\n");
+		plot_file <<
+			"\tfile_" << idx << " using 1:2 with points "
+			"lw 1 lt 1 lc " << idx << " title title_" << idx << ",\\\n"
+			"\tf_" << idx << "(x) with lines "
+			"lw 1 lt 1 lc " << idx << " notitle";
+			if (i < num_methods - 1) {
+				plot_file << ",\\";
+			}
+			plot_file << "\n";
 	}
-	int idx = num_methods - 1;
-	fprintf(plot_file, plot_format_string, idx, idx, idx, idx, idx);
-	fprintf(plot_file, "\n");
 
-	fclose(plot_file);
+	plot_file.close();
 }
 
 #endif  // __GENERATE_PLOTFILE__

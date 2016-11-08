@@ -58,17 +58,17 @@ int main(int argc, char **argv) {
 	printf("setup\n");
 
 	const int num_sizes = 1;
-	int *sizes = new int [num_sizes];
+	int sizes[num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
 		sizes[i] = i * 100 + 1000;
 	}
 
 	const int num_runs = 10;
 
-	const double tolerance = 0.01;
+	const double tolerance = 0.0078125;  // 2^{-7}
 	const int max_faults = 20;
-	const int num_methods = 4;
 
+	const int num_methods = 4;
 	JacobiMethod jacobi_method(tolerance, max_faults);
 	OverrelaxationMethod gauss_seidel_method(1.0, tolerance, max_faults),
 						 lower_relaxation_method(0.5, tolerance, max_faults),
@@ -86,7 +86,7 @@ int main(int argc, char **argv) {
 
 // perform measurements
 	printf("measurements\n");
-	const char data_filename_format[] = "./data/data_%s_%s.txt";
+	string data_filename_format = string("./data/data_%s_%s.txt");
 
 	PerformanceComparator p_comp;
 	p_comp.run_comparison(num_methods, methods, num_sizes, sizes,
@@ -96,9 +96,9 @@ int main(int argc, char **argv) {
 	printf("generate plotfile\n");
 
 	// beginstab
-	const char plot_full_path[] = "./gnuplot/plot_converged.plt",
-			   graph_rel_path[] = "../graphs/graph_converged.png",
-			   data_filename_relformat[] = "../data/data_converged_%s.txt";
+	string plot_full_path = string("./gnuplot/plot_converged.plt"),
+		   graph_rel_path = string("../graphs/graph_converged.png"),
+		   data_filename_relformat = string("../data/data_converged_%s.txt");
 	// endstab
 
 	generate_plotfile(plot_full_path, graph_rel_path,
@@ -115,7 +115,6 @@ int main(int argc, char **argv) {
 
 // perform cleanup
 	printf("cleanup\n");
-	delete[] sizes;
 	delete[] methods;
 
 	printf("done\n");
