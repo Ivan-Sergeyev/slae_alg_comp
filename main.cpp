@@ -68,11 +68,12 @@ int main(int argc, char **argv) {
 	const double tolerance = 0.0078125;  // 2^{-7}
 	const int max_faults = 20;
 
-	const int num_methods = 4;
+	const int num_methods = 5;
 	JacobiMethod jacobi_method(tolerance, max_faults);
 	OverrelaxationMethod gauss_seidel_method(1.0, tolerance, max_faults),
 						 lower_relaxation_method(0.5, tolerance, max_faults),
 						 upper_relaxation_method(1.5, tolerance, max_faults);
+	GaussMethod gauss_method;
 
 	GenericMethod **methods = new GenericMethod* [num_methods];
 	methods[0] = &jacobi_method;
@@ -83,7 +84,9 @@ int main(int argc, char **argv) {
 	cout << "added " << methods[2]->get_name() << "\n";
 	methods[3] = &upper_relaxation_method;
 	cout << "added " << methods[3]->get_name() << "\n";
-
+	methods[4] = &gauss_method;
+	cout << "added " << methods[4]->get_name() << "\n";
+	
 // perform measurements
 	printf("measurements\n");
 	string data_filename_format = string("./data/data_%s_%s.txt");
