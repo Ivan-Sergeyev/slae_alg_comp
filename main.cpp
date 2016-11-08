@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
 	const int num_sizes = 1;
 	int sizes[num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
-		sizes[i] = i * 100 + 1000;
+		sizes[i] = i * 100 + 100;
 	}
 
 	const int num_runs = 10;

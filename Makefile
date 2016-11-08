@@ -2,10 +2,7 @@ all: main
 	./main
 
 clean:
-	rm main *.exe model/*.exe
-
-clean_all: clean
-	rm data/* gnuplot/* graphs/*
+	rm -f data/*.txt gnuplot/*.plt graphs/*.png
 
 main:
 	g++ -std=gnu++11 main.cpp -o main
