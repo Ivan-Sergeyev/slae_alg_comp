@@ -1,9 +1,15 @@
 #ifndef __OVERRELAXATION_METHOD__
 #define __OVERRELAXATION_METHOD__
 
+#include <algorithm>
 #include <cmath>
+#include <string>
 
 #include "generic_method.h"
+
+
+using std::string;
+using std::to_string;
 
 
 class OverrelaxationMethod : public GenericMethod {
@@ -20,13 +26,11 @@ public:
 		assert(tau < 2);
 
 		if (tau == 1.0) {
-			set_name("Seidel Method");
+			set_name(string("Seidel Method"));
 		} else {
-			char *name = new char[52];
-			*name = 0;
-			sprintf(name, "Overrelaxation Method with tau=%lf", tau);
+			string name = string("Overrelaxation Method with tau=") +
+						  to_string(tau);
 			set_name(name);
-			delete[] name;
 		}
 	}
 
