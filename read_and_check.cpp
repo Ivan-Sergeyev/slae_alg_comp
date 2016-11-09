@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
 
 #include "model/linear_algebra.h" 
 #include "model/gauss_method.h" // my file in program dir which helps as to work with matrix
@@ -76,9 +77,14 @@ int main(int argn, char* argv[]){
 
     if (matrix_read(&M, data_file)) return 1;
 
-//    printf("%s", M.repr());
+    printf("%s", M.repr().c_str() );
+
+    Matrix A = M.inverse();
+
+    printf("%s", A.repr().c_str());
 
 
+/*
     GaussMethod Gauss;
     Vector ans = *Gauss.run(M, b);
  //   printf("%s \n", ans.repr());
@@ -88,6 +94,7 @@ int main(int argn, char* argv[]){
 
     if (is_answer_good(ans, M, b, 0.1)) printf("ANSWER CORRECT\n");
     else printf("ANSWER INCORRECT\n");
+  */
     /*
     //gause algoritm
     element* M_dub; 

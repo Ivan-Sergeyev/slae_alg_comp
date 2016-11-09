@@ -274,6 +274,16 @@ private:
 		}
 	}
 
+	Matrix _dublicate(){
+		Matrix M(_size);
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size; ++j) {
+				M(i,j) = _value[i][j];
+			}
+		}	
+		return M;
+	}
+
 // erase
 	void _delete() {
 		if (_value) {  // TODO: check redundancy (unix specific?)
@@ -447,6 +457,35 @@ public:
 			result(j) = cash/_value[j][j];
 		}
 		return result;
+	}
+
+// inverse matrix
+	Matrix inverse(){
+		Vector b(_size);
+		printf("|-b0 = %s\n", b.repr().c_str());
+		Matrix M_dub;
+		Vector answer(_size);
+		double coeff;
+		double* a = new double [_size*_size];
+		for (int k = 0; k < _size; k++) {
+			 M_dub = _dublicate();
+			for (int n = 0; n < _size; n++) if (n == k) b(n) = 1; else b(n) = 0;
+			printf("|-b = %s\n", b.repr().c_str());
+			for( int j = 0; j < _size; j++) {
+				M_dub.find_max_and_swap(&b, j);
+				for (int i = j+1; i < _size; i++){
+					coeff = M_dub(i,j)/M_dub(j,j);
+					M_dub.sub(&b, i, j, coeff);
+				}
+			}
+			answer = M_dub.get_answer_from_triangle(b);
+			for(int l = 0; l < _size; l++){
+				a[k+l*_size]=answer(l);
+			}
+			printf("|-answer = %s\n", answer.repr().c_str());
+		}
+		Matrix M(_size, a);
+		return M;
 	}
 };
 
