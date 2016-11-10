@@ -487,6 +487,17 @@ public:
 		Matrix M(_size, a);
 		return M;
 	}
+//Transpose
+	Matrix transpose(){
+		double* a = new double [_size*_size];
+		for(int i = 0; i < _size; i++){
+			for (int j = 0; j < _size; j++){	
+				a[j*_size+i] = _value[i][j];
+			}
+		}
+		Matrix M(_size,a);
+		return M;
+	}
 };
 
 #endif  // __LINEAR_ALGEBRA__

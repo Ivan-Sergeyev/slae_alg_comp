@@ -79,7 +79,7 @@ int main(int argn, char* argv[]){
 
     printf("%s", M.repr().c_str() );
 
-    Matrix A = M.inverse();
+    Matrix A = M.transpose();
 
     printf("%s", A.repr().c_str());
 
