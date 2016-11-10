@@ -274,7 +274,7 @@ private:
 		}
 	}
 
-	Matrix _dublicate(){
+	Matrix _dublicate() const{
 		Matrix M(_size);
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
@@ -471,9 +471,8 @@ public:
 	}
 
 // inverse matrix
-	Matrix inverse(){
+	Matrix inverse() const{
 		Vector b(_size);
-		printf("|-b0 = %s\n", b.repr().c_str());
 		Matrix M_dub;
 		Vector answer(_size);
 		double coeff;
@@ -481,7 +480,6 @@ public:
 		for (int k = 0; k < _size; k++) {
 			 M_dub = _dublicate();
 			for (int n = 0; n < _size; n++) if (n == k) b(n) = 1; else b(n) = 0;
-			printf("|-b = %s\n", b.repr().c_str());
 			for( int j = 0; j < _size; j++) {
 				M_dub.find_max_and_swap(&b, j);
 				for (int i = j+1; i < _size; i++){
@@ -493,13 +491,12 @@ public:
 			for(int l = 0; l < _size; l++){
 				a[k+l*_size]=answer(l);
 			}
-			printf("|-answer = %s\n", answer.repr().c_str());
 		}
 		Matrix M(_size, a);
 		return M;
 	}
 //Transpose
-	Matrix transpose(){
+	Matrix transpose() const{
 		double* a = new double [_size*_size];
 		for(int i = 0; i < _size; i++){
 			for (int j = 0; j < _size; j++){	
@@ -508,6 +505,10 @@ public:
 		}
 		Matrix M(_size,a);
 		return M;
+	}
+// number of conditionality
+	double mu() const{
+		return this->norm()*this->inverse().norm();
 	}
 };
 
