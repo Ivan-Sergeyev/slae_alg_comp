@@ -403,7 +403,18 @@ public:
 		}
 		return result;
 	}
-
+	Matrix operator * (const Matrix &other) const {
+		assert(_size == other.get_size());
+		Matrix result(_size);
+		for (int i = 0; i < _size; i++) {
+			for (int j = 0; j < _size; j++) {
+				for (int k = 0; k < _size; k++){
+					result(i,j) += _value[i][k]*other(k,j);
+				}
+			}
+		}
+		return result;
+	}
 // string representation
 	string repr() const {
 		assert(_is_ok());
