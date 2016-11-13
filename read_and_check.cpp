@@ -13,12 +13,9 @@
 #include "model/linear_algebra.h"
 
 
-int errc;
-
-
 int read_vector(Vector *b, FILE* file) {
 	for (int j = 0; j < b->get_size(); j++) {
-		errc = fscanf(file, "%lf", &(*b)(j));
+		int errc = fscanf(file, "%lf", &(*b)(j));
 		if ((errc == EOF) || (errc == 0)) {
 			return 1;
 		}
@@ -29,7 +26,7 @@ int read_vector(Vector *b, FILE* file) {
 int matrix_read(Matrix *M, FILE* file) {
 	for(int i = 0; i < M->get_size(); i++) {
 		for (int j = 0; j < M->get_size(); j++) {
-			errc = fscanf(file, "%lf", &(*M)(i,j));
+			int errc = fscanf(file, "%lf", &(*M)(i,j));
 			if ((errc == EOF) || (errc == 0)) return 1;
 		}
 	}
@@ -85,7 +82,7 @@ int main(int argc, char** argv) {
 
 	// reading data
 	int num;
-	errc = fscanf(data_file, "%d", &num);
+	int errc = fscanf(data_file, "%d", &num);
 	if ((errc == 0) || (errc == EOF)) return 1;
 
 	Vector b(num);
