@@ -488,15 +488,15 @@ public:
 	}
 
 // specific functions for gauss method -- pending refactor
-	void find_max_and_swap(Vector* b, int j) const {
-		int max_index = j;
-		for (int i = j+1; i < _size; ++i) if (_value[i][j] > _value[max_index][j] ) max_index = i;
-		if (max_index != j){
+	void find_max_and_swap(Vector* b, int from, int to, int in_col) const {
+		int max_index = from;
+		for (int i = from+1; i < to; ++i) if (_value[i][in_col] > _value[max_index][in_col]) max_index = i;
+		if (max_index != from){
 			double temp;
-			for (int i = j; i < _size; ++i) {
-				temp = _value[j][i]; _value[j][i] = _value[max_index][i]; _value[max_index][i] = temp;
+			for (int i = 0; i < _size; ++i) {
+				temp = _value[in_col][i]; _value[in_col][i] = _value[max_index][i]; _value[max_index][i] = temp;
 			}
-			temp = (*b)(j); (*b)(j) = (*b)(max_index); (*b)(max_index) = temp;
+			temp = (*b)(in_col); (*b)(in_col) = (*b)(max_index); (*b)(max_index) = temp;
 		}
 
  	}
@@ -527,7 +527,7 @@ public:
 			 m = *this;
 			for (int n = 0; n < _size; ++n) if (n == k) b(n) = 1; else b(n) = 0;
 			for(int j = 0; j < _size; ++j) {
-				m.find_max_and_swap(&b, j);
+				m.find_max_and_swap(&b, j, _size, j);
 				for (int i = j+1; i < _size; ++i){
 					coeff = m(i,j)/m(j,j);
 					m.sub(&b, i, j, coeff);
