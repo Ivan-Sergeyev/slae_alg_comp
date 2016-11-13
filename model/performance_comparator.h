@@ -28,9 +28,13 @@ private:
 		assert(_log_file.good());
 		string full_msg;
 		if (level == 1) {
-			full_msg += "| ";
+			full_msg += "= ";
+		} else if (level == 1) {
+			full_msg += "|- ";
 		} else if (level == 2) {
-			full_msg += "|-";
+			full_msg += "|== ";
+		} else if (level == 3) {
+			full_msg += "|--- ";
 		}
 		// TODO: full_msg += timestamp + " ";
 		full_msg += msg;
@@ -53,19 +57,19 @@ private:
 		return m;
 	}
 
-	Matrix _diag_generate(int _size, double min, double max){
-    	Matrix M(_size);
+	Matrix _diag_generate(int size, double min, double max){
+    	Matrix M(size);
 	    srand(time(NULL));
 	    M(0,0) = min,
 	    M(1,1) = max;
-	    for(int i = 2; i < _size; i++) {
+	    for(int i = 2; i < size; i++) {
 	    	M(i,i) = min + rand() * (max - min) / RAND_MAX;
 	    }
 	    return M;
 	}
 
-	Matrix _generate_random_matrix_with_mu(int _size, double mu){
-		Matrix M = _generate_random_matrix(_size);
+	Matrix _generate_random_matrix_with_mu(int size, double mu){
+		Matrix M = _generate_random_matrix(size);
 	    double min = 1;
 	    double max = min*mu;
 		M = M.ort() * _diag_generate(M.get_size(), min, max);
@@ -134,55 +138,77 @@ public:
 
 	void run_comparison(int num_methods, GenericMethod **methods,
 						int num_sizes, const int *sizes,
+						int num_mus, const double *mus,
 						int num_runs, string data_filename_format) {
 		Matrix A;
 		Vector f;
 		Vector res;
+		string msg;
+		const string eol = string("\n");
 
 		// _log_start_time = clock();
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
 			int size = sizes[s_idx];
-			for(int r_idx = 0; r_idx < num_runs; ++r_idx) {
-				f = _generate_random_vector(size);
-				A = _generate_random_matrix(size);
-				_make_diagonally_dominant(A);
-				double cond_num = A.mu();
+			msg = string("running on size = ") + to_string(size) + eol;
+			_write_log(msg, 0);
 
-				for (int m_idx = 0; m_idx < num_methods; ++m_idx)
-				{
-					string msg =
-						string("- running ") + methods[m_idx]->get_name() +
-						" on matrix size " + to_string(size) + "\n";
-					_write_log(msg, 1);
+			for(int m_idx = 0; m_idx < num_mus; ++m_idx) {
+				double mu = mus[m_idx];
+				msg = string("running on mu = ") + to_string(mu) + eol;
+				_write_log(msg, 1);
 
-					time_t time = -clock();
-					res = methods[m_idx]->run(A, f);
-					time += clock();
-					double dtime = ((double) time) / CLOCKS_PER_SEC;
+				for(int r_idx = 0; r_idx < num_runs; ++r_idx) {
+					msg = string("run #") + to_string(r_idx) + eol;
+					_write_log(msg, 2);
 
-					string verdict;
-					if (res.get_size() == size) {
-						verdict = string("converged");
-					} else {
-						verdict = string("diverged");
+					msg = string("generating the system") + eol;
+					_write_log(msg, 2);
+
+					f = _generate_random_vector(size);
+					A = _generate_random_matrix_with_mu(size, mu);
+					_make_diagonally_dominant(A);
+
+					msg = string("running methods") + eol;
+					_write_log(msg, 2);
+
+					for (int m_idx = 0; m_idx < num_methods; ++m_idx)
+					{
+						string msg = string("running ") +
+									 methods[m_idx]->get_name() + eol;
+						_write_log(msg, 3);
+
+						time_t time = -clock();
+						res = methods[m_idx]->run(A, f);
+						time += clock();
+						double dtime = ((double) time) / CLOCKS_PER_SEC;
+
+						string verdict;
+						if (res.get_size() == size) {
+							verdict = string("converged");
+						} else {
+							verdict = string("diverged");
+						}
+
+						// todo: use data_filename_format
+						string data_filename =
+							string("./data/data_") + verdict + string("_") +
+							methods[m_idx]->get_name() + string(".txt");
+
+						fstream data_file(data_filename, ostream::out | ostream::app);
+						if (!(data_file.is_open())) {
+							cout << "Error opening data file \"" << data_filename << "\"\n";
+							cout << "Aborting\n";
+							return;
+						}
+						data_file << size << " " << dtime << " " << mu << "\n";
+						data_file.close();
 					}
-
-					// todo: use data_filename_format
-					string data_filename =
-						string("./data/data_") + verdict + string("_") +
-						methods[m_idx]->get_name() + string(".txt");
-
-					fstream data_file(data_filename, ostream::out | ostream::app);
-					if (!(data_file.is_open())) {
-						cout << "Error opening data file \"" << data_filename << "\"\n";
-						cout << "Aborting\n";
-						return;
-					}
-					data_file << size << " " << dtime << " " << cond_num << "\n";
-					data_file.close();
+					// for r_idx
 				}
+			// for m_idx
 			}
+		// for s_idx
 		}
 	}
 };

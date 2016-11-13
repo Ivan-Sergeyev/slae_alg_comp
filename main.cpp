@@ -46,6 +46,22 @@ void test() {
 #endif // NDEBUG
 
 
+void fill_arithm_progr(int *sizes, int num_elems, int start, int step) {
+	int size = start;
+	for (int idx = 0; idx < num_elems; ++idx, size += step) {
+		sizes[idx] = size;
+	}
+}
+
+
+void fill_geom_progr(double *sizes, int num_elems, double start, double mul) {
+	double size = start;
+	for (int idx = 0; idx < num_elems; ++idx, size *= mul) {
+		sizes[idx] = size;
+	}
+}
+
+
 int main(int argc, char **argv) {
 #ifndef NDEBUG
 	if (argc == 2 && !strcmp(argv[1], "test")) {
@@ -57,17 +73,35 @@ int main(int argc, char **argv) {
 // setup
 	printf("perform setup\n");
 
-	const int num_sizes = 2;
-	int sizes[num_sizes];
-	for (int i = 0; i < num_sizes; ++i) {
-		sizes[i] = i * 100 + 100;
-	}
+	// populate a list of small sizes
+	const int small_num_sizes = 30,
+			  small_start = 100,
+			  small_step = 100;
+	int small_sizes[small_num_sizes];
+	fill_arithm_progr(small_sizes, small_num_sizes, small_start, small_step);
 
-	const int num_runs = 2;
+	// populate a list of large sizes
+	const int large_num_sizes = 50,
+			  large_start = 3100,
+			  large_step = 100;
+	int large_sizes[large_num_sizes];
+	fill_arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
 
+	// populate a list of conditionality numbers
+	const int num_mus = 10;
+	const double mu_start = 2,
+				 mu_mul = 2;
+	double mus[num_mus];
+	fill_geom_progr(mus, num_mus, mu_start, mu_mul);
+
+	// set number of runs for each size and number of conditionality
+	const int num_runs = 10;
+
+	// set parameters for numeric algorithms
 	const double tolerance = 0.0078125;  // 2^{-7}
 	const int max_faults = 20;
 
+	// populate mathods
 	const int num_methods = 5;
 	JacobiMethod jacobi_method(tolerance, max_faults);
 	OverrelaxationMethod gauss_seidel_method(1.0, tolerance, max_faults),
@@ -92,7 +126,9 @@ int main(int argc, char **argv) {
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
 	PerformanceComparator p_comp(cout);
-	p_comp.run_comparison(num_methods, methods, num_sizes, sizes,
+	p_comp.run_comparison(num_methods, methods,
+						  small_num_sizes, small_sizes,
+						  num_mus, mus,
 						  num_runs, data_filename_format);
 
 // prepare plot and run gnuplot

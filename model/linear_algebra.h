@@ -490,16 +490,16 @@ public:
 // specific functions for gauss method -- pending refactor
 // !!! missing description
 // !!! this has to be rewritten
-	void find_max_and_swap(Vector* b, int j) const {
+	void find_max_and_swap(Vector* b, int j) {
 		int max_index = j;
 		for (int i = j + 1; i < _size; ++i) {
 			if (_value[i][j] > _value[max_index][j]) {
 				max_index = i;
 			}
 		}
-		if (max_index != j){
+		if (max_index != j) {
 			double temp;
-			swap_rows(i, j);
+			swap_rows(max_index, j);
 			swap((*b)(j), (*b)(max_index));
 		}
 
@@ -529,19 +529,18 @@ public:
 		return result;
 	}
 
-// calculate inverse matrix
+// calculate inverse matrix using gauss method
 // !!! this has to be rewritten
 	Matrix inverse() const{
-		Vector b(_size);
 		Matrix m;
 		Vector answer(_size);
 		double coeff;
 		double* a = new double [_size*_size];
 		for (int k = 0; k < _size; ++k) {
 			m = *this;
-			for (int n = 0; n < _size; ++n) {
-				b(n) = (n == k);
-			}
+			Vector b(_size);
+			b(k) = 1;
+
 			for(int j = 0; j < _size; ++j) {
 				m.find_max_and_swap(&b, j);
 				for (int i = j + 1; i < _size; ++i){
