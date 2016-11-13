@@ -488,35 +488,49 @@ public:
 	}
 
 // specific functions for gauss method -- pending refactor
+// !!! missing description
+// !!! this has to be rewritten
 	void find_max_and_swap(Vector* b, int j) const {
 		int max_index = j;
-		for (int i = j+1; i < _size; ++i) if (_value[i][j] > _value[max_index][j] ) max_index = i;
+		for (int i = j + 1; i < _size; ++i) {
+			if (_value[i][j] > _value[max_index][j]) {
+				max_index = i;
+			}
+		}
 		if (max_index != j){
 			double temp;
-			for (int i = j; i < _size; ++i) {
-				temp = _value[j][i]; _value[j][i] = _value[max_index][i]; _value[max_index][i] = temp;
-			}
-			temp = (*b)(j); (*b)(j) = (*b)(max_index); (*b)(max_index) = temp;
+			swap_rows(i, j);
+			swap((*b)(j), (*b)(max_index));
 		}
 
  	}
+
+// !!! missing description
+// !!! this should not be member of class matrix
  	void sub(Vector* b, int k, int l, double coeff) const{
-		for (int i = 0; i < _size; ++i) _value[k][i] -= _value[l][i]*coeff;
-		(*b)(k) -= (*b)(l)*coeff;
+		for (int i = 0; i < _size; ++i) {
+			_value[k][i] -= _value[l][i] * coeff;
+		}
+		(*b)(k) -= (*b)(l) * coeff;
 	}
 
+// !!! missing description
+// !!! this has to be rewritten
 	Vector get_answer_from_triangle(const Vector &b) {
 		Vector result(_size);
 		double cash;
-		for (int j = _size-1; j >=0; j--){
+		for (int j = _size-1; j >= 0; j--) {
 			cash = b(j);
-			for (int i = j+1; i < _size; ++i) cash -= _value[j][i] * result(i);
-			result(j) = cash/_value[j][j];
+			for (int i = j + 1; i < _size; ++i) {
+				cash -= _value[j][i] * result(i);
+			}
+			result(j) = cash / _value[j][j];
 		}
 		return result;
 	}
 
-// inverse matrix
+// calculate inverse matrix
+// !!! this has to be rewritten
 	Matrix inverse() const{
 		Vector b(_size);
 		Matrix m;
@@ -524,18 +538,20 @@ public:
 		double coeff;
 		double* a = new double [_size*_size];
 		for (int k = 0; k < _size; ++k) {
-			 m = *this;
-			for (int n = 0; n < _size; ++n) if (n == k) b(n) = 1; else b(n) = 0;
+			m = *this;
+			for (int n = 0; n < _size; ++n) {
+				b(n) = (n == k);
+			}
 			for(int j = 0; j < _size; ++j) {
 				m.find_max_and_swap(&b, j);
-				for (int i = j+1; i < _size; ++i){
-					coeff = m(i,j)/m(j,j);
+				for (int i = j + 1; i < _size; ++i){
+					coeff = m(i, j) / m(j, j);
 					m.sub(&b, i, j, coeff);
 				}
 			}
 			answer = m.get_answer_from_triangle(b);
 			for(int l = 0; l < _size; ++l){
-				a[k+l*_size]=answer(l);
+				a[k + l * _size] = answer(l);
 			}
 		}
 		Matrix M(_size,a);
@@ -544,13 +560,16 @@ public:
 	}
 
 // orthnorm
+// !!! bad description
+// !!! this has to be rewritten
 	Matrix ort() const {
-		double* a = new double [_size*_size];  // !!! never deleted
-		double* add = new double [_size];      // !!! never deleted
+		double* a = new double [_size*_size];
+		double* add = new double [_size];
 		double coeff1;
 		double coeff2;
 		for (int j = 0; j  < _size ; ++j){
-			for (int l = 0; l < _size; l++ ) {
+			fill_n(add, _size, 0);
+			for (int l = 0; l < _size; ++l) {
 				add[l] = 0;
 			}
 
