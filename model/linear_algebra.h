@@ -538,7 +538,9 @@ public:
 				a[k+l*_size]=answer(l);
 			}
 		}
-		return M(_size, a);
+		Matrix M(_size,a);
+		delete[] a;
+		return M;
 	}
 
 // orthnorm
@@ -578,6 +580,8 @@ public:
 			}
 		}
 		Matrix M(_size, a);
+		delete[] a;
+		delete[] add;
 		return M;
 	}
 };
