@@ -125,9 +125,14 @@ int main(int argc, char **argv) {
 	printf("perform measurements\n");
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
-	PerformanceComparator p_comp(cout);
+	PerformanceComparator p_comp(std::cerr);
 	p_comp.run_comparison(num_methods, methods,
 						  small_num_sizes, small_sizes,
+						  num_mus, mus,
+						  num_runs, data_filename_format);
+
+	p_comp.run_comparison(num_methods - 1, methods,
+						  large_num_sizes, large_sizes,
 						  num_mus, mus,
 						  num_runs, data_filename_format);
 
