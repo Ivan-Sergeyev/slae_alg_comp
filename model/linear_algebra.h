@@ -518,13 +518,13 @@ public:
 // !!! this has to be rewritten
 	Vector get_answer_from_triangle(const Vector &b) {
 		Vector result(_size);
-		double cash;
+		double temp;
 		for (int j = _size-1; j >= 0; j--) {
-			cash = b(j);
+			temp = b(j);
 			for (int i = j + 1; i < _size; ++i) {
-				cash -= _value[j][i] * result(i);
+				temp -= _value[j][i] * result(i);
 			}
-			result(j) = cash / _value[j][j];
+			result(j) = temp / _value[j][j];
 		}
 		return result;
 	}
@@ -568,18 +568,15 @@ public:
 		double coeff2;
 		for (int j = 0; j  < _size ; ++j){
 			fill_n(add, _size, 0);
-			for (int l = 0; l < _size; ++l) {
-				add[l] = 0;
-			}
 
 			for (int k = 0; k < j; ++k){
 				coeff1 = 0;
 				coeff2 = 0;
-				for (int l = 0;  l < _size; ++l){
+				for (int l = 0;  l < _size; ++l) {
 					coeff1 += _value[l][j] * a[l * _size + k];
 					coeff2 += a[l * _size + k] * a[l * _size + k];
 				}
-				coeff1 = coeff1/coeff2;
+				coeff1 = coeff1 / coeff2;
 				for (int l = 0; l < _size; ++l){
 					add[l] -= coeff1 * a[l*_size + k];
 				}
@@ -594,7 +591,7 @@ public:
 			}
 			coeff1 = sqrt(coeff1);
 			for (int l = 0; l < _size; ++l){
-				a[l * _size + j]/=coeff1;
+				a[l * _size + j] /= coeff1;
 			}
 		}
 		Matrix M(_size, a);

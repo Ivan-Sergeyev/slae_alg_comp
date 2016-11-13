@@ -7,15 +7,15 @@
 #include "linear_algebra.h"
 
 
+using std::cerr;
 using std::string;
-using std::cout;
 
 
 namespace linear_algebra_test {
 	typedef int (*test_function_pointer)();
 
 	int _test_v_ctor_0() {
-		cout << "  | testing Vector()\n";
+		cerr << "  | testing Vector()\n";
 		bool ret = 0;
 		Vector x;
 
@@ -25,24 +25,24 @@ namespace linear_algebra_test {
 		string x_repr_ref = string("");
 
 		if (x_size != x_size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | x_size = " << x_size
+			cerr << "  | failure:\n";
+			cerr << "  | x_size = " << x_size
 				 << ", should be " << x_size_ref << "\n";
 			ret = 1;
 		} else if (x_repr != x_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | x_repr = \"" << x_repr
+			cerr << "  | failure:\n";
+			cerr << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_ctor_i() {
-		cout << "  | testing Vector(const int size)\n";
+		cerr << "  | testing Vector(const int size)\n";
 		bool ret = 0;
 		int x_size_ref = 5;
 
@@ -52,19 +52,19 @@ namespace linear_algebra_test {
 		string x_repr_ref = string("0.000000 0.000000 0.000000 0.000000 0.000000");
 
 		if (x_repr != x_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | x_repr = \"" << x_repr
+			cerr << "  | failure:\n";
+			cerr << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_ctor_ipd() {
-		cout << "  | testing Vector(const int size, const double *value)\n";
+		cerr << "  | testing Vector(const int size, const double *value)\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -75,19 +75,19 @@ namespace linear_algebra_test {
 		string x_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (x_repr != x_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | x_repr = \"" << x_repr
+			cerr << "  | failure:\n";
+			cerr << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_ctor_vec() {
-		cout << "  | testing Vector(const Vector &other)\n";
+		cerr << "  | testing Vector(const Vector &other)\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -99,19 +99,19 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n";
+			cerr << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_get_size() {
-		cout << "  | testing get_size()\n";
+		cerr << "  | testing get_size()\n";
 		bool ret = 0;
 		int x_size_ref = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -121,18 +121,18 @@ namespace linear_algebra_test {
 		int x_size = x.get_size();
 
 		if (x_size != x_size_ref) {
-			cout << "  | failure\n";
-			cout << "  | x_size = " << x_size
+			cerr << "  | failure\n";
+			cerr << "  | x_size = " << x_size
 				 << ", should be " << x_size_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_v_idx_c() {
-		cout << "  | testing const operator ()\n";
+		cerr << "  | testing const operator ()\n";
 		bool ret = 0;
 		int size = 3;
 		int idx = 2;
@@ -144,18 +144,18 @@ namespace linear_algebra_test {
 		int x_val_ref = x_coord[idx];
 
 		if (x_val != x_val_ref) {
-			cout << "  | failure\n";
-			cout << "  | x[" << idx << "] = " << x_val
+			cerr << "  | failure\n";
+			cerr << "  | x[" << idx << "] = " << x_val
 				 << ", should be " << x_val_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_v_idx_v() {
-		cout << "  | testing operator ()\n";
+		cerr << "  | testing operator ()\n";
 		bool ret = 0;
 		int size = 3;
 		int idx = 2;
@@ -168,18 +168,18 @@ namespace linear_algebra_test {
 		int x_val = x(idx);
 
 		if (x_val != x_val_ref) {
-			cout << "  | failure\n";
-			cout << "  | x[" << idx << "] = " << x_val
+			cerr << "  | failure\n";
+			cerr << "  | x[" << idx << "] = " << x_val
 				 << ", should be " << x_val_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_v_norm() {
-		cout << "  | testing norm()\n";
+		cerr << "  | testing norm()\n";
 		bool ret = 0;
 		int size = 4;
 		double x_coord[] = {0.0, 1.0, -2.0, 3.0};
@@ -190,18 +190,18 @@ namespace linear_algebra_test {
 		double x_n_ref = 3.0;
 
 		if (x_n != x_n_ref) {
-			cout << "  | failure\n";
-			cout << "  | x_norm = " << x_n
+			cerr << "  | failure\n";
+			cerr << "  | x_norm = " << x_n
 				 << ", should be " << x_n_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_v_assignment() {
-		cout << "  | testing operator =\n";
+		cerr << "  | testing operator =\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -214,19 +214,19 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n";
+			cerr << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_eq() {
-		cout << "  | testing operator ==\n";
+		cerr << "  | testing operator ==\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -240,25 +240,25 @@ namespace linear_algebra_test {
 		Vector v(size, v_coord);
 
 		if (!(x == y)) {
-			cout << "  | failure\n";
-			cout << "  | " << x.repr() << " should be = " << y.repr() << "\n";
+			cerr << "  | failure\n";
+			cerr << "  | " << x.repr() << " should be = " << y.repr() << "\n";
 			ret = 1;
 		} else if (x == z) {
-			cout << "  | failure\n";
-			cout << "  | " << x.repr() << " should be != " << z.repr() << "\n";
+			cerr << "  | failure\n";
+			cerr << "  | " << x.repr() << " should be != " << z.repr() << "\n";
 			ret = 1;
 		} else if (x == v) {
-			cout << "  | failure\n";
-			cout << "  | " << x.repr() << " should be != " << v.repr() << "\n";
+			cerr << "  | failure\n";
+			cerr << "  | " << x.repr() << " should be != " << v.repr() << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_v_plus_b() {
-		cout << "  | testing binary operator +\n";
+		cerr << "  | testing binary operator +\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -272,19 +272,19 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("11.000000 22.000000 33.000000");
 
 		if (z_repr != z_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n";
+			cerr << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_minus_b() {
-		cout << "  | testing binary operator -\n";
+		cerr << "  | testing binary operator -\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -298,19 +298,19 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("-9.000000 -18.000000 -27.000000");
 
 		if (z_repr != z_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n";
+			cerr << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_plus_u() {
-		cout << "  | testing unary operator +\n";
+		cerr << "  | testing unary operator +\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -322,19 +322,19 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n";
+			cerr << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_minus_u() {
-		cout << "  | testing unary operator -\n";
+		cerr << "  | testing unary operator -\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -347,19 +347,19 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("-1.000000 -2.000000 -3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n";
+			cerr << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_plus_e() {
-		cout << "  | testing operator +=\n";
+		cerr << "  | testing operator +=\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -375,24 +375,24 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (x_repr != x_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | x_repr = \"" << x_repr
+			cerr << "  | failure\n";
+			cerr << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else if (y_repr != y_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n";
+			cerr << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_minus_e() {
-		cout << "  | testing operator -=\n";
+		cerr << "  | testing operator -=\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -408,24 +408,24 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (x_repr != x_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | x_repr = \"" << x_repr
+			cerr << "  | failure\n";
+			cerr << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else if (y_repr != y_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n";
+			cerr << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_mul_e() {
-		cout << "  | testing operator *=\n";
+		cerr << "  | testing operator *=\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -438,19 +438,19 @@ namespace linear_algebra_test {
 		string x_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (x_repr != x_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | x_repr = \"" << x_repr
+			cerr << "  | failure\n";
+			cerr << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_mul_vd() {
-		cout << "  | testing operator * (Vector, double)\n";
+		cerr << "  | testing operator * (Vector, double)\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -463,19 +463,19 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (y_repr != y_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n";
+			cerr << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_v_mul_dv() {
-		cout << "  | testing operator * (double, Vector)\n";
+		cerr << "  | testing operator * (double, Vector)\n";
 		bool ret = 0;
 
 		int size = 3;
@@ -489,19 +489,19 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (y_repr != y_repr_ref) {
-			cout << "  | failure\n";
-			cout << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n";
+			cerr << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_m_ctor_0() {
-		cout << "  | testing Matrix()\n";
+		cerr << "  | testing Matrix()\n";
 		bool ret = 0;
 
 		Matrix m;
@@ -510,18 +510,18 @@ namespace linear_algebra_test {
 		int m_size_ref = 0;
 
 		if (m_size != m_size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_size = " << m_size
+			cerr << "  | failure:\n";
+			cerr << "  | m_size = " << m_size
 				 << ", should be " << m_size_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_ctor_i() {
-		cout << "  | testing Matrix(const int size)\n";
+		cerr << "  | testing Matrix(const int size)\n";
 		bool ret = 0;
 
 		int m_size_ref = 2;
@@ -533,25 +533,25 @@ namespace linear_algebra_test {
 		string m_repr_ref = string("0.000000 0.000000\n0.000000 0.000000\n");
 
 		if (m_size != m_size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_size = " << m_size
+			cerr << "  | failure:\n";
+			cerr << "  | m_size = " << m_size
 				 << ", should be " << m_size_ref << "\n";
 			ret = 1;
 		}
 		if (m_repr != m_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_repr:\n" << m_repr
+			cerr << "  | failure:\n";
+			cerr << "  | m_repr:\n" << m_repr
 				 << "  | should be:\n" << m_repr_ref;
 			ret = 1;
 		}
 		if (!ret) {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_ctor_id() {
-		cout << "  | testing Matrix(const int size, const double *value)\n";
+		cerr << "  | testing Matrix(const int size, const double *value)\n";
 		// also testing const operator ()
 		bool ret = 0;
 
@@ -565,25 +565,25 @@ namespace linear_algebra_test {
 		string m_repr_ref = string("3.000000 5.000000\n7.000000 11.000000\n");
 
 		if (m_size != m_size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_size = " << m_size
+			cerr << "  | failure:\n";
+			cerr << "  | m_size = " << m_size
 				 << ", should be " << m_size_ref << "\n";
 			ret = 1;
 		}
 		if (m_repr != m_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_repr:\n" << m_repr
+			cerr << "  | failure:\n";
+			cerr << "  | m_repr:\n" << m_repr
 				 << "  | should be:\n" << m_repr_ref;
 			ret = 1;
 		}
 		if (!ret) {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_ctor_m() {
-		cout << "  | testing Matrix(const Matrix &other)\n";
+		cerr << "  | testing Matrix(const Matrix &other)\n";
 		bool ret = 0;
 
 		int size_ref = 2;
@@ -597,25 +597,25 @@ namespace linear_algebra_test {
 		string m_repr_ref = string("3.000000 5.000000\n7.000000 11.000000\n");
 
 		if (m_size != size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_size = " << m_size
+			cerr << "  | failure:\n";
+			cerr << "  | m_size = " << m_size
 				 << ", should be " << size_ref << "\n";
 			ret = 1;
 		}
 		if (m_repr != m_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | m_repr:\n" << m_repr
+			cerr << "  | failure:\n";
+			cerr << "  | m_repr:\n" << m_repr
 				 << "  | should be:\n" << m_repr_ref;
 			ret = 1;
 		}
 		if (!ret) {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_get_size() {
-		cout << "  | testing get_size()\n";
+		cerr << "  | testing get_size()\n";
 		bool ret = 0;
 
 		int x_size_ref = 3;
@@ -626,18 +626,18 @@ namespace linear_algebra_test {
 		int x_size = x.get_size();
 
 		if (x_size != x_size_ref) {
-			cout << "  | failure\n";
-			cout << "  | x_size = " << x_size
+			cerr << "  | failure\n";
+			cerr << "  | x_size = " << x_size
 				 << ", should be " << x_size_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_idx_v() {
-		cout << "  | testing operator ()\n";
+		cerr << "  | testing operator ()\n";
 		bool ret = 0;
 
 		int m_size_ref = 2;
@@ -651,21 +651,21 @@ namespace linear_algebra_test {
 				double v_ref = m_value_ref[i * m_size_ref + 1];
 				m(i, j) = v_ref;
 				if (m(i, j) != v_ref) {
-					cout << "  | failure\n";
-					cout << "  | m(" << i << ", " << j << ") = " << m(i, j)
+					cerr << "  | failure\n";
+					cerr << "  | m(" << i << ", " << j << ") = " << m(i, j)
 						 << " != " << v_ref << "\n";
 					ret = 1;
 				}
 			}
 		}
 		if (!ret) {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_norm() {
-		cout << "  | testing norm()\n";
+		cerr << "  | testing norm()\n";
 		bool ret = 0;
 		int m_size_ref = 2;
 		double m_value[] = {3.0, 5.0, 7.0, 11.0};
@@ -675,17 +675,17 @@ namespace linear_algebra_test {
 		double norm = m.norm();
 
 		if (norm != norm_ref) {
-			cout << "  | failure\n";
-			cout << "  | norm = " << norm << " != " << norm_ref << "\n";
+			cerr << "  | failure\n";
+			cerr << "  | norm = " << norm << " != " << norm_ref << "\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_assignment() {
-		cout << "  | testing operator =\n";
+		cerr << "  | testing operator =\n";
 		bool ret = 0;
 
 		int size_ref = 2;
@@ -700,25 +700,25 @@ namespace linear_algebra_test {
 		string b_repr_ref = string("3.000000 5.000000\n7.000000 11.000000\n");
 
 		if (b_size != size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | b_size = " << b_size
+			cerr << "  | failure:\n";
+			cerr << "  | b_size = " << b_size
 				 << ", should be " << size_ref << "\n";
 			ret = 1;
 		}
 		if (b_repr != b_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | b_repr:\n" << b_repr
+			cerr << "  | failure:\n";
+			cerr << "  | b_repr:\n" << b_repr
 				 << "  | should be:\n" << b_repr_ref;
 			ret = 1;
 		}
 		if (!ret) {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
 
 	int _test_m_mul() {
-		cout << "  | testing operator *\n";
+		cerr << "  | testing operator *\n";
 		bool ret = 0;
 
 		int size_ref = 2;
@@ -735,24 +735,24 @@ namespace linear_algebra_test {
 
 		int f_size = f.get_size();
 		if (f_size != size_ref) {
-			cout << "  | failure:\n";
-			cout << "  | f_size = " << f_size
+			cerr << "  | failure:\n";
+			cerr << "  | f_size = " << f_size
 				 << ", should be " << size_ref << "\n";
 			ret = 1;
 		} else if (f_repr != f_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | f_repr = \"" << f_repr
+			cerr << "  | failure:\n";
+			cerr << "  | f_repr = \"" << f_repr
 				 << "\", should be \"" << f_repr_ref << "\"\n";
 			ret = 1;
 		} else {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 
 		return ret;
 	}
 
 	int _test_m_swap_rows() {
-		cout << "  | testing swap_rows(int, int)\n";
+		cerr << "  | testing swap_rows(int, int)\n";
 		bool ret = 0;
 
 		int size = 2;
@@ -765,13 +765,13 @@ namespace linear_algebra_test {
 		string a_repr_ref = string("7.000000 11.000000\n3.000000 5.000000\n");
 
 		if (a_repr != a_repr_ref) {
-			cout << "  | failure:\n";
-			cout << "  | a_repr:\n" << a_repr
+			cerr << "  | failure:\n";
+			cerr << "  | a_repr:\n" << a_repr
 				 << "  | should be:\n" << a_repr_ref;
 			ret = 1;
 		}
 		if (!ret) {
-			cout << "  | success\n";
+			cerr << "  | success\n";
 		}
 		return ret;
 	}
@@ -791,12 +791,12 @@ namespace linear_algebra_test {
 
 		int num_fails = 0;
 		for (int i = 0; vector_tests[i]; ++i) {
-			cout << "  class Vector -- test #" << i << "\n";
+			cerr << "  class Vector -- test #" << i << "\n";
 			num_fails += vector_tests[i]();
 		}
-		cout << "-----------------------------------------------------------\n";
+		cerr << "-----------------------------------------------------------\n";
 		for (int i = 0; matrix_tests[i]; ++i) {
-			cout << "  class Matrix -- test #" << i << "\n";
+			cerr << "  class Matrix -- test #" << i << "\n";
 			num_fails += matrix_tests[i]();
 		}
 

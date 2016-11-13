@@ -1,7 +1,5 @@
 #include <cstdio>
-//#include <direct.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <unistd.h>
 
@@ -13,6 +11,10 @@
 #include "model/performance_comparator.h"
 
 #include "model/generate_plotfile.h"
+
+
+using std::cerr;
+using std::system;
 
 
 // #define NDEBUG  // disable tests and asserts for release
@@ -33,14 +35,14 @@ void test() {
 	int total_fails = 0;
 	for (int i = 0; i < num_modules; ++i)
 	{
-		cout << "testing " << module_name[i] << "\n";
-		cout << "===========================================================\n";
+		cerr << "testing " << module_name[i] << "\n";
+		cerr << "===========================================================\n";
 		int num_fails = module_test[i]();
-		cout << "===========================================================\n";
-		cout << num_fails << " fails in " << module_name[i] << "\n\n";
+		cerr << "===========================================================\n";
+		cerr << num_fails << " fails in " << module_name[i] << "\n\n";
 		total_fails += num_fails;
 	}
-	cout << "total fails: " << total_fails << "\n";
+	cerr << "total fails: " << total_fails << "\n";
 }
 
 #endif // NDEBUG
@@ -71,17 +73,17 @@ int main(int argc, char **argv) {
 #endif  // NDEBUG
 
 // setup
-	printf("perform setup\n");
+	cerr << "perform setup\n";
 
 	// populate a list of small sizes
-	const int small_num_sizes = 30,
+	const int small_num_sizes = 1,
 			  small_start = 100,
 			  small_step = 100;
 	int small_sizes[small_num_sizes];
 	fill_arithm_progr(small_sizes, small_num_sizes, small_start, small_step);
 
 	// populate a list of large sizes
-	const int large_num_sizes = 50,
+	const int large_num_sizes = 0,
 			  large_start = 3100,
 			  large_step = 100;
 	int large_sizes[large_num_sizes];
@@ -111,21 +113,21 @@ int main(int argc, char **argv) {
 
 	GenericMethod **methods = new GenericMethod* [num_methods];
 	methods[0] = &jacobi_method;
-	cout << "added " << methods[0]->get_name() << "\n";
+	cerr << "added " << methods[0]->get_name() << "\n";
 	methods[1] = &gauss_seidel_method;
-	cout << "added " << methods[1]->get_name() << "\n";
+	cerr << "added " << methods[1]->get_name() << "\n";
 	methods[2] = &lower_relaxation_method;
-	cout << "added " << methods[2]->get_name() << "\n";
+	cerr << "added " << methods[2]->get_name() << "\n";
 	methods[3] = &upper_relaxation_method;
-	cout << "added " << methods[3]->get_name() << "\n";
+	cerr << "added " << methods[3]->get_name() << "\n";
 	methods[4] = &gauss_method;
-	cout << "added " << methods[4]->get_name() << "\n";
+	cerr << "added " << methods[4]->get_name() << "\n";
 
 // perform measurements
-	printf("perform measurements\n");
+	cerr << "perform measurements\n";
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
-	PerformanceComparator p_comp(std::cerr);
+	PerformanceComparator p_comp(cerr);
 	p_comp.run_comparison(num_methods, methods,
 						  small_num_sizes, small_sizes,
 						  num_mus, mus,
@@ -137,7 +139,7 @@ int main(int argc, char **argv) {
 						  num_runs, data_filename_format);
 
 // prepare plot and run gnuplot
-	printf("generate plotfiles\n");
+	cerr << "generate plotfiles\n";
 
 	// beginstab
 	string plot_all = string("./gnuplot/plot_all.plt"),
@@ -155,7 +157,7 @@ int main(int argc, char **argv) {
 					  data_format_rel, num_methods - 1, methods);
 
 // run gnuplot with plot_dir as current directory
-	printf("plot graphs\n");
+	cerr << "plot graphs\n";
 	const char gnuplot_call_all[] = "gnuplot plot_all.plt";
 	const char gnuplot_call_num[] = "gnuplot plot_num.plt";
 
@@ -166,9 +168,9 @@ int main(int argc, char **argv) {
 	chdir("..");
 
 // perform cleanup
-	printf("perform cleanup\n");
+	cerr << "perform cleanup\n";
 	delete[] methods;
 
-	printf("done\n");
+	cerr << "done\n";
 	return 0;
 }

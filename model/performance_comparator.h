@@ -14,7 +14,7 @@
 
 using namespace std::chrono;
 
-using std::cout;
+using std::cerr;
 using std::ostream;
 using std::fstream;
 using std::string;
@@ -26,17 +26,16 @@ private:
 	ostream &_log_file;
 	time_point<system_clock> _log_start_time;
 
-	string _timestamp(time_point<system_clock> time) {
-		string begin = string("["),
-			   end = string("]"),
-			   sep = string(":");
+	string _timestamp(const time_point<system_clock> &time) const {
+		const string begin = string("["),
+					 end = string("]"),
+					 sep = string(":");
 
 		auto time_diff = time - _log_start_time;
 		string h = to_string(duration_cast<hours>(time_diff).count()),
-			   m = to_string(duration_cast<minutes>(time_diff).count()),
-			   s = to_string(duration_cast<seconds>(time_diff).count());
-		string timestamp = begin + h + sep + m + sep + s + end;
-		return timestamp;
+			   m = to_string(duration_cast<minutes>(time_diff).count() % 60),
+			   s = to_string(duration_cast<seconds>(time_diff).count() % 60);
+		return begin + h + sep + m + sep + s + end;
 	}
 
 	void _write_log(string msg, int level=0) {
@@ -67,7 +66,7 @@ private:
 		int n = size * size;
 		double *values = new double[n];
 		for(int i = 0; i < n; ++i) {
-			values[i] = rand();
+			values[i] = rand() + 1;
 		}
 		Matrix m(size, values);
 		delete[] values;
@@ -79,8 +78,8 @@ private:
 	    srand(time(NULL));
 	    M(0, 0) = min,
 	    M(1, 1) = max;
-	    for(int i = 2; i < size; i++) {
-	    	M(i,i) = min + rand() * (max - min) / RAND_MAX;
+	    for(int i = 2; i < size; ++i) {
+	    	M(i, i) = min + rand() * (max - min) / RAND_MAX;
 	    }
 	    return M;
 	}
@@ -88,7 +87,7 @@ private:
 	Matrix _generate_random_matrix_with_mu(int size, double mu){
 		Matrix M = _generate_random_matrix(size);
 	    double min = 1;
-	    double max = min*mu;
+	    double max = min * mu;
 		M = M.ort() * _diag_generate(M.get_size(), min, max);
 		return M;
 	}
@@ -118,7 +117,7 @@ private:
 	 Vector& _read_vector(FILE* file, int size){ // check for work
 	 	double *coords = new double[size];
 	 	int errc;
-     	for (int j = 0; j < size; j++) {
+     	for (int j = 0; j < size; ++j) {
      		errc = fscanf(file, "%lf", &coords[j]);
     		if ((errc == EOF) || (errc == 0)) return 1;
      	}
@@ -144,7 +143,7 @@ private:
  	int _check_answer(const Vector &answer, const Matrix &M, const Vector &b, const double &epsilon){
 	    Vector check = M * answer;
     	double max = 0;
-    	for (int i = 0; i < result.get_size(); i++) if (std::abs(check(i)-result(i)) > max) max = std::abs(check(i)-result(i));
+    	for (int i = 0; i < result.get_size(); ++i) if (std::abs(check(i)-result(i)) > max) max = std::abs(check(i)-result(i));
     	delete &check;
     	if (max < epsilon) return 1;
     	return 0;
@@ -166,12 +165,12 @@ public:
 		_log_start_time = system_clock::now();
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
-			int size = sizes[s_idx];
+			const int size = sizes[s_idx];
 			msg = string("running on size = ") + to_string(size) + eol;
 			_write_log(msg, 0);
 
 			for(int mu_idx = 0; mu_idx < num_mus; ++mu_idx) {
-				double mu = mus[mu_idx];
+				const double mu = mus[mu_idx];
 				msg = string("running on mu = ") + to_string(mu) + eol;
 				_write_log(msg, 1);
 
@@ -184,7 +183,6 @@ public:
 
 					f = _generate_random_vector(size);
 					A = _generate_random_matrix_with_mu(size, mu);
-					_make_diagonally_dominant(A);
 
 					msg = string("running methods") + eol;
 					_write_log(msg, 2);
@@ -205,6 +203,7 @@ public:
 						} else {
 							verdict = string("diverged");
 						}
+						_write_log(verdict, 3);
 
 						// todo: use data_filename_format
 						string data_filename =
@@ -213,8 +212,7 @@ public:
 
 						fstream data_file(data_filename, ostream::out | ostream::app);
 						if (!(data_file.is_open())) {
-							cout << "Error opening data file \"" << data_filename << "\"\n";
-							cout << "Aborting\n";
+							_log_file << "Error opening data file \"" << data_filename << "\"\nAborting\n";
 							return;
 						}
 						auto elapsed_ns = duration_cast<nanoseconds>(end_time - start_time).count();
