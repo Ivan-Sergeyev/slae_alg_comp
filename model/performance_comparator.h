@@ -3,7 +3,6 @@
 
 #include <algorithm>
 #include <chrono>
-#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -14,35 +13,37 @@
 
 
 using namespace std::chrono;
+
 using std::cout;
 using std::ostream;
 using std::fstream;
 using std::string;
-using std::tm;
 using std::to_string;
 
 
 class PerformanceComparator {
 private:
 	ostream &_log_file;
-	time_t _log_start_time;
+	time_point<system_clock> _log_start_time;
 
-	string _timestamp(double time) {
+	string _timestamp(time_point<system_clock> time) {
 		string begin = string("["),
 			   end = string("]"),
 			   sep = string(":");
 
-		string h = to_string(int(time) / 3600),
-			   m = to_string(int(time) / 60 % 60),
-			   s = to_string(int(time) % 60);
+		auto time_diff = time - _log_start_time;
+		string h = to_string(duration_cast<hours>(time_diff).count()),
+			   m = to_string(duration_cast<minutes>(time_diff).count()),
+			   s = to_string(duration_cast<seconds>(time_diff).count());
 		string timestamp = begin + h + sep + m + sep + s + end;
 		return timestamp;
 	}
 
 	void _write_log(string msg, int level=0) {
 		assert(_log_file.good());
-		string full_msg = _timestamp(difftime(time(0), _log_start_time));
-		full_msg += string(" ");
+
+		string full_msg = _timestamp(system_clock::now()) + string(" ");
+
 		if (level == 0) {
 			full_msg += string("= ");
 		} else if (level == 1) {
@@ -52,6 +53,7 @@ private:
 		} else if (level == 3) {
 			full_msg += string("|--- ");
 		}
+
 		full_msg += msg;
 		_log_file << full_msg;
 	}
@@ -75,8 +77,8 @@ private:
 	Matrix _diag_generate(int size, double min, double max){
     	Matrix M(size);
 	    srand(time(NULL));
-	    M(0,0) = min,
-	    M(1,1) = max;
+	    M(0, 0) = min,
+	    M(1, 1) = max;
 	    for(int i = 2; i < size; i++) {
 	    	M(i,i) = min + rand() * (max - min) / RAND_MAX;
 	    }
@@ -161,7 +163,7 @@ public:
 		string msg;
 		const string eol = string("\n");
 
-		_log_start_time = time(0);
+		_log_start_time = system_clock::now();
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
 			int size = sizes[s_idx];
