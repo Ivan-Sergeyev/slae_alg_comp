@@ -305,16 +305,6 @@ private:
 		}
 	}
 
-	Matrix _dublicate() const{
-		Matrix M(_size);
-		for (int i = 0; i < _size; ++i) {
-			for (int j = 0; j < _size; ++j) {
-				M(i,j) = _value[i][j];
-			}
-		}
-		return M;
-	}
-
 // erase
 	void _delete() {
 		if (_value) {  // TODO: check redundancy (unix specific?)
@@ -442,7 +432,7 @@ public:
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
 				for (int k = 0; k < _size; ++k){
-					result(i,j) += _value[i][k]*other(k,j);
+					result(i, j) += _value[i][k] * other(k, j);
 				}
 			}
 		}
@@ -453,7 +443,8 @@ public:
 	string repr() const {
 		assert(_is_ok());
 
-		if (!_size) {  // empty vector
+		if (!_size) {
+			// empty vector
 			return string("");
 		}
 
@@ -475,7 +466,28 @@ public:
 		}
 	}
 
-// specific function for gauss method -- pending refactor
+// transpose matrix
+	void transpose() {
+		for(int i = 0; i < _size; ++i){
+			for (int j = 0; j < _size; ++j){
+				swap(_value[i][j], _value[j][i]);
+			}
+		}
+	}
+
+// get transposed matrix
+	Matrix transposed () const {
+		Matrix t(*this);
+		t.transpose();
+		return t;
+	}
+
+// get matrix' number of conditionality
+	double mu() const {
+		return this->norm() * this->inverse().norm();
+	}
+
+// specific functions for gauss method -- pending refactor
 	void find_max_and_swap(Vector* b, int j) const {
 		int max_index = j;
 		for (int i = j+1; i < _size; ++i) if (_value[i][j] > _value[max_index][j] ) max_index = i;
@@ -507,50 +519,27 @@ public:
 // inverse matrix
 	Matrix inverse() const{
 		Vector b(_size);
-		Matrix M_dub;
+		Matrix m;
 		Vector answer(_size);
 		double coeff;
 		double* a = new double [_size*_size];
 		for (int k = 0; k < _size; ++k) {
-			 M_dub = _dublicate();
+			 m = *this;
 			for (int n = 0; n < _size; ++n) if (n == k) b(n) = 1; else b(n) = 0;
 			for(int j = 0; j < _size; ++j) {
-				M_dub.find_max_and_swap(&b, j);
+				m.find_max_and_swap(&b, j);
 				for (int i = j+1; i < _size; ++i){
-					coeff = M_dub(i,j)/M_dub(j,j);
-					M_dub.sub(&b, i, j, coeff);
+					coeff = m(i,j)/m(j,j);
+					m.sub(&b, i, j, coeff);
 				}
 			}
-			answer = M_dub.get_answer_from_triangle(b);
+			answer = m.get_answer_from_triangle(b);
 			for(int l = 0; l < _size; ++l){
 				a[k+l*_size]=answer(l);
 			}
 		}
-		Matrix M(_size, a);
-		return M;
+		return M(_size, a);
 	}
-
-// transpose matrix
-	void transpose() {
-		for(int i = 0; i < _size; ++i){
-			for (int j = 0; j < _size; ++j){
-				swap(_value[i][j], _value[j][i]);
-			}
-		}
-	}
-
-// get transposed matrix
-	Matrix transposed () const {
-		Matrix t(*this);
-		t.transpose();
-		return t;
-	}
-
-// number of conditionality
-	double mu() const {
-		return this->norm() * this->inverse().norm();
-	}
-
 
 // orthnorm
 	Matrix ort() const {
