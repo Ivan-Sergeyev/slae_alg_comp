@@ -40,6 +40,14 @@ int is_answer_good(Vector answer, Matrix M, Vector result, double epsilon){
     return 0;
 }
 
+Matrix diag_generate(double _size, double min, double max){
+    Matrix M(_size);
+    srand(time(NULL));
+    M(0,0) = min,
+    M(1,1) = max;
+    for(int i = 2; i < _size; i++) M(i,i) = min + rand()*(max-min)/RAND_MAX;
+    return M;
+}
 int main(int argn, char* argv[]){ 
     if (argn < 3){ // cheak that arguments is enought
 	return 0;
@@ -69,32 +77,44 @@ int main(int argn, char* argv[]){
     Vector b(num);
 
     if (read_vector(&b, data_file)) return 1;
-    
+ /*   
+    double c_rep[3] = {7, 8, 9};
+    Vector c(num, c_rep);    
 
- //   printf("%s \n", b.repr());
+    printf("%s \n", b.repr().c_str());
+    printf("%s \n", c.repr().c_str());
+
+    c = c - c.proj(b);
+    printf("%s \n", c.repr().c_str());
+ */
+
+    
     
     Matrix M(num);
 
     if (matrix_read(&M, data_file)) return 1;
 
-    printf("%s", M.repr().c_str() );
+  //  printf("%s", M.repr().c_str() );
+    double min = 1;
+    double max = 40;
+   M = M.ort()*diag_generate(M.get_size(), min, max);
 
-    Matrix A = M.transpose();
+   printf("min = %lf, max = %lf, mu = %lf\n", min, max, M.mu());
+   
+    //printf("|-norm %lf * % lf = %lf\n", M.norm(), M.inverse().norm(), M.mu());
 
-    printf("%s", A.repr().c_str());
-
-
-/*
+    unsigned int start_t = clock();
     GaussMethod Gauss;
-    Vector ans = *Gauss.run(M, b);
+    Vector ans = Gauss.run(M, b);
+    unsigned int end_t = clock();
  //   printf("%s \n", ans.repr());
 
+    printf("gauss time: %f\n", (end_t - start_t)*1.0/CLOCKS_PER_SEC);
    
- //   printf("%s \n", check.repr());
-
+  
     if (is_answer_good(ans, M, b, 0.1)) printf("ANSWER CORRECT\n");
     else printf("ANSWER INCORRECT\n");
-  */
+  
     /*
     //gause algoritm
     element* M_dub; 

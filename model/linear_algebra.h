@@ -242,6 +242,21 @@ public:
 		rep += to_string(_coord[_size - 1]);
 		return rep;
 	}
+
+
+	Vector proj(const Vector  &a) {// projection on a
+		Vector b(a);
+		double coeff1 = 0;
+		double coeff2 = 0;
+		for ( int i  = 0;  i < _size; i++){
+			coeff1+= a(i)*_coord[i];
+			coeff2+= a(i)*a(i);
+		}
+		for (int i = 0; i < _size; i++){
+			b(i) *= coeff1/coeff2;
+		}
+		return b;
+	}
 };
 
 
@@ -509,6 +524,46 @@ public:
 // number of conditionality
 	double mu() const{
 		return this->norm()*this->inverse().norm();
+	}
+
+
+// orthnorm
+
+	Matrix ort() const{
+		double* a = new double [_size*_size];
+		double* add = new double [_size];
+		double coeff1;
+		double coeff2;
+		for (int j = 0; j  < _size ; j++){
+			for ( int l = 0; l < _size; l ++) add[l]=0;
+
+			for ( int k = 0; k < j; k++){
+				coeff1 = 0;
+				coeff2 = 0;
+				for ( int l  = 0;  l < _size; l++){
+					coeff1+= _value[l][j]*a[l*_size+k];
+					coeff2+= a[l*_size+k]*a[l*_size+k];
+				}
+				coeff1 = coeff1/coeff2;
+				for ( int l = 0; l < _size; l++){
+					add[l] -= coeff1*a[l*_size+k];
+				}
+			}
+
+			for(int l = 0; l < _size; l++){
+				a[l*_size+j] = _value[l][j]+add[l];
+			}
+			coeff1 = 0;
+			for ( int l  = 0;  l < _size; l++){
+				coeff1+= a[l*_size+j]*a[l*_size+j];
+			}
+			coeff1 = sqrt(coeff1);
+			for ( int l  = 0;  l < _size; l++){
+				a[l*_size+j]/=coeff1;
+			}
+		}
+		Matrix M(_size, a);
+		return M;
 	}
 };
 

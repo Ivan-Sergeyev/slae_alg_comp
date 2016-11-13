@@ -38,6 +38,7 @@ private:
 	//  * pass generator functions as arguments to run_comparison
 
 	Matrix _generate_random_matrix(int size) {
+		srand(time(NULL));
 		int n = size * size;
 		double *values = new double[n];
 		for(int i = 0; i < n; ++i) {
@@ -46,6 +47,23 @@ private:
 		Matrix m(size, values);
 		delete[] values;
 		return m;
+	}
+
+	Matrix _diag_generate(int _size, double min, double max){
+    	Matrix M(_size);
+	    srand(time(NULL));
+	    M(0,0) = min,
+	    M(1,1) = max;
+	    for(int i = 2; i < _size; i++) M(i,i) = min + rand()*(max-min)/RAND_MAX;
+	    return M;
+	}
+
+	Matrix _generate_random_matrix_with_mu(int _size, double mu){
+		Matrix M = _generate_random_matrix(_size);
+	    double min = 1;
+	    double max = min*mu;
+		M = M.ort()*diag_generate(M.get_size(), min, max);
+		return M;
 	}
 
 	void _make_diagonally_dominant(Matrix &m) {
