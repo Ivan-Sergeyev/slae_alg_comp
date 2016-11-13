@@ -91,7 +91,7 @@ int main(int argc, char **argv) {
 	printf("perform measurements\n");
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
-	PerformanceComparator p_comp;
+	PerformanceComparator p_comp(cout);
 	p_comp.run_comparison(num_methods, methods, num_sizes, sizes,
 						  num_runs, data_filename_format);
 

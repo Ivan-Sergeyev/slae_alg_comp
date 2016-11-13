@@ -13,6 +13,7 @@
 
 
 using std::cout;
+using std::ostream;
 using std::fstream;
 using std::string;
 using std::to_string;
@@ -20,17 +21,20 @@ using std::to_string;
 
 class PerformanceComparator {
 private:
+	ostream &_log_file;
 	clock_t _log_start_time;
 
 	void _write_log(string msg, int level=0) {
-		// TODO: use log file (fstream)
+		assert(_log_file.good());
+		string full_msg;
 		if (level == 1) {
-			cout << "| ";
+			full_msg += "| ";
 		} else if (level == 2) {
-			cout << "|-";
+			full_msg += "|-";
 		}
-		// TODO: add timestamp using _log_start_time
-		cout << msg;
+		// TODO: full_msg += timestamp + " ";
+		full_msg += msg;
+		_log_file << full_msg;
 	}
 
 	// TODO:
@@ -54,7 +58,9 @@ private:
 	    srand(time(NULL));
 	    M(0,0) = min,
 	    M(1,1) = max;
-	    for(int i = 2; i < _size; i++) M(i,i) = min + rand()*(max-min)/RAND_MAX;
+	    for(int i = 2; i < _size; i++) {
+	    	M(i,i) = min + rand() * (max - min) / RAND_MAX;
+	    }
 	    return M;
 	}
 
@@ -62,7 +68,7 @@ private:
 		Matrix M = _generate_random_matrix(_size);
 	    double min = 1;
 	    double max = min*mu;
-		M = M.ort()*diag_generate(M.get_size(), min, max);
+		M = M.ort() * _diag_generate(M.get_size(), min, max);
 		return M;
 	}
 
@@ -124,7 +130,7 @@ private:
 	}
 */
 public:
-	PerformanceComparator() {}
+	PerformanceComparator(ostream &log_file) : _log_file(log_file) {}
 
 	void run_comparison(int num_methods, GenericMethod **methods,
 						int num_sizes, const int *sizes,
@@ -138,9 +144,10 @@ public:
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
 			int size = sizes[s_idx];
 			for(int r_idx = 0; r_idx < num_runs; ++r_idx) {
+				f = _generate_random_vector(size);
 				A = _generate_random_matrix(size);
 				_make_diagonally_dominant(A);
-				f = _generate_random_vector(size);
+				double cond_num = A.mu();
 
 				for (int m_idx = 0; m_idx < num_methods; ++m_idx)
 				{
@@ -166,13 +173,13 @@ public:
 						string("./data/data_") + verdict + string("_") +
 						methods[m_idx]->get_name() + string(".txt");
 
-					fstream data_file(data_filename, fstream::out | fstream::app);
+					fstream data_file(data_filename, ostream::out | ostream::app);
 					if (!(data_file.is_open())) {
 						cout << "Error opening data file \"" << data_filename << "\"\n";
 						cout << "Aborting\n";
 						return;
 					}
-					data_file << size << " " << dtime << "\n";
+					data_file << size << " " << dtime << " " << cond_num << "\n";
 					data_file.close();
 				}
 			}
