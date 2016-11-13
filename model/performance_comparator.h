@@ -2,41 +2,56 @@
 #define __PERFORMANCE_COMPARATOR__
 
 #include <algorithm>
+#include <chrono>
+#include <ctime>
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
 #include <string>
-#include <time.h>
 
 #include "generic_method.h"
 #include "linear_algebra.h"
 
 
+using namespace std::chrono;
 using std::cout;
 using std::ostream;
 using std::fstream;
 using std::string;
+using std::tm;
 using std::to_string;
 
 
 class PerformanceComparator {
 private:
 	ostream &_log_file;
-	clock_t _log_start_time;
+	time_t _log_start_time;
+
+	string _timestamp(double time) {
+		string begin = string("["),
+			   end = string("]"),
+			   sep = string(":");
+
+		string h = to_string(int(time) / 3600),
+			   m = to_string(int(time) / 60 % 60),
+			   s = to_string(int(time) % 60);
+		string timestamp = begin + h + sep + m + sep + s + end;
+		return timestamp;
+	}
 
 	void _write_log(string msg, int level=0) {
 		assert(_log_file.good());
-		string full_msg;
-		if (level == 1) {
-			full_msg += "= ";
+		string full_msg = _timestamp(difftime(time(0), _log_start_time));
+		full_msg += string(" ");
+		if (level == 0) {
+			full_msg += string("= ");
 		} else if (level == 1) {
-			full_msg += "|- ";
+			full_msg += string("|- ");
 		} else if (level == 2) {
-			full_msg += "|== ";
+			full_msg += string("|== ");
 		} else if (level == 3) {
-			full_msg += "|--- ";
+			full_msg += string("|--- ");
 		}
-		// TODO: full_msg += timestamp + " ";
 		full_msg += msg;
 		_log_file << full_msg;
 	}
@@ -110,7 +125,7 @@ private:
      	return *v;
 	 }
 
-	// //read matrix from file
+	// read matrix from file
 	Matrix& _read_matrix(FILE* file, int size) { //check for work
 	 	int n = size * size;
 	 	double *values = new double[n];
@@ -146,15 +161,15 @@ public:
 		string msg;
 		const string eol = string("\n");
 
-		// _log_start_time = clock();
+		_log_start_time = time(0);
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
 			int size = sizes[s_idx];
 			msg = string("running on size = ") + to_string(size) + eol;
 			_write_log(msg, 0);
 
-			for(int m_idx = 0; m_idx < num_mus; ++m_idx) {
-				double mu = mus[m_idx];
+			for(int mu_idx = 0; mu_idx < num_mus; ++mu_idx) {
+				double mu = mus[mu_idx];
 				msg = string("running on mu = ") + to_string(mu) + eol;
 				_write_log(msg, 1);
 
@@ -178,10 +193,9 @@ public:
 									 methods[m_idx]->get_name() + eol;
 						_write_log(msg, 3);
 
-						time_t time = -clock();
+						auto start_time = high_resolution_clock::now();
 						res = methods[m_idx]->run(A, f);
-						time += clock();
-						double dtime = ((double) time) / CLOCKS_PER_SEC;
+						auto end_time = high_resolution_clock::now();
 
 						string verdict;
 						if (res.get_size() == size) {
@@ -201,12 +215,16 @@ public:
 							cout << "Aborting\n";
 							return;
 						}
-						data_file << size << " " << dtime << " " << mu << "\n";
+						auto elapsed_ns = duration_cast<nanoseconds>(end_time - start_time).count();
+						double elapsed_s = (double)elapsed_ns / (double)1000000000;
+
+						data_file << size << " " << elapsed_s << " " << mu << "\n";
 						data_file.close();
+						// for m_idx
 					}
 					// for r_idx
 				}
-			// for m_idx
+			// for mu_idx
 			}
 		// for s_idx
 		}
