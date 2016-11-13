@@ -222,6 +222,37 @@ public:
 		return mul;
 	}
 
+// division (vector times double)
+	Vector operator / (const double &a) const {
+		assert(a);
+		return *this * (1/a);
+	}
+
+// dot product
+	double dot_product(const Vector &other) const {
+		assert(_is_ok());
+		assert(_size == other.get_size());
+		double prod = 0;
+		for (int i = 0; i < _size; ++i) {
+			prod += _coord[i] * other(i);
+		}
+		return prod;
+	}
+
+// dot product
+	friend double dot_product(const Vector &a, const Vector &b) {
+		return a.dot_product(b);
+	}
+
+// project this vector on another
+	Vector project(const Vector &other) {
+		assert(_is_ok());
+		assert(_size == other.get_size());
+		double c1 = dot_product(other);
+		double c2 = dot_product(*this);
+		return other * c1 / c2;
+	}
+
 // multiplication (double times vector)
 	friend Vector operator * (const double &a, const Vector &vector) {
 		return vector * a;
@@ -241,21 +272,6 @@ public:
 		}
 		rep += to_string(_coord[_size - 1]);
 		return rep;
-	}
-
-
-	Vector proj(const Vector  &a) {// projection on a
-		Vector b(a);
-		double coeff1 = 0;
-		double coeff2 = 0;
-		for ( int i  = 0;  i < _size; i++){
-			coeff1+= a(i)*_coord[i];
-			coeff2+= a(i)*a(i);
-		}
-		for (int i = 0; i < _size; i++){
-			b(i) *= coeff1/coeff2;
-		}
-		return b;
 	}
 };
 
@@ -295,7 +311,7 @@ private:
 			for (int j = 0; j < _size; ++j) {
 				M(i,j) = _value[i][j];
 			}
-		}	
+		}
 		return M;
 	}
 
@@ -418,18 +434,21 @@ public:
 		}
 		return result;
 	}
+
+// multiplication by a matrix
 	Matrix operator * (const Matrix &other) const {
 		assert(_size == other.get_size());
 		Matrix result(_size);
-		for (int i = 0; i < _size; i++) {
-			for (int j = 0; j < _size; j++) {
-				for (int k = 0; k < _size; k++){
+		for (int i = 0; i < _size; ++i) {
+			for (int j = 0; j < _size; ++j) {
+				for (int k = 0; k < _size; ++k){
 					result(i,j) += _value[i][k]*other(k,j);
 				}
 			}
 		}
 		return result;
 	}
+
 // string representation
 	string repr() const {
 		assert(_is_ok());
@@ -459,10 +478,10 @@ public:
 // specific function for gauss method -- pending refactor
 	void find_max_and_swap(Vector* b, int j) const {
 		int max_index = j;
-		for (int i = j+1; i < _size; i++) if (_value[i][j] > _value[max_index][j] ) max_index = i;
+		for (int i = j+1; i < _size; ++i) if (_value[i][j] > _value[max_index][j] ) max_index = i;
 		if (max_index != j){
 			double temp;
-			for (int i = j; i < _size; i++) {
+			for (int i = j; i < _size; ++i) {
 				temp = _value[j][i]; _value[j][i] = _value[max_index][i]; _value[max_index][i] = temp;
 			}
 			temp = (*b)(j); (*b)(j) = (*b)(max_index); (*b)(max_index) = temp;
@@ -470,7 +489,7 @@ public:
 
  	}
  	void sub(Vector* b, int k, int l, double coeff) const{
-		for (int i = 0; i < _size; i++) _value[k][i] -= _value[l][i]*coeff;
+		for (int i = 0; i < _size; ++i) _value[k][i] -= _value[l][i]*coeff;
 		(*b)(k) -= (*b)(l)*coeff;
 	}
 
@@ -479,7 +498,7 @@ public:
 		double cash;
 		for (int j = _size-1; j >=0; j--){
 			cash = b(j);
-			for (int i = j+1; i < _size; i++) cash -= _value[j][i] * result(i);
+			for (int i = j+1; i < _size; ++i) cash -= _value[j][i] * result(i);
 			result(j) = cash/_value[j][j];
 		}
 		return result;
@@ -492,74 +511,81 @@ public:
 		Vector answer(_size);
 		double coeff;
 		double* a = new double [_size*_size];
-		for (int k = 0; k < _size; k++) {
+		for (int k = 0; k < _size; ++k) {
 			 M_dub = _dublicate();
-			for (int n = 0; n < _size; n++) if (n == k) b(n) = 1; else b(n) = 0;
-			for( int j = 0; j < _size; j++) {
+			for (int n = 0; n < _size; ++n) if (n == k) b(n) = 1; else b(n) = 0;
+			for(int j = 0; j < _size; ++j) {
 				M_dub.find_max_and_swap(&b, j);
-				for (int i = j+1; i < _size; i++){
+				for (int i = j+1; i < _size; ++i){
 					coeff = M_dub(i,j)/M_dub(j,j);
 					M_dub.sub(&b, i, j, coeff);
 				}
 			}
 			answer = M_dub.get_answer_from_triangle(b);
-			for(int l = 0; l < _size; l++){
+			for(int l = 0; l < _size; ++l){
 				a[k+l*_size]=answer(l);
 			}
 		}
 		Matrix M(_size, a);
 		return M;
 	}
-//Transpose
-	Matrix transpose() const{
-		double* a = new double [_size*_size];
-		for(int i = 0; i < _size; i++){
-			for (int j = 0; j < _size; j++){	
-				a[j*_size+i] = _value[i][j];
+
+// transpose matrix
+	void transpose() {
+		for(int i = 0; i < _size; ++i){
+			for (int j = 0; j < _size; ++j){
+				swap(_value[i][j], _value[j][i]);
 			}
 		}
-		Matrix M(_size,a);
-		return M;
 	}
+
+// get transposed matrix
+	Matrix transposed () const {
+		Matrix t(*this);
+		t.transpose();
+		return t;
+	}
+
 // number of conditionality
-	double mu() const{
-		return this->norm()*this->inverse().norm();
+	double mu() const {
+		return this->norm() * this->inverse().norm();
 	}
 
 
 // orthnorm
-
-	Matrix ort() const{
-		double* a = new double [_size*_size];
-		double* add = new double [_size];
+	Matrix ort() const {
+		double* a = new double [_size*_size];  // !!! never deleted
+		double* add = new double [_size];      // !!! never deleted
 		double coeff1;
 		double coeff2;
-		for (int j = 0; j  < _size ; j++){
-			for ( int l = 0; l < _size; l ++) add[l]=0;
+		for (int j = 0; j  < _size ; ++j){
+			for (int l = 0; l < _size; l++ ) {
+				add[l] = 0;
+			}
 
-			for ( int k = 0; k < j; k++){
+			for (int k = 0; k < j; ++k){
 				coeff1 = 0;
 				coeff2 = 0;
-				for ( int l  = 0;  l < _size; l++){
-					coeff1+= _value[l][j]*a[l*_size+k];
-					coeff2+= a[l*_size+k]*a[l*_size+k];
+				for (int l = 0;  l < _size; ++l){
+					coeff1 += _value[l][j] * a[l * _size + k];
+					coeff2 += a[l * _size + k] * a[l * _size + k];
 				}
 				coeff1 = coeff1/coeff2;
-				for ( int l = 0; l < _size; l++){
-					add[l] -= coeff1*a[l*_size+k];
+				for (int l = 0; l < _size; ++l){
+					add[l] -= coeff1 * a[l*_size + k];
 				}
 			}
 
-			for(int l = 0; l < _size; l++){
-				a[l*_size+j] = _value[l][j]+add[l];
+			for(int l = 0; l < _size; ++l){
+				a[l * _size + j] = _value[l][j] + add[l];
 			}
 			coeff1 = 0;
-			for ( int l  = 0;  l < _size; l++){
-				coeff1+= a[l*_size+j]*a[l*_size+j];
+			for (int l = 0; l < _size; ++l){
+				coeff1 += a[l * _size + j] * a[l * _size + j];
 			}
 			coeff1 = sqrt(coeff1);
-			for ( int l  = 0;  l < _size; l++){
-				a[l*_size+j]/=coeff1;
+			for (int l = 0; l < _size; ++l){
+				a[l * _size + j]/=coeff1;
 			}
 		}
 		Matrix M(_size, a);

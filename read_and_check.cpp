@@ -95,7 +95,7 @@ int main(int argc, char** argv) {
 	printf("%s \n", b.repr().c_str());
 	printf("%s \n", c.repr().c_str());
 
-	c = c - c.proj(b);
+	c = c - c.project(b);
 	printf("%s \n", c.repr().c_str());
  */
 

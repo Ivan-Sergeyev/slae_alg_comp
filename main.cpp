@@ -57,13 +57,13 @@ int main(int argc, char **argv) {
 // setup
 	printf("perform setup\n");
 
-	const int num_sizes = 4;
+	const int num_sizes = 2;
 	int sizes[num_sizes];
 	for (int i = 0; i < num_sizes; ++i) {
 		sizes[i] = i * 100 + 100;
 	}
 
-	const int num_runs = 10;
+	const int num_runs = 2;
 
 	const double tolerance = 0.0078125;  // 2^{-7}
 	const int max_faults = 20;
