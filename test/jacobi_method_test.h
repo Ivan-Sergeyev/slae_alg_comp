@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string>
 
-#include "jacobi_method.h"
-#include "linear_algebra.h"
+#include "../model/jacobi_method.h"
+#include "../model/linear_algebra.h"
 
 
 using std::cerr;

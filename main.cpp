@@ -21,8 +21,8 @@ using std::system;
 
 #ifndef NDEBUG  // debug version
 
-#include "model/linear_algebra_test.h"
-#include "model/jacobi_method_test.h"
+#include "test/linear_algebra_test.h"
+#include "test/jacobi_method_test.h"
 
 
 void test() {
