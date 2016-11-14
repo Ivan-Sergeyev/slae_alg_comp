@@ -66,65 +66,81 @@ void fill_geom_progr(double *sizes, int num_elems, double start, double mul) {
 
 int main(int argc, char **argv) {
 #ifndef NDEBUG
-	if (argc == 2 && !strcmp(argv[1], "test")) {
+	if (argc == 2 && string(argv[1]) == string("test")) {
+		cerr << "commence testing\n";
 		test();
 		return 0;
 	}
 #endif  // NDEBUG
 
 // setup
-	cerr << "perform setup\n";
+	cerr << "commence setup\n";
 
 	// populate a list of small sizes
-	const int small_num_sizes = 1,
-			  small_start = 100,
-			  small_step = 100;
+	int small_num_sizes = 30,
+		small_start = 100,
+		small_step = 100;
 	int small_sizes[small_num_sizes];
 	fill_arithm_progr(small_sizes, small_num_sizes, small_start, small_step);
 
 	// populate a list of large sizes
-	const int large_num_sizes = 0,
-			  large_start = 3100,
-			  large_step = 100;
+	int large_num_sizes = 50,
+		large_start = 3100,
+		large_step = 100;
 	int large_sizes[large_num_sizes];
 	fill_arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
 
 	// populate a list of conditionality numbers
-	const int num_mus = 10;
-	const double mu_start = 2,
-				 mu_mul = 2;
+	int num_mus = 10;
+	double mu_start = 2,
+		   mu_mul = 2;
 	double mus[num_mus];
 	fill_geom_progr(mus, num_mus, mu_start, mu_mul);
 
+	if (argc == 2 && string(argv[1]) == string("test_run")) {
+		// only run on small number of tests
+		cerr << "test_run mode enabled\n";
+		small_num_sizes = 1;
+		large_num_sizes = 0;
+	}
+
 	// set number of runs for each size and number of conditionality
-	const int num_runs = 10;
+	int num_runs = 10;
 
 	// set parameters for numeric algorithms
-	const double tolerance = 0.0078125;  // 2^{-7}
-	const int max_faults = 20;
+	double tolerance = 0.0078125;  // 2^{-7}
+	int max_faults = 20;
 
 	// populate mathods
-	const int num_methods = 5;
-	JacobiMethod jacobi_method(tolerance, max_faults);
-	OverrelaxationMethod gauss_seidel_method(1.0, tolerance, max_faults),
-						 lower_relaxation_method(0.5, tolerance, max_faults),
-						 upper_relaxation_method(1.5, tolerance, max_faults);
-	GaussMethod gauss_method;
+	int num_or_methods = 2 + 3,  // number of overrelaxation methods
+		num_methods = num_or_methods + 2;  // total number of methods
 
 	GenericMethod **methods = new GenericMethod* [num_methods];
-	methods[0] = &jacobi_method;
-	cerr << "added " << methods[0]->get_name() << "\n";
-	methods[1] = &gauss_seidel_method;
-	cerr << "added " << methods[1]->get_name() << "\n";
-	methods[2] = &lower_relaxation_method;
-	cerr << "added " << methods[2]->get_name() << "\n";
-	methods[3] = &upper_relaxation_method;
-	cerr << "added " << methods[3]->get_name() << "\n";
-	methods[4] = &gauss_method;
-	cerr << "added " << methods[4]->get_name() << "\n";
+	int m_idx = 0;
+
+	// add overrelaxation methods
+	double tau = 0.0l;
+	double tau_step = 1.0l / (num_or_methods - 1);
+	for(; m_idx < num_or_methods; ++m_idx) {
+		tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
+		methods[m_idx] = new OverrelaxationMethod(tau, tolerance, max_faults);
+		cerr << "added " << methods[m_idx]->get_name() << "\n";
+	}
+
+	// add jacobi method
+	JacobiMethod jacobi_method(tolerance, max_faults);
+	methods[m_idx] = &jacobi_method;
+	cerr << "added " << methods[m_idx]->get_name() << "\n";
+	++m_idx;
+	// add gauss method
+	GaussMethod gauss_method;
+	methods[m_idx] = &gauss_method;
+	cerr << "added " << methods[m_idx]->get_name() << "\n";
+	++m_idx;
+	assert(m_idx == num_methods);
 
 // perform measurements
-	cerr << "perform measurements\n";
+	cerr << "commence measurements\n";
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
 	PerformanceComparator p_comp(cerr);
@@ -141,11 +157,10 @@ int main(int argc, char **argv) {
 // prepare plot and run gnuplot
 	cerr << "generate plotfiles\n";
 
-	// beginstab
+	// todo: use format strings
 	string plot_all = string("./gnuplot/plot_all.plt"),
 		   graph_all_rel = string("../graphs/graph_all.png"),
 		   data_format_rel = string("../data/data_converged_%s.txt");
-	// endstab
 
 	generate_plotfile(plot_all, graph_all_rel,
 					  data_format_rel, num_methods, methods);
@@ -168,7 +183,7 @@ int main(int argc, char **argv) {
 	chdir("..");
 
 // perform cleanup
-	cerr << "perform cleanup\n";
+	cerr << "commence cleanup\n";
 	delete[] methods;
 
 	cerr << "done\n";

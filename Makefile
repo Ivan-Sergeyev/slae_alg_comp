@@ -12,3 +12,6 @@ run: main
 
 test: main
 	./main test
+
+test_run: main
+	./main test_run
