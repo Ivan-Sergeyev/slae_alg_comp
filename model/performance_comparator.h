@@ -204,22 +204,23 @@ public:
 		Matrix A;
 		Vector f;
 		string msg;
+		const string sep = string("==========================================");
 		const string eol = string("\n");
 
 		_log_start_time = system_clock::now();
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
 			const int size = sizes[s_idx];
-			msg = string("running on size = ") + to_string(size) + eol;
 			_write_log(msg, 0);
 
 			for(int mu_idx = 0; mu_idx < num_mus; ++mu_idx) {
 				const double mu = mus[mu_idx];
-				msg = string("running on mu = ") + to_string(mu) + eol;
 				_write_log(msg, 1);
 
 				for(int r_idx = 0; r_idx < num_runs; ++r_idx) {
-					msg = string("run #") + to_string(r_idx) + eol;
+					msg = string("run #") + to_string(r_idx);
+					msg += string(" on size = ") + to_string(size);
+					msg += string(" with mu = ") + to_string(mu) + eol;
 					_write_log(msg, 2);
 
 					msg = string("generating the system") + eol;
