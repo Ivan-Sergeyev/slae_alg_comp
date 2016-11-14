@@ -1,18 +1,21 @@
-# no executables
+# executables
 *.exe
 *.out
 
-# no bat or batch files
+# bat and batch files
 *.bat
 *.sh
 
-# no results
+# logs
+*log.txt
+
+# results
 *.png
 gnuplot/*
 data/*
 graphs/*
 
-# but keep folders for results
+# exclude folders for results
 !gnuplot/.gitkeep
 !data/.gitkeep
 !graphs/.gitkeep
