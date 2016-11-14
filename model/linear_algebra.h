@@ -150,6 +150,11 @@ public:
 		return 1;
 	}
 
+// inequality check
+	bool operator != (const Vector &other) const {
+		return !(*this == other);
+	}
+
 // binary plus
 	Vector operator + (const Vector &other) {
 		assert(_is_ok());
