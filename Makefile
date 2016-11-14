@@ -1,5 +1,5 @@
 all: main
-	./main
+	./main 2>log_file.txt
 
 clean:
 	rm -f *.exe model/*.exe data/*.txt gnuplot/*.plt graphs/*.png
