@@ -99,8 +99,8 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n"
+				 << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -121,8 +121,8 @@ namespace linear_algebra_test {
 		int x_size = x.get_size();
 
 		if (x_size != x_size_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x_size = " << x_size
+			cerr << "  | failure\n"
+				 << "  | x_size = " << x_size
 				 << ", should be " << x_size_ref << "\n";
 			ret = 1;
 		} else {
@@ -144,8 +144,8 @@ namespace linear_algebra_test {
 		int x_val_ref = x_coord[idx];
 
 		if (x_val != x_val_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x[" << idx << "] = " << x_val
+			cerr << "  | failure\n"
+				 << "  | x[" << idx << "] = " << x_val
 				 << ", should be " << x_val_ref << "\n";
 			ret = 1;
 		} else {
@@ -168,8 +168,8 @@ namespace linear_algebra_test {
 		int x_val = x(idx);
 
 		if (x_val != x_val_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x[" << idx << "] = " << x_val
+			cerr << "  | failure\n"
+				 << "  | x[" << idx << "] = " << x_val
 				 << ", should be " << x_val_ref << "\n";
 			ret = 1;
 		} else {
@@ -190,8 +190,8 @@ namespace linear_algebra_test {
 		double x_n_ref = 3.0;
 
 		if (x_n != x_n_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x_norm = " << x_n
+			cerr << "  | failure\n"
+				 << "  | x_norm = " << x_n
 				 << ", should be " << x_n_ref << "\n";
 			ret = 1;
 		} else {
@@ -214,8 +214,8 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n"
+				 << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -240,16 +240,16 @@ namespace linear_algebra_test {
 		Vector v(size, v_coord);
 
 		if (!(x == y)) {
-			cerr << "  | failure\n";
-			cerr << "  | " << x.repr() << " should be = " << y.repr() << "\n";
+			cerr << "  | failure\n"
+				 << "  | " << x.repr() << " should be = " << y.repr() << "\n";
 			ret = 1;
 		} else if (x == z) {
-			cerr << "  | failure\n";
-			cerr << "  | " << x.repr() << " should be != " << z.repr() << "\n";
+			cerr << "  | failure\n"
+				 << "  | " << x.repr() << " should be != " << z.repr() << "\n";
 			ret = 1;
 		} else if (x == v) {
-			cerr << "  | failure\n";
-			cerr << "  | " << x.repr() << " should be != " << v.repr() << "\n";
+			cerr << "  | failure\n"
+				 << "  | " << x.repr() << " should be != " << v.repr() << "\n";
 			ret = 1;
 		} else {
 			cerr << "  | success\n";
@@ -272,8 +272,8 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("11.000000 22.000000 33.000000");
 
 		if (z_repr != z_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n"
+				 << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -298,8 +298,8 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("-9.000000 -18.000000 -27.000000");
 
 		if (z_repr != z_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n"
+				 << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -322,8 +322,8 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("1.000000 2.000000 3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n"
+				 << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -347,8 +347,8 @@ namespace linear_algebra_test {
 		string z_repr_ref = string("-1.000000 -2.000000 -3.000000");
 
 		if (z_repr != z_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | z_repr = \"" << z_repr
+			cerr << "  | failure\n"
+				 << "  | z_repr = \"" << z_repr
 				 << "\", should be \"" << z_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -375,13 +375,13 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (x_repr != x_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x_repr = \"" << x_repr
+			cerr << "  | failure\n"
+				 << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else if (y_repr != y_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n"
+				 << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -408,13 +408,13 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (x_repr != x_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x_repr = \"" << x_repr
+			cerr << "  | failure\n"
+				 << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else if (y_repr != y_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n"
+				 << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -438,8 +438,8 @@ namespace linear_algebra_test {
 		string x_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (x_repr != x_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x_repr = \"" << x_repr
+			cerr << "  | failure\n"
+				 << "  | x_repr = \"" << x_repr
 				 << "\", should be \"" << x_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -463,8 +463,8 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (y_repr != y_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n"
+				 << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -489,8 +489,8 @@ namespace linear_algebra_test {
 		string y_repr_ref = string("10.000000 20.000000 30.000000");
 
 		if (y_repr != y_repr_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | y_repr = \"" << y_repr
+			cerr << "  | failure\n"
+				 << "  | y_repr = \"" << y_repr
 				 << "\", should be \"" << y_repr_ref << "\"\n";
 			ret = 1;
 		} else {
@@ -626,8 +626,8 @@ namespace linear_algebra_test {
 		int x_size = x.get_size();
 
 		if (x_size != x_size_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | x_size = " << x_size
+			cerr << "  | failure\n"
+				 << "  | x_size = " << x_size
 				 << ", should be " << x_size_ref << "\n";
 			ret = 1;
 		} else {
@@ -651,8 +651,8 @@ namespace linear_algebra_test {
 				double v_ref = m_value_ref[i * m_size_ref + 1];
 				m(i, j) = v_ref;
 				if (m(i, j) != v_ref) {
-					cerr << "  | failure\n";
-					cerr << "  | m(" << i << ", " << j << ") = " << m(i, j)
+					cerr << "  | failure\n"
+				 << "  | m(" << i << ", " << j << ") = " << m(i, j)
 						 << " != " << v_ref << "\n";
 					ret = 1;
 				}
@@ -675,8 +675,8 @@ namespace linear_algebra_test {
 		double norm = m.norm();
 
 		if (norm != norm_ref) {
-			cerr << "  | failure\n";
-			cerr << "  | norm = " << norm << " != " << norm_ref << "\n";
+			cerr << "  | failure\n"
+				 << "  | norm = " << norm << " != " << norm_ref << "\n";
 			ret = 1;
 		} else {
 			cerr << "  | success\n";
