@@ -15,7 +15,7 @@ namespace jacobi_method_test {
 	typedef int (*test_function_pointer)();
 
 	int _test_identity_matrix() {
-		cerr << "  | testing with identity matrix\n";
+		cerr << "  | testing JacobiMethod with identity matrix\n";
 		bool ret = 0;
 
 		double tolerance = 1e-8;
@@ -45,7 +45,7 @@ namespace jacobi_method_test {
 	}
 
 	int _test_coursebook_ex() {
-		cerr << "  | testing with matrix from coursebook example\n";
+		cerr << "  | testing JacobiMethod with coursebook example\n";
 		bool ret = 0;
 
 		double tolerance = 1e-8;
@@ -80,7 +80,7 @@ namespace jacobi_method_test {
 
 		int num_fails = 0;
 		for (int i = 0; jacobi_method_tests[i]; ++i) {
-			cerr << "  JacobiMethod -- test #" << i << "\n";
+			cerr << "  test #" << i << "\n";
 			num_fails += jacobi_method_tests[i]();
 		}
 

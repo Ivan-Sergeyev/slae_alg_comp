@@ -15,7 +15,7 @@ namespace linear_algebra_test {
 	typedef int (*test_function_pointer)();
 
 	int _test_v_ctor_0() {
-		cerr << "  | testing Vector()\n";
+		cerr << "  | testing Vector::Vector()\n";
 		bool ret = 0;
 		Vector x;
 
@@ -42,7 +42,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_ctor_i() {
-		cerr << "  | testing Vector(const int size)\n";
+		cerr << "  | testing Vector::Vector(const int size)\n";
 		bool ret = 0;
 		int x_size_ref = 5;
 
@@ -64,7 +64,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_ctor_ipd() {
-		cerr << "  | testing Vector(const int size, const double *value)\n";
+		cerr << "  | testing Vector::Vector(const int size, const double *value)\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -87,7 +87,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_ctor_vec() {
-		cerr << "  | testing Vector(const Vector &other)\n";
+		cerr << "  | testing Vector::Vector(const Vector &other)\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -111,7 +111,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_get_size() {
-		cerr << "  | testing get_size()\n";
+		cerr << "  | testing Vector::get_size()\n";
 		bool ret = 0;
 		int x_size_ref = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -132,7 +132,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_idx_c() {
-		cerr << "  | testing const operator ()\n";
+		cerr << "  | testing Vector::const operator ()\n";
 		bool ret = 0;
 		int size = 3;
 		int idx = 2;
@@ -155,7 +155,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_idx_v() {
-		cerr << "  | testing operator ()\n";
+		cerr << "  | testing Vector::operator ()\n";
 		bool ret = 0;
 		int size = 3;
 		int idx = 2;
@@ -179,7 +179,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_norm() {
-		cerr << "  | testing norm()\n";
+		cerr << "  | testing Vector::norm()\n";
 		bool ret = 0;
 		int size = 4;
 		double x_coord[] = {0.0, 1.0, -2.0, 3.0};
@@ -201,7 +201,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_assignment() {
-		cerr << "  | testing operator =\n";
+		cerr << "  | testing Vector::operator =\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -226,7 +226,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_eq() {
-		cerr << "  | testing operator ==\n";
+		cerr << "  | testing Vector::operator ==\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -258,7 +258,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_plus_b() {
-		cerr << "  | testing binary operator +\n";
+		cerr << "  | testing Vector::binary operator +\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -284,7 +284,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_minus_b() {
-		cerr << "  | testing binary operator -\n";
+		cerr << "  | testing Vector::binary operator -\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -310,7 +310,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_plus_u() {
-		cerr << "  | testing unary operator +\n";
+		cerr << "  | testing Vector::unary operator +\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -334,7 +334,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_minus_u() {
-		cerr << "  | testing unary operator -\n";
+		cerr << "  | testing Vector::unary operator -\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -359,7 +359,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_plus_e() {
-		cerr << "  | testing operator +=\n";
+		cerr << "  | testing Vector::operator +=\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -392,7 +392,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_minus_e() {
-		cerr << "  | testing operator -=\n";
+		cerr << "  | testing Vector::operator -=\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -425,7 +425,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_mul_e() {
-		cerr << "  | testing operator *=\n";
+		cerr << "  | testing Vector::operator *=\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -450,7 +450,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_mul_vd() {
-		cerr << "  | testing operator * (Vector, double)\n";
+		cerr << "  | testing Vector::operator * (Vector, double)\n";
 		bool ret = 0;
 		int size = 3;
 		double x_coord[] = {1.0, 2.0, 3.0};
@@ -475,7 +475,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_v_mul_dv() {
-		cerr << "  | testing operator * (double, Vector)\n";
+		cerr << "  | testing Vector::operator * (double, Vector)\n";
 		bool ret = 0;
 
 		int size = 3;
@@ -501,7 +501,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_ctor_0() {
-		cerr << "  | testing Matrix()\n";
+		cerr << "  | testing Matrix::Matrix()\n";
 		bool ret = 0;
 
 		Matrix m;
@@ -521,7 +521,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_ctor_i() {
-		cerr << "  | testing Matrix(const int size)\n";
+		cerr << "  | testing Matrix::Matrix(const int size)\n";
 		bool ret = 0;
 
 		int m_size_ref = 2;
@@ -551,7 +551,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_ctor_id() {
-		cerr << "  | testing Matrix(const int size, const double *value)\n";
+		cerr << "  | testing Matrix::Matrix(const int size, const double *value)\n";
 		// also testing const operator ()
 		bool ret = 0;
 
@@ -583,7 +583,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_ctor_m() {
-		cerr << "  | testing Matrix(const Matrix &other)\n";
+		cerr << "  | testing Matrix::Matrix(const Matrix &other)\n";
 		bool ret = 0;
 
 		int size_ref = 2;
@@ -615,7 +615,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_get_size() {
-		cerr << "  | testing get_size()\n";
+		cerr << "  | testing Matrix::get_size()\n";
 		bool ret = 0;
 
 		int x_size_ref = 3;
@@ -637,7 +637,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_idx_v() {
-		cerr << "  | testing operator ()\n";
+		cerr << "  | testing Matrix::operator ()\n";
 		bool ret = 0;
 
 		int m_size_ref = 2;
@@ -665,7 +665,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_norm() {
-		cerr << "  | testing norm()\n";
+		cerr << "  | testing Matrix::norm()\n";
 		bool ret = 0;
 		int m_size_ref = 2;
 		double m_value[] = {3.0, 5.0, 7.0, 11.0};
@@ -685,7 +685,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_assignment() {
-		cerr << "  | testing operator =\n";
+		cerr << "  | testing Matrix::operator =\n";
 		bool ret = 0;
 
 		int size_ref = 2;
@@ -718,7 +718,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_mul() {
-		cerr << "  | testing operator *\n";
+		cerr << "  | testing Matrix::operator *\n";
 		bool ret = 0;
 
 		int size_ref = 2;
@@ -752,7 +752,7 @@ namespace linear_algebra_test {
 	}
 
 	int _test_m_swap_rows() {
-		cerr << "  | testing swap_rows(int, int)\n";
+		cerr << "  | testing Matrix::swap_rows(int, int)\n";
 		bool ret = 0;
 
 		int size = 2;
@@ -790,13 +790,13 @@ namespace linear_algebra_test {
 			 _test_m_swap_rows, 0};
 
 		int num_fails = 0;
-		for (int i = 0; vector_tests[i]; ++i) {
-			cerr << "  class Vector -- test #" << i << "\n";
+		int idx = 0;
+		for (int i = 0; vector_tests[i]; ++i, ++idx) {
+			cerr << "  test #" << idx << "\n";
 			num_fails += vector_tests[i]();
 		}
-		cerr << "-----------------------------------------------------------\n";
-		for (int i = 0; matrix_tests[i]; ++i) {
-			cerr << "  class Matrix -- test #" << i << "\n";
+		for (int i = 0; matrix_tests[i]; ++i, ++idx) {
+			cerr << "  test #" << idx << "\n";
 			num_fails += matrix_tests[i]();
 		}
 
