@@ -27,14 +27,19 @@ private:
 	time_point<system_clock> _log_start_time;
 
 	string _timestamp(const time_point<system_clock> &time) const {
-		const string begin = string("["),
-					 end = string("]"),
-					 sep = string(":");
-
 		auto time_diff = time - _log_start_time;
+
 		string h = to_string(duration_cast<hours>(time_diff).count()),
 			   m = to_string(duration_cast<minutes>(time_diff).count() % 60),
 			   s = to_string(duration_cast<seconds>(time_diff).count() % 60);
+
+		h = string(2 - h.length(), '0') + h;
+		m = string(2 - m.length(), '0') + m;
+		s = string(2 - s.length(), '0') + s;
+
+		const string begin = string("["),
+					 end = string("]"),
+					 sep = string(":");
 		return begin + h + sep + m + sep + s + end;
 	}
 
