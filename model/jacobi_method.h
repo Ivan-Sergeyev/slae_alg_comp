@@ -2,8 +2,12 @@
 #define __JACOBI_METHOD__
 
 #include <cmath>
+#include <iostream>
 
 #include "generic_method.h"
+
+
+using std::cerr;
 
 
 class JacobiMethod : public GenericMethod {
@@ -51,6 +55,8 @@ public:
 			}
 
 			if (!std::isfinite(cur_dist)) {
+				cerr << "[warning] " << get_name() << " diverged\n"
+					 << "          !std::isfinite(cur_dist)\n";
 				u_next = Vector(0);
 				return u_next;  // diverged
 			}
@@ -58,6 +64,8 @@ public:
 				++number_faults;
 				if (number_faults > _max_faults) {
 					u_next = Vector(0);
+					cerr << "[warning] " << get_name() << " diverged\n"
+						 << "          number_faults > _max_faults\n";
 					return u_next;  // diverged
 				}
 			} else {
