@@ -149,6 +149,51 @@ private:
     	return 0;
 	}
 */
+
+	void _write_results_to_file(string data_filename, string results) {
+		fstream data_file(data_filename, ostream::out | ostream::app);
+		if (!(data_file.is_open())) {
+			_log_file << "Error opening data file \"" << data_filename << "\"\n"
+					  << "Aborting\n";
+			return;
+		}
+		// write results to file
+		data_file << results << "\n";
+		data_file.close();
+	}
+
+	void _run_measurements(const GenericMethod *method, int size, double mu,
+						   const Matrix &A, const Vector &f,
+						   string data_filename_format) {
+		// measure performance
+		auto t_start = high_resolution_clock::now();
+		Vector answer = method->run(A, f);
+		auto t_end = high_resolution_clock::now();
+
+		// calculate time difference in seconds
+		auto elapsed_ns = duration_cast<nanoseconds>(t_end - t_start).count();
+		double elapsed_s = (double)elapsed_ns / (double)1000000000;
+		// gather data to be saved
+		string results = to_string(size) + string(" ") + to_string(elapsed_s) +
+						 string(" ") + to_string(mu);
+
+		string verdict;
+		if (answer.get_size() == size) {
+			verdict = string("converged");
+		} else {
+			verdict = string("diverged");
+		}
+
+		// assemble filename to save data to
+		// todo: use data_filename_format
+		string data_filename =
+			string("./data/data_") + verdict + string("_") +
+			method->get_name() + string(".txt");
+
+		// open data file
+		_write_results_to_file(data_filename, results);
+	}
+
 public:
 	PerformanceComparator(ostream &log_file) : _log_file(log_file) {}
 
@@ -158,7 +203,6 @@ public:
 						int num_runs, string data_filename_format) {
 		Matrix A;
 		Vector f;
-		Vector res;
 		string msg;
 		const string eol = string("\n");
 
@@ -189,37 +233,12 @@ public:
 
 					for (int m_idx = 0; m_idx < num_methods; ++m_idx)
 					{
-						string msg = string("running ") +
-									 methods[m_idx]->get_name() + eol;
+						string m_name = methods[m_idx]->get_name();
+						string msg = string("running ") + m_name + eol;
 						_write_log(msg, 3);
 
-						auto start_time = high_resolution_clock::now();
-						res = methods[m_idx]->run(A, f);
-						auto end_time = high_resolution_clock::now();
-
-						string verdict;
-						if (res.get_size() == size) {
-							verdict = string("converged");
-						} else {
-							verdict = string("diverged");
-						}
-						_write_log(verdict, 3);
-
-						// todo: use data_filename_format
-						string data_filename =
-							string("./data/data_") + verdict + string("_") +
-							methods[m_idx]->get_name() + string(".txt");
-
-						fstream data_file(data_filename, ostream::out | ostream::app);
-						if (!(data_file.is_open())) {
-							_log_file << "Error opening data file \"" << data_filename << "\"\nAborting\n";
-							return;
-						}
-						auto elapsed_ns = duration_cast<nanoseconds>(end_time - start_time).count();
-						double elapsed_s = (double)elapsed_ns / (double)1000000000;
-
-						data_file << size << " " << elapsed_s << " " << mu << "\n";
-						data_file.close();
+						_run_measurements(methods[m_idx], size, mu, A, f,
+										  data_filename_format);
 						// for m_idx
 					}
 					// for r_idx
