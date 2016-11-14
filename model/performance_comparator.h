@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string>
 
+#include "generators.h"
 #include "generic_method.h"
 #include "linear_algebra.h"
 
@@ -62,41 +63,6 @@ private:
 		_log_file << full_msg;
 	}
 
-	// TODO:
-	//  * move generators to separate files
-	//  * pass generator functions as arguments to run_comparison
-
-	Matrix _generate_random_matrix(int size) {
-		srand(time(NULL));
-		int n = size * size;
-		double *values = new double[n];
-		for(int i = 0; i < n; ++i) {
-			values[i] = rand() + 1;
-		}
-		Matrix m(size, values);
-		delete[] values;
-		return m;
-	}
-
-	Matrix _diag_generate(int size, double min, double max){
-    	Matrix M(size);
-	    srand(time(NULL));
-	    M(0, 0) = min,
-	    M(1, 1) = max;
-	    for(int i = 2; i < size; ++i) {
-	    	M(i, i) = min + rand() * (max - min) / RAND_MAX;
-	    }
-	    return M;
-	}
-
-	Matrix _generate_random_matrix_with_mu(int size, double mu){
-		Matrix M = _generate_random_matrix(size);
-	    double min = 1;
-	    double max = min * mu;
-		M = M.ort() * _diag_generate(M.get_size(), min, max);
-		return M;
-	}
-
 	void _make_diagonally_dominant(Matrix &m) {
 		int n = m.get_size();
 		for(int i = 0; i < n; ++i) {
@@ -108,15 +74,6 @@ private:
 		}
 	}
 
-	Vector _generate_random_vector(int size) {
-		double *coords = new double[size];
-		for(int i = 0; i < size; ++i) {
-			coords[i] = rand();
-		}
-		Vector v(size, coords);
-		delete[] coords;
-		return v;
-	}
 /*
 	 // read vector from file
 	 Vector& _read_vector(FILE* file, int size){ // check for work
@@ -212,6 +169,10 @@ public:
 		const string sep = string("==========================================");
 		const string eol = string("\n");
 
+		// todo: move seed to args?
+		int seed = time(0);
+		srand(seed);
+
 		_log_start_time = system_clock::now();
 
 		for(int s_idx = 0; s_idx < num_sizes; ++s_idx) {
@@ -231,8 +192,8 @@ public:
 					msg = string("generating the system") + eol;
 					_write_log(msg, 2);
 
-					f = _generate_random_vector(size);
-					A = _generate_random_matrix_with_mu(size, mu);
+					f = generators::vector_random(size);
+					A = generators::matrix_with_mu(size, mu);
 
 					msg = string("running methods") + eol;
 					_write_log(msg, 2);
