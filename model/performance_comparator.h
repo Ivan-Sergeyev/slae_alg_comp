@@ -29,7 +29,7 @@ private:
 	string _timestamp(const time_point<system_clock> &time) const {
 		auto time_diff = time - _log_start_time;
 
-		string h = to_string(duration_cast<hours>(time_diff).count()),
+		string h = to_string(duration_cast<hours>(time_diff).count() % 100),
 			   m = to_string(duration_cast<minutes>(time_diff).count() % 60),
 			   s = to_string(duration_cast<seconds>(time_diff).count() % 60);
 
