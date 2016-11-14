@@ -7,6 +7,7 @@
 *.sh
 
 # no results
+*.png
 gnuplot/*
 data/*
 graphs/*
