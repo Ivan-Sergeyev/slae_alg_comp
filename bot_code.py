@@ -234,7 +234,7 @@ def maker(message):
 def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
-        output = commands.getoutput("tail -n 10 log_err.txt")
+        output = commands.getoutput("tail -n 10 log.txt")
         bot.send_message(cid, output) 
         
 # #--------------------
