@@ -278,6 +278,11 @@ public:
 		rep += to_string(_coord[_size - 1]);
 		return rep;
 	}
+
+// output operator
+	friend std::ostream& operator << (std::ostream &out, const Vector &vector) {
+		return out << vector.repr();
+	}
 };
 
 
@@ -449,7 +454,7 @@ public:
 		assert(_is_ok());
 
 		if (!_size) {
-			// empty vector
+			// empty matrix
 			return string("");
 		}
 
@@ -458,10 +463,16 @@ public:
 			for (int j = 0; j < _size - 1; ++j) {
 					rep += to_string(_value[i][j]) + string(" ");
 				}
-			rep += to_string(_value[i][_size - 1]) + string("\n");
+			rep += to_string(_value[i][_size - 1]);
+			rep += string((i != _size - 1), '\n');
 		}
 
 		return rep;
+	}
+
+// output operator
+	friend std::ostream& operator << (std::ostream &out, const Matrix &matrix) {
+		return out << matrix.repr();
 	}
 
 // swap two rows
