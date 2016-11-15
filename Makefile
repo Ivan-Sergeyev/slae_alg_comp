@@ -15,3 +15,6 @@ test: main
 
 test_run: main
 	./main test_run
+
+plot:
+	python data_analyse.py
