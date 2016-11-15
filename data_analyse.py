@@ -8,8 +8,8 @@ def f(x, a, b, c):
 	if (fit == 2): return 1.0*a*x**2+b*x
 	if (fit == 3): return 1.0*a*x**3+b*x**2+c*x
 
-names = ["Gauss Method", "Overrelaxation Method with tau=0.500000",  "Seidel Method", "Overrelaxation Method with tau=1.500000", "Jacobi Method"]
-len = 5
+names = ["Gauss Method", "Overrelaxation Method with tau=0.500000",  "Seidel Method", "Overrelaxation Method with tau=1.500000", "Overrelaxation Method with tau=1.250000", "Overrelaxation Method with tau=1.750000", "Jacobi Method"]
+len = 7
 
 colors = {0: 'red', 1: 'black', 2: 'green', 3: 'yellow', 4: 'blue', 5: 'aqua', 6: 'c', 7: 'm', 8: 'brown', 9: 'violet', 10: 'darkgreen'}
 
@@ -19,12 +19,12 @@ ax = dict()
 x = dict()
 y = dict()
 #data_collected
-for i in range(len-1):
+for i in range(len):
 	data[i] = pd.read_csv("temp_data/data_converged_"+names[i]+".txt", header = None, sep=' ')
 	data[i] = data[i].rename(columns={0:"n", 1:"t", 2:"mu"})
 
-data[len-1] = pd.read_csv("temp_data/data_diverged_"+names[len-1]+".txt", header = None, sep=' ') # Jacobi Method
-data[len-1] = data[len-1].rename(columns={0:"n", 1:"t", 2:"mu"})
+#data[len-1] = pd.read_csv("temp_data/data_diverged_"+names[len-1]+".txt", header = None, sep=' ') # Jacobi Method
+#data[len-1] = data[len-1].rename(columns={0:"n", 1:"t", 2:"mu"})
 
 for i in range(len):
 	ax[i] = plt.subplot()
