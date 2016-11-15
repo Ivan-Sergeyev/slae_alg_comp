@@ -47,6 +47,7 @@ public:
 		int number_faults = 0;
 
 		while(1) {
+			cerr << u_cur << "\n";
 			u_next = step(n, A, f, u_cur);
 			cur_dist = (u_cur - u_next).norm();
 

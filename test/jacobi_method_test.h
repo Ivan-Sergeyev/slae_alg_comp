@@ -2,10 +2,12 @@
 #define __JACOBI_METHOD_TEST__
 
 #include <iostream>
+#include <stdlib.h>
 #include <string>
 
 #include "../model/jacobi_method.h"
 #include "../model/linear_algebra.h"
+#include "../model/generators.h"
 
 
 using std::cerr;
@@ -34,8 +36,8 @@ namespace jacobi_method_test {
 
 		if (res.repr() != res_ref.repr()) {
 			cerr << "  | failure\n"
-				 << "  | result = " << res.repr()
-				 << ", should be " << res_ref.repr() << "\n";
+				 << "  | result = " << res << "\n"
+				 << "  | should be " << res_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
@@ -64,8 +66,8 @@ namespace jacobi_method_test {
 
 		if (res.repr() != res_ref.repr()) {
 			cerr << "  | failure\n"
-				 << "  | result = " << res.repr()
-				 << ", should be " << res_ref.repr() << "\n";
+				 << "  | result = " << res << "\n"
+				 << "  | should be " << res_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
@@ -74,9 +76,50 @@ namespace jacobi_method_test {
 		return ret;
 	}
 
+	int _test_with_generator() {
+		cerr << "  | testing JacobiMethod with matrix generator with mu\n";
+		bool ret = 0;
+
+		int size = 2;
+		double tolerance = 1e-8;
+		int max_faults = 20;
+		JacobiMethod jacobi_method(tolerance, max_faults);
+
+		for(int mu = 1; mu < 2; ++mu) {
+			srand(mu);
+			Vector f = generators::vector_random(size);
+			Matrix A = generators::matrix_with_mu(size, mu);
+			Vector result = jacobi_method.run(A, f);
+
+			if (result.get_size() != size) {
+				cerr << "  | failure\n"
+					 << "  | result has size = " << result.get_size() << "\n"
+					 << "  | vector: " << f << "\n"
+					 << "  | matrix:\n" << A << "\n";
+				ret = 1;
+			} else {
+				Vector res_f = A * result;
+
+				if ((result - res_f).norm() > tolerance) {
+					cerr << "  | failure\n"
+						 << "  | result gives RHS = " << res_f << "\n"
+						 << "  | vector: " << f << "\n"
+						 << "  | matrix:\n" << A << "\n";
+					ret = 1;
+				}
+			}
+		}
+
+		if (!ret) {
+			cerr << "  | success\n";
+		}
+		return ret;
+	}
+
 	int test() {
 		const test_function_pointer jacobi_method_tests[] =
-			{_test_identity_matrix, _test_coursebook_ex, 0};
+			{_test_identity_matrix, _test_coursebook_ex, _test_with_generator,
+			 0};
 
 		int num_fails = 0;
 		for (int i = 0; jacobi_method_tests[i]; ++i) {
