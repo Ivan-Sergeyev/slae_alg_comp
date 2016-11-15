@@ -13,7 +13,7 @@ len = 7
 
 colors = {0: 'red', 1: 'black', 2: 'green', 3: 'yellow', 4: 'blue', 5: 'aqua', 6: 'c', 7: 'm', 8: 'brown', 9: 'violet', 10: 'darkgreen'}
 
-
+mu_len = 7
 data = dict()
 ax = dict()
 x = dict()
@@ -34,15 +34,18 @@ for i in range(len):
 	else: fit = 3
 	coeff, covar = curve_fit(f, data[i].n.values, data[i].t.values)
 
-	data[i].drop(data[i][((data[i].t-f(data[i].n*1.0, coeff[0], coeff[1], coeff[2])) > data[i].t*0.2)].index, axis=0, inplace = True)
+	#data[i].drop(data[i][((data[i].t-f(data[i].n*1.0, coeff[0], coeff[1], coeff[2])) > data[i].t*0.2)].index, axis=0, inplace = True)
 
-	coeff, covar = curve_fit(f, data[i].n.values, data[i].t.values)
-	y[i] = f(x[i], coeff[0], coeff[1], coeff[2])
+	
 
-	for k in range(10):
-		n = 2**(k+1)
+	for k in range(mu_len):
+		n = 10**k
+		print i, n
+		x[k+i*mu_len] = np.arange(0, data[i].n.max(), 1)
+		coeff, covar = curve_fit(f, data[i][(data[i].mu==n)].n.values, data[i][(data[i].mu==n)].t.values)
+		y[k+i*mu_len] = f(x[k+i*mu_len], coeff[0], coeff[1], coeff[2])
 		data[i][(data[i].mu==n)].plot(x='n', y = 't', kind='scatter',label = "mu = "+str(n),color=colors[k+1], ax=ax[i], s = 10) #  & (data[i].bad != True)
-	plt.plot(x[i],y[i], linewidth = 0.5)
+		ax[i].plot(x[k+i*mu_len],y[k+i*mu_len],color=colors[k+1], linewidth = 0.5)
 	plt.legend(loc=2, fontsize='xx-small')
 	plt.grid(True)
 	plt.xlabel('size of matrix')
@@ -57,7 +60,7 @@ com = plt.subplot();
 for i in range(len-2):
 	k = i+1;
 	data[k].plot(x='n', y = 't',kind = 'scatter', label = names[k], color=colors[k], ax=com, s = 10)
-	plt.plot(x[k], y[k], label = names[k]+"line", linewidth = 0.5)
+	com.plot(x[k*mu_len], y[k*mu_len], label = names[k]+"line", linewidth = 0.5)
 plt.legend(loc=2, fontsize='xx-small')
 plt.grid(True)
 plt.xlabel('size of matrix')

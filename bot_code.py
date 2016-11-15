@@ -197,17 +197,21 @@ def maker(message):
 def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
-        photo = open('graph_python/Gauss MethodTime(size of matrix).png', 'rb')
+        photo = open('temp_graphs/Gauss MethodTime(size of matrix).png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('graph_python/All Method.png', 'rb')
+        photo = open('temp_graphs/All Methods.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('graph_python/Jacobi MethodTime(size of matrix).png', 'rb')
+        photo = open('temp_graphs/Jacobi MethodTime(size of matrix).png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('graph_python/Overrelaxation Method with tau=0.500000Time(size of matrix).png', 'rb')
+        photo = open('temp_graphs/Overrelaxation Method with tau=0.500000Time(size of matrix).png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('graph_python/Overrelaxation Method with tau=1.500000Time(size of matrix).png', 'rb')
+        photo = open('temp_graphs/Overrelaxation Method with tau=1.250000Time(size of matrix).png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('graph_python/Seidel MethodTime(size of matrix).png', 'rb')
+        photo = open('temp_graphs/Overrelaxation Method with tau=1.500000Time(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('temp_graphs/Overrelaxation Method with tau=1.750000Time(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('temp_graphs/Seidel MethodTime(size of matrix).png', 'rb')
         bot.send_photo(cid, photo)
         bot.send_message(cid, "Everything is ok")
 
