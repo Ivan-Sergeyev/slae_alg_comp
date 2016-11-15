@@ -1,7 +1,5 @@
 #include <cstdio>
-//#include <direct.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <string.h>
 #include <unistd.h>
 
@@ -15,94 +13,157 @@
 #include "model/generate_plotfile.h"
 
 
+using std::cerr;
+using std::system;
+
+
 // #define NDEBUG  // disable tests and asserts for release
 
 #ifndef NDEBUG  // debug version
 
-#include "model/linear_algebra_test.h"
+#include "test/linear_algebra_test.h"
+#include "test/jacobi_method_test.h"
 
 
 void test() {
 	typedef int (*test_funcion_pointer)();
 
-	const int num_modules = 1;
-	string module_name[num_modules] = {string("linear_algebra")};
+	const int num_modules = 2;
+	string module_name[num_modules] = \
+		{string("linear_algebra"), string("jacobi_method")};
 	test_funcion_pointer module_test[num_modules] =
-		{linear_algebra_test::test};
+		{linear_algebra_test::test, jacobi_method_test::test};
 
 	int total_fails = 0;
 	for (int i = 0; i < num_modules; ++i)
 	{
-		cout << "testing " << module_name[i] << "\n";
-		cout << "===========================================================\n";
+		cerr << "testing " << module_name[i] << "\n";
+		cerr << "===========================================================\n";
 		int num_fails = module_test[i]();
-		cout << "===========================================================\n";
-		cout << num_fails << " fails in " << module_name[i] << "\n\n";
+		cerr << "===========================================================\n";
+		cerr << num_fails << " fails in " << module_name[i] << "\n\n";
 		total_fails += num_fails;
 	}
-	cout << "total fails: " << total_fails << "\n";
+	cerr << "total fails: " << total_fails << "\n";
 }
 
 #endif // NDEBUG
 
 
+void fill_arithm_progr(int *sizes, int num_elems, int start, int step) {
+	int size = start;
+	for (int idx = 0; idx < num_elems; ++idx, size += step) {
+		sizes[idx] = size;
+	}
+}
+
+
+void fill_geom_progr(double *sizes, int num_elems, double start, double mul) {
+	double size = start;
+	for (int idx = 0; idx < num_elems; ++idx, size *= mul) {
+		sizes[idx] = size;
+	}
+}
+
+
 int main(int argc, char **argv) {
 #ifndef NDEBUG
-	if (argc == 2 && !strcmp(argv[1], "test")) {
+	if (argc == 2 && string(argv[1]) == string("test")) {
+		cerr << "[info] commence testing\n";
 		test();
 		return 0;
 	}
 #endif  // NDEBUG
 
 // setup
-	printf("perform setup\n");
+	cerr << "[info] commence setup\n";
 
-	const int num_sizes = 2;
-	int sizes[num_sizes];
-	for (int i = 0; i < num_sizes; ++i) {
-		sizes[i] = i * 100 + 100;
+	// populate a list of small sizes
+	int small_num_sizes = 30,
+		small_start = 100,
+		small_step = 100;
+	int small_sizes[small_num_sizes];
+	fill_arithm_progr(small_sizes, small_num_sizes, small_start, small_step);
+
+	// populate a list of large sizes
+	int large_num_sizes = 50,
+		large_start = 3100,
+		large_step = 100;
+	int large_sizes[large_num_sizes];
+	fill_arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
+
+	// populate a list of condition numbers
+	int num_mus = 10;
+	double mu_start = 2,
+		   mu_mul = 2;
+	double mus[num_mus];
+	fill_geom_progr(mus, num_mus, mu_start, mu_mul);
+
+	if (argc == 2 && string(argv[1]) == string("test_run")) {
+		// only run on small number of tests
+		cerr << "[info] test_run mode enabled\n";
+		small_num_sizes = 1;
+		large_num_sizes = 0;
 	}
 
-	const int num_runs = 2;
+	// set number of runs for each size and condition number
+	int num_runs = 10;
 
-	const double tolerance = 0.0078125;  // 2^{-7}
-	const int max_faults = 20;
+	// set parameters for numeric algorithms
+	double tolerance = 0.0078125;  // 2^{-7}
+	int max_faults = 20;
 
-	const int num_methods = 5;
-	JacobiMethod jacobi_method(tolerance, max_faults);
-	OverrelaxationMethod gauss_seidel_method(1.0, tolerance, max_faults),
-						 lower_relaxation_method(0.5, tolerance, max_faults),
-						 upper_relaxation_method(1.5, tolerance, max_faults);
-	GaussMethod gauss_method;
+	// populate mathods
+	int num_or_methods = 2 + 3,  // number of overrelaxation methods
+		num_methods = num_or_methods + 2;  // total number of methods
 
 	GenericMethod **methods = new GenericMethod* [num_methods];
-	methods[0] = &jacobi_method;
-	cout << "added " << methods[0]->get_name() << "\n";
-	methods[1] = &gauss_seidel_method;
-	cout << "added " << methods[1]->get_name() << "\n";
-	methods[2] = &lower_relaxation_method;
-	cout << "added " << methods[2]->get_name() << "\n";
-	methods[3] = &upper_relaxation_method;
-	cout << "added " << methods[3]->get_name() << "\n";
-	methods[4] = &gauss_method;
-	cout << "added " << methods[4]->get_name() << "\n";
+	int m_idx = 0;
+
+	// add overrelaxation methods
+	double tau = 0.0l;
+	double tau_step = 1.0l / (num_or_methods - 1);
+	for(; m_idx < num_or_methods; ++m_idx) {
+		tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
+		methods[m_idx] = new OverrelaxationMethod(tau, tolerance, max_faults);
+		cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
+	}
+
+	// add jacobi method
+	JacobiMethod jacobi_method(tolerance, max_faults);
+	methods[m_idx] = &jacobi_method;
+	cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
+	++m_idx;
+	// add gauss method
+	GaussMethod gauss_method;
+	methods[m_idx] = &gauss_method;
+	cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
+	++m_idx;
+	assert(m_idx == num_methods);
 
 // perform measurements
-	printf("perform measurements\n");
+	cerr << "[info] commence measurements\n";
+	// todo: use format strings
 	string data_filename_format = string("./data/data_%s_%s.txt");
 
-	PerformanceComparator p_comp(cout);
-	p_comp.run_comparison(num_methods, methods, num_sizes, sizes,
+	PerformanceComparator p_comp(cerr);
+	p_comp.run_comparison(num_methods, methods,
+						  small_num_sizes, small_sizes,
+						  num_mus, mus,
+						  num_runs, data_filename_format);
+
+	p_comp.run_comparison(num_methods - 1, methods,
+						  large_num_sizes, large_sizes,
+						  num_mus, mus,
 						  num_runs, data_filename_format);
 
 // prepare plot and run gnuplot
-	printf("generate plotfiles\n");
+	cerr << "[info] commence generating plotfiles\n";
 
-	// beginstab
+	// todo: use format strings
 	string plot_all = string("./gnuplot/plot_all.plt"),
 		   graph_all_rel = string("../graphs/graph_all.png"),
 		   data_format_rel = string("../data/data_converged_%s.txt");
-	// endstab
 
 	generate_plotfile(plot_all, graph_all_rel,
 					  data_format_rel, num_methods, methods);
@@ -114,20 +175,30 @@ int main(int argc, char **argv) {
 					  data_format_rel, num_methods - 1, methods);
 
 // run gnuplot with plot_dir as current directory
-	printf("plot graphs\n");
+	cerr << "[info] commence plotting graphs\n";
+	// todo: concatenate commands
 	const char gnuplot_call_all[] = "gnuplot plot_all.plt";
 	const char gnuplot_call_num[] = "gnuplot plot_num.plt";
 
 	chdir("./gnuplot/");
-	system(gnuplot_call_all);
-	system(gnuplot_call_num);
+	int status_1 = system(gnuplot_call_all);
+	int status_2 = system(gnuplot_call_num);
 	remove("fit.log");
 	chdir("..");
 
+	if (status_1) {
+		cerr << "[error] error during system(\"" << gnuplot_call_all << "\")\n"
+			 << "        exit status " << status_1 << "\n";
+	}
+	if (status_2) {
+		cerr << "[error] error during system(\"" << gnuplot_call_num << "\")\n"
+			 << "        exit status " << status_2 << "\n";
+	}
+
 // perform cleanup
-	printf("perform cleanup\n");
+	cerr << "[info] commence cleanup\n";
 	delete[] methods;
 
-	printf("done\n");
+	cerr << "[info] done\n";
 	return 0;
 }

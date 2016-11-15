@@ -7,6 +7,7 @@
 #include "generic_method.h"
 
 
+using std::cerr;
 using std::fstream;
 using std::string;
 
@@ -16,8 +17,8 @@ void generate_plotfile(string plot_filename, string graph_filename,
 					   const int num_methods, GenericMethod **methods) {
 	fstream plot_file(plot_filename, fstream::out);
 	if (!plot_file.is_open()) {
-		cout << "Error opening plot file \"" << plot_filename << "\"\n";
-		cout << "Aborting\n";
+		cerr << "Error opening plot file \"" << plot_filename << "\"\n";
+		cerr << "Aborting\n";
 		return;
 	}
 
