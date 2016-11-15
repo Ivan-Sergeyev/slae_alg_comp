@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 
+
+#include "model/generators.h"
 #include "model/generic_method.h"
 #include "model/gauss_method.h"
 #include "model/jacobi_method.h"
@@ -24,23 +26,6 @@ using std::system;
 #endif // NDEBUG
 
 
-// TODO: move to generators.h, use template arguments
-void arithm_progr(int *sizes, int num_elems, int start, int step) {
-	int size = start;
-	for (int idx = 0; idx < num_elems; ++idx, size += step) {
-		sizes[idx] = size;
-	}
-}
-
-
-void geom_progr(double *sizes, int num_elems, double start, double mul) {
-	double size = start;
-	for (int idx = 0; idx < num_elems; ++idx, size *= mul) {
-		sizes[idx] = size;
-	}
-}
-
-
 int main(int argc, char **argv) {
 #ifndef NDEBUG
 	if (argc == 2 && string(argv[1]) == string("test")) {
@@ -58,21 +43,23 @@ int main(int argc, char **argv) {
 		small_start = 100,
 		small_step = 100;
 	int small_sizes[small_num_sizes];
-	arithm_progr(small_sizes, small_num_sizes, small_start, small_step);
+	generators::arithm_progr<int>(small_sizes, small_num_sizes,
+								  small_start, small_step);
 
 	// populate a list of large sizes
 	int large_num_sizes = 50,
 		large_start = 3100,
 		large_step = 100;
 	int large_sizes[large_num_sizes];
-	arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
+	generators::arithm_progr<int>(large_sizes, large_num_sizes,
+								  large_start, large_step);
 
 	// populate a list of condition numbers
 	int num_mus = 7;
 	double mu_start = 1,
 		   mu_mul = 10;
 	double mus[num_mus];
-	geom_progr(mus, num_mus, mu_start, mu_mul);
+	generators::geom_progr<double>(mus, num_mus, mu_start, mu_mul);
 
 	if (argc == 2 && string(argv[1]) == string("test_run")) {
 		// only run on small number of tests
