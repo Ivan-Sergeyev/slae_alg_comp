@@ -33,9 +33,12 @@ for i in range(len):
 	if (i!= 0) : fit = 2
 	else: fit = 3
 	coeff, covar = curve_fit(f, data[i].n.values, data[i].t.values)
-	y[i] = f(x[i], coeff[0], coeff[1], coeff[2])
 	
-	data[i].drop(data[i][((data[i].t-f(data[i].n*1.0, coeff[0], coeff[1], coeff[2])) > data[i].t*0.1)].index, axis=0, inplace = True)
+	data[i].drop(data[i][((data[i].t-f(data[i].n*1.0, coeff[0], coeff[1], coeff[2])) > data[i].t*0.2)].index, axis=0, inplace = True)
+
+	coeff, covar = curve_fit(f, data[i].n.values, data[i].t.values)
+	y[i] = f(x[i], coeff[0], coeff[1], coeff[2])
+
 	for k in range(10):
 		n = 2**(k+1)
 		data[i][(data[i].mu==n)].plot(x='n', y = 't', kind='scatter',label = "mu = "+str(n),color=colors[k+1], ax=ax[i], s = 10) #  & (data[i].bad != True)
