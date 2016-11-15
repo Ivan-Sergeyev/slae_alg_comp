@@ -21,8 +21,7 @@ namespace jacobi_method_test {
 		bool ret = 0;
 
 		double tolerance = 1e-8;
-		int max_faults = 20;
-		JacobiMethod jacobi_method(tolerance, max_faults);
+		JacobiMethod jacobi_method(tolerance);
 
 		const int size = 3;
 		const double a_value[size * size] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
@@ -51,8 +50,7 @@ namespace jacobi_method_test {
 		bool ret = 0;
 
 		double tolerance = 1e-8;
-		int max_faults = 20;
-		JacobiMethod jacobi_method(tolerance, max_faults);
+		JacobiMethod jacobi_method(tolerance);
 
 		const int size = 2;
 		const double a_value[size * size] = {2, 1, 1, 2};
@@ -80,31 +78,30 @@ namespace jacobi_method_test {
 		cerr << "  | testing JacobiMethod with matrix generator with mu\n";
 		bool ret = 0;
 
-		int size = 2;
+		int size = 10;
 		double tolerance = 1e-8;
-		int max_faults = 20;
-		JacobiMethod jacobi_method(tolerance, max_faults);
+		JacobiMethod jacobi_method(tolerance);
 
-		for(int mu = 1; mu < 2; ++mu) {
+		for(int mu = 1; mu < 400; ++mu) {
 			srand(mu);
 			Vector f = generators::vector_random(size);
-			Matrix A = generators::matrix_with_mu(size, mu);
+			Matrix A = generators::matrix_with_approximate_mu(size, mu);
 			Vector result = jacobi_method.run(A, f);
 
 			if (result.get_size() != size) {
 				cerr << "  | failure\n"
 					 << "  | result has size = " << result.get_size() << "\n"
 					 << "  | vector: " << f << "\n"
-					 << "  | matrix:\n" << A << "\n";
+					 << "  | matrix:\n" << A << "\n\n";
 				ret = 1;
 			} else {
 				Vector res_f = A * result;
 
-				if ((result - res_f).norm() > tolerance) {
+				if ((f - res_f).norm() > 10 * tolerance) {
 					cerr << "  | failure\n"
-						 << "  | result gives RHS = " << res_f << "\n"
+						 << "  | answer of jacobi method yields RHS = " << res_f << "\n"
 						 << "  | vector: " << f << "\n"
-						 << "  | matrix:\n" << A << "\n";
+						 << "  | matrix:\n" << A << "\n\n";
 					ret = 1;
 				}
 			}
