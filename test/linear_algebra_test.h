@@ -530,7 +530,7 @@ namespace linear_algebra_test {
 
 		int m_size = m.get_size();
 		string m_repr = m.repr();
-		string m_repr_ref = string("0.000000 0.000000\n0.000000 0.000000\n");
+		string m_repr_ref = string("0.000000 0.000000\n0.000000 0.000000");
 
 		if (m_size != m_size_ref) {
 			cerr << "  | failure:\n";
@@ -540,8 +540,8 @@ namespace linear_algebra_test {
 		}
 		if (m_repr != m_repr_ref) {
 			cerr << "  | failure:\n";
-			cerr << "  | m_repr:\n" << m_repr
-				 << "  | should be:\n" << m_repr_ref;
+			cerr << "  | m_repr:\n" << m_repr << "\n"
+				 << "  | should be:\n" << m_repr_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
@@ -562,7 +562,7 @@ namespace linear_algebra_test {
 
 		int m_size = m.get_size();
 		string m_repr = m.repr();
-		string m_repr_ref = string("3.000000 5.000000\n7.000000 11.000000\n");
+		string m_repr_ref = string("3.000000 5.000000\n7.000000 11.000000");
 
 		if (m_size != m_size_ref) {
 			cerr << "  | failure:\n";
@@ -572,8 +572,8 @@ namespace linear_algebra_test {
 		}
 		if (m_repr != m_repr_ref) {
 			cerr << "  | failure:\n";
-			cerr << "  | m_repr:\n" << m_repr
-				 << "  | should be:\n" << m_repr_ref;
+			cerr << "  | m_repr:\n" << m_repr << "\n"
+				 << "  | should be:\n" << m_repr_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
@@ -594,7 +594,7 @@ namespace linear_algebra_test {
 
 		int m_size = m.get_size();
 		string m_repr = m.repr();
-		string m_repr_ref = string("3.000000 5.000000\n7.000000 11.000000\n");
+		string m_repr_ref = string("3.000000 5.000000\n7.000000 11.000000");
 
 		if (m_size != size_ref) {
 			cerr << "  | failure:\n";
@@ -604,8 +604,8 @@ namespace linear_algebra_test {
 		}
 		if (m_repr != m_repr_ref) {
 			cerr << "  | failure:\n";
-			cerr << "  | m_repr:\n" << m_repr
-				 << "  | should be:\n" << m_repr_ref;
+			cerr << "  | m_repr:\n" << m_repr << "\n"
+				 << "  | should be:\n" << m_repr_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
@@ -697,7 +697,7 @@ namespace linear_algebra_test {
 
 		int b_size = b.get_size();
 		string b_repr = b.repr();
-		string b_repr_ref = string("3.000000 5.000000\n7.000000 11.000000\n");
+		string b_repr_ref = string("3.000000 5.000000\n7.000000 11.000000");
 
 		if (b_size != size_ref) {
 			cerr << "  | failure:\n";
@@ -707,8 +707,8 @@ namespace linear_algebra_test {
 		}
 		if (b_repr != b_repr_ref) {
 			cerr << "  | failure:\n";
-			cerr << "  | b_repr:\n" << b_repr
-				 << "  | should be:\n" << b_repr_ref;
+			cerr << "  | b_repr:\n" << b_repr << "\n"
+				 << "  | should be:\n" << b_repr_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
@@ -762,12 +762,12 @@ namespace linear_algebra_test {
 
 		a.swap_rows(0, 1);
 		string a_repr = a.repr();
-		string a_repr_ref = string("7.000000 11.000000\n3.000000 5.000000\n");
+		string a_repr_ref = string("7.000000 11.000000\n3.000000 5.000000");
 
 		if (a_repr != a_repr_ref) {
 			cerr << "  | failure:\n";
-			cerr << "  | a_repr:\n" << a_repr
-				 << "  | should be:\n" << a_repr_ref;
+			cerr << "  | a_repr:\n" << a_repr << "\n"
+				 << "  | should be:\n" << a_repr_ref << "\n";
 			ret = 1;
 		}
 		if (!ret) {
