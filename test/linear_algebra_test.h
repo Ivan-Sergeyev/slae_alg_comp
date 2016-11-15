@@ -776,32 +776,18 @@ namespace linear_algebra_test {
 		return ret;
 	}
 
-	int test() {
-		const test_function_pointer vector_tests[] =
-			{_test_v_ctor_0, _test_v_ctor_i, _test_v_ctor_ipd, _test_v_ctor_vec,
-			 _test_v_get_size, _test_v_idx_c, _test_v_idx_v, _test_v_norm,
-			 _test_v_assignment, _test_v_eq,
-			 _test_v_plus_b, _test_v_minus_b, _test_v_plus_u, _test_v_minus_u,
-			 _test_v_plus_e, _test_v_minus_e, _test_v_mul_e, _test_v_mul_vd,
-			 _test_v_mul_dv, 0};
-		const test_function_pointer matrix_tests[] =
-			{_test_m_ctor_0, _test_m_ctor_i, _test_m_ctor_id, _test_m_ctor_m,
-			 _test_m_idx_v, _test_m_norm, _test_m_assignment, _test_m_mul,
-			 _test_m_swap_rows, 0};
+	const test_function_pointer vector_tests[] =
+		{_test_v_ctor_0, _test_v_ctor_i, _test_v_ctor_ipd, _test_v_ctor_vec,
+		 _test_v_get_size, _test_v_idx_c, _test_v_idx_v, _test_v_norm,
+		 _test_v_assignment, _test_v_eq,
+		 _test_v_plus_b, _test_v_minus_b, _test_v_plus_u, _test_v_minus_u,
+		 _test_v_plus_e, _test_v_minus_e, _test_v_mul_e, _test_v_mul_vd,
+		 _test_v_mul_dv, 0};
 
-		int num_fails = 0;
-		int idx = 0;
-		for (int i = 0; vector_tests[i]; ++i, ++idx) {
-			cerr << "  test #" << idx << "\n";
-			num_fails += vector_tests[i]();
-		}
-		for (int i = 0; matrix_tests[i]; ++i, ++idx) {
-			cerr << "  test #" << idx << "\n";
-			num_fails += matrix_tests[i]();
-		}
-
-		return num_fails;
-	}
+	const test_function_pointer matrix_tests[] =
+		{_test_m_ctor_0, _test_m_ctor_i, _test_m_ctor_id, _test_m_ctor_m,
+		 _test_m_idx_v, _test_m_norm, _test_m_assignment, _test_m_mul,
+		 _test_m_swap_rows, 0};
 }
 
 #endif // __LINEAR_ALGEBRA_TEST__

@@ -3,6 +3,8 @@
 #include <string.h>
 #include <unistd.h>
 
+
+#include "model/generators.h"
 #include "model/generic_method.h"
 #include "model/gauss_method.h"
 #include "model/jacobi_method.h"
@@ -19,63 +21,16 @@ using std::system;
 
 // #define NDEBUG  // disable tests and asserts for release
 
-#ifndef NDEBUG  // debug version
-
-#include "test/linear_algebra_test.h"
-#include "test/jacobi_method_test.h"
-#include "test/overrelaxation_method_test.h"
-
-
-void test() {
-	typedef int (*test_funcion_pointer)();
-
-	const int num_modules = 3;
-	string module_name[num_modules] = \
-		{string("linear_algebra"), string("jacobi_method"),
-		 string("overrelaxation_method")};
-	test_funcion_pointer module_test[num_modules] =
-		{linear_algebra_test::test, jacobi_method_test::test,
-		 overrelaxation_method_test::test};
-
-	string separator(79, '=');
-
-	int total_fails = 0;
-	for (int i = 0; i < num_modules; ++i)
-	{
-		cerr << "testing " << module_name[i] << "\n";
-		cerr << separator << "\n";
-		int num_fails = module_test[i]();
-		cerr << separator << "\n";
-		cerr << num_fails << " fails in " << module_name[i] << "\n\n";
-		total_fails += num_fails;
-	}
-	cerr << "total fails: " << total_fails << "\n";
-}
-
+#ifndef NDEBUG
+#include "test/project_test.h"
 #endif // NDEBUG
-
-
-void fill_arithm_progr(int *sizes, int num_elems, int start, int step) {
-	int size = start;
-	for (int idx = 0; idx < num_elems; ++idx, size += step) {
-		sizes[idx] = size;
-	}
-}
-
-
-void fill_geom_progr(double *sizes, int num_elems, double start, double mul) {
-	double size = start;
-	for (int idx = 0; idx < num_elems; ++idx, size *= mul) {
-		sizes[idx] = size;
-	}
-}
 
 
 int main(int argc, char **argv) {
 #ifndef NDEBUG
 	if (argc == 2 && string(argv[1]) == string("test")) {
 		cerr << "[info] commence testing\n";
-		test();
+		project_test();
 		return 0;
 	}
 #endif  // NDEBUG
@@ -88,21 +43,23 @@ int main(int argc, char **argv) {
 		small_start = 100,
 		small_step = 100;
 	int small_sizes[small_num_sizes];
-	fill_arithm_progr(small_sizes, small_num_sizes, small_start, small_step);
+	generators::arithm_progr<int>(small_sizes, small_num_sizes,
+								  small_start, small_step);
 
 	// populate a list of large sizes
 	int large_num_sizes = 50,
 		large_start = 3100,
 		large_step = 100;
 	int large_sizes[large_num_sizes];
-	fill_arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
+	generators::arithm_progr<int>(large_sizes, large_num_sizes,
+								  large_start, large_step);
 
 	// populate a list of condition numbers
 	int num_mus = 7;
 	double mu_start = 1,
 		   mu_mul = 10;
 	double mus[num_mus];
-	fill_geom_progr(mus, num_mus, mu_start, mu_mul);
+	generators::geom_progr<double>(mus, num_mus, mu_start, mu_mul);
 
 	if (argc == 2 && string(argv[1]) == string("test_run")) {
 		// only run on small number of tests

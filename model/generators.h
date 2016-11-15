@@ -89,6 +89,24 @@ namespace generators {
 		delete[] coords;
 		return v;
 	}
+
+	template<typename T>
+	void arithm_progr(T *array, int num_elems, T start, T step) {
+		T value = start;
+		for (int idx = 0; idx < num_elems; ++idx, value += step) {
+			array[idx] = value;
+		}
+	}
+
+
+	template<typename T>
+	void geom_progr(T *array, int num_elems, T start, T mul) {
+		T value = start;
+		for (int idx = 0; idx < num_elems; ++idx, value *= mul) {
+			array[idx] = value;
+		}
+	}
+
 }
 
 #endif  // __GENERATORS__

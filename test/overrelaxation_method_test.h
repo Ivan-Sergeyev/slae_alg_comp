@@ -118,19 +118,8 @@ namespace overrelaxation_method_test {
 		return ret;
 	}
 
-	int test() {
-		const test_function_pointer overrelaxation_method_tests[] =
-			{_test_identity_matrix, _test_coursebook_ex, _test_with_generator,
-			 0};
-
-		int num_fails = 0;
-		for (int i = 0; overrelaxation_method_tests[i]; ++i) {
-			cerr << "  test #" << i << "\n";
-			num_fails += overrelaxation_method_tests[i]();
-		}
-
-		return num_fails;
-	}
+	const test_function_pointer overrelaxation_method_tests[] =
+		{_test_identity_matrix, _test_coursebook_ex, _test_with_generator, 0};
 }
 
 #endif // __OVERRELAXATION_METHOD_TEST__
