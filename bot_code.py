@@ -24,6 +24,9 @@ import subprocess as sb
 from telebot import types
 
 user_list = pd.DataFrame()
+admin_list = dict()
+admin_list[273084068] = 1 #Ivan
+admin_list[73972270] = 1
 knownUsers = []
 newUsers = 0
 userStep = {}
@@ -74,7 +77,7 @@ def shut_up():
 
     print (userList)
 
-    userList.to_csv(r'user_list.csv')
+    #userList.to_csv(r'user_list.csv')
     sys.exit(0)
 
 
@@ -129,18 +132,18 @@ bot.set_update_listener(listener)  # register listener
 @bot.message_handler(commands=["start", 'старт', 'Старт'])
 def comm_start(message):
     cid = message.chat.id
-    if cid not in knownUsers:
+    print cid
+    if (admin_list[cid]):
         global newUsers
         global userStep
 
         newUsers += 1
         userStep[cid] = 1
         knownUsers.append(cid)
-        bot.send_message(cid, "Программа запущена")#, reply_markup=optionSelect)
+        bot.send_message(cid, "Я вас слушаю")#, reply_markup=optionSelect)
         comm_help(message)
     else:
         bot.send_message(cid, "Добро пожаловать")#, reply_markup=optionSelect)
-        userStep[cid] = 1
 
 
 @bot.message_handler(commands=['shutUp'])
@@ -153,43 +156,47 @@ def comm_shutUp(message):
 @bot.message_handler(commands=['help', 'помощь', 'Помощь'])
 def comm_help(message):
     cid = message.chat.id
-    help_text = "И - инстукция: \n"
-    for key in commands:  # generate help text out of the commands dictionary defined at the top
-        help_text += "/" + key + ": "
-        help_text += commands[key] + "\n"
-    bot.send_message(cid, help_text)  # send the generated help page
+    if (admin_list[cid]):
+        help_text = "И - инстукция: \n"
+        for key in commands:  # generate help text out of the commands dictionary defined at the top
+            help_text += "/" + key + ": "
+            help_text += commands[key] + "\n"
+        bot.send_message(cid, help_text)  # send the generated help page
 
 
 @bot.message_handler(commands=['plot'])
 def maker(message):
     cid = message.chat.id
-    a = sb.Popen(['make', 'plot'])
-    bot.send_message(cid, "Ok")
+    if (admin_list[cid]):
+        a = sb.Popen(['make', 'plot'])
+        bot.send_message(cid, "Ok")
 
 
 @bot.message_handler(commands=['graph'])
 def maker(message):
     cid = message.chat.id
-    photo = open('graph_python/Gauss MethodTime(size of matrix).png', 'rb')
-    bot.send_photo(cid, photo)
-    photo = open('graph_python/All Method.png', 'rb')
-    bot.send_photo(cid, photo)
-    photo = open('graph_python/Jacobi MethodTime(size of matrix).png', 'rb')
-    bot.send_photo(cid, photo)
-    photo = open('graph_python/Overrelaxation Method with tau=0.500000Time(size of matrix).png', 'rb')
-    bot.send_photo(cid, photo)
-    photo = open('graph_python/Overrelaxation Method with tau=1.500000Time(size of matrix).png', 'rb')
-    bot.send_photo(cid, photo)
-    photo = open('graph_python/Seidel MethodTime(size of matrix).png', 'rb')
-    bot.send_photo(cid, photo)
-    bot.send_message(cid, "Everything is ok")
+    if (admin_list[cid]):
+        photo = open('graph_python/Gauss MethodTime(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('graph_python/All Method.png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('graph_python/Jacobi MethodTime(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('graph_python/Overrelaxation Method with tau=0.500000Time(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('graph_python/Overrelaxation Method with tau=1.500000Time(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('graph_python/Seidel MethodTime(size of matrix).png', 'rb')
+        bot.send_photo(cid, photo)
+        bot.send_message(cid, "Everything is ok")
 
 @bot.message_handler(commands=['make'])
 def maker(message):
     cid = message.chat.id
-    #sb.Popen('rm main')
-    sb.Popen(['make'])
-    bot.send_message(cid, "ok")
+    if (admin_list[cid]):
+        #sb.Popen('rm main')
+        #sb.Popen(['make'])
+        bot.send_message(cid, "not work yet")
 # #--------------------
 # def _create_choices_button_for_photo():
 #     markup = types.ReplyKeyboardMarkup()
