@@ -28,12 +28,56 @@ namespace generators {
 	    return M;
 	}
 
-	Matrix matrix_with_mu(int size, double mu){
+	Matrix matrix_with_exact_mu(int size, double mu){
 		Matrix M = matrix_random(size);
 	    double min_ev = 1;
 	    double max_ev = min_ev * mu;
 		M = M.ort() * matrix_diagonal(size, min_ev, max_ev);
 		return M;
+	}
+
+	Matrix matrix_with_approximate_mu(int size, double mu){
+		if (size == 1) {
+			double value = 1;
+			return Matrix(1, &value);
+		}
+
+		int n = size * size;
+		double max_diag = mu,
+			   min_diag = 1;
+
+		int max_row = rand() % size,
+			min_row = rand() % size;
+		min_row = (min_row + (min_row == max_row)) % size;
+
+		double *values = new double[n];
+		double diag_val, val;
+		for(int i = 0; i < size; ++i) {
+			diag_val = 0;
+			diag_val += (double)(i == min_row) * min_diag;
+			diag_val += (double)(i == max_row) * max_diag;
+			if (diag_val == 0) {
+				diag_val = rand();
+				diag_val *= (max_diag - min_diag) / RAND_MAX;
+				diag_val += min_diag;
+			}
+			values[i * (size + 1)] = diag_val;
+
+			for(int j = 0; j < i; ++j) {
+				values[i * size + j] = values[j * size + i];
+			}
+			diag_val = min_diag / (size - 1);
+			for(int j = i + 1; j < size; ++j) {
+				val = rand();
+				val *= diag_val / 2 / RAND_MAX;
+				values[i * size + j] = val;
+				diag_val -= val;
+			}
+		}
+
+		Matrix m(size, values);
+		delete[] values;
+		return m;
 	}
 
 	Vector vector_random(int size) {

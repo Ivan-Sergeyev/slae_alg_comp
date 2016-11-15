@@ -193,7 +193,7 @@ public:
 					_write_log(msg, 2);
 
 					f = generators::vector_random(size);
-					A = generators::matrix_with_mu(size, mu);
+					A = generators::matrix_with_approximate_mu(size, mu);
 
 					msg = string("running methods") + eol;
 					_write_log(msg, 2);

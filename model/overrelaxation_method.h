@@ -16,14 +16,12 @@ using std::to_string;
 
 class OverrelaxationMethod : public GenericMethod {
 private:
-	double _tolerance;  // convergence tolerance
-	int _max_faults;    // divergence criteria
 	double _tau;        // relaxation parameter
+	double _tolerance;  // convergence tolerance
 
 public:
-	OverrelaxationMethod(const double &tau,
-						 const double &tolerance, const int &max_faults) :
-			_tolerance(tolerance), _max_faults(max_faults) {
+	OverrelaxationMethod(const double &tau, const double &tolerance) :
+			_tau(tau), _tolerance(tolerance) {
 		assert(tau > 0);
 		assert(tau < 2);
 
@@ -61,7 +59,6 @@ public:
 		double prev_dist = (u_cur - u_next).norm();
 		double cur_dist;
 		u_cur = u_next;
-		int number_faults = 0;
 
 		while(1) {
 			u_next = step(n, A, f, u_cur);
@@ -76,17 +73,6 @@ public:
 					 << "          !std::isfinite(cur_dist)\n";
 				u_next = Vector(0);
 				return u_next;  // diverged
-			}
-			if (cur_dist >= prev_dist) {
-				++number_faults;
-				if (number_faults > _max_faults) {
-					u_next = Vector(0);
-					cerr << "[warning] " << get_name() << " diverged\n"
-						 << "          number_faults > _max_faults\n";
-					return u_next;  // diverged
-				}
-			} else {
-				number_faults = 0;
 			}
 
 			prev_dist = cur_dist;

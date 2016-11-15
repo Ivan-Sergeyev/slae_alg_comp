@@ -4,7 +4,7 @@
 
 import config
 import sys
-from config import commands
+from config import commandss
 from config import optionSelect
 from config import hideBoard
 #from config import room_list, alco_quest, slogans, tosts, girls_connect, boys_connect
@@ -159,9 +159,9 @@ def comm_help(message):
     cid = message.chat.id
     if (admin_list[cid]):
         help_text = "И - инстукция: \n"
-        for key in commands:  # generate help text out of the commands dictionary defined at the top
+        for key in commandss:  # generate help text out of the commands dictionary defined at the top
             help_text += "/" + key + ": "
-            help_text += commands[key] + "\n"
+            help_text += commandss[key] + "\n"
         bot.send_message(cid, help_text)  # send the generated help page
 
 
