@@ -2,7 +2,7 @@ all: main
 	./main 2>log.txt
 
 clean:
-	-rm -f *.exe model/*.exe *log.txt main
+	-rm -f *.exe model/*.exe test/*.exe *log.txt main
 
 clean_results:
 	-rm -f temp_data/*.txt temp_gnuplot/*.plt temp_graphs/*.png
