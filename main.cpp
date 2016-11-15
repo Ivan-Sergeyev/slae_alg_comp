@@ -93,9 +93,9 @@ int main(int argc, char **argv) {
 	fill_arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
 
 	// populate a list of condition numbers
-	int num_mus = 10;
-	double mu_start = 2,
-		   mu_mul = 2;
+	int num_mus = 7;
+	double mu_start = 1,
+		   mu_mul = 10;
 	double mus[num_mus];
 	fill_geom_progr(mus, num_mus, mu_start, mu_mul);
 
