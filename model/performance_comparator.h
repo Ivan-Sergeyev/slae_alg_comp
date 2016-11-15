@@ -149,7 +149,7 @@ private:
 		// assemble filename to save data to
 		// todo: use data_filename_format
 		string data_filename =
-			string("./data/data_") + verdict + string("_") +
+			string("./temp_data/data_") + verdict + string("_") +
 			method->get_name() + string(".txt");
 
 		// open data file
