@@ -115,19 +115,8 @@ namespace jacobi_method_test {
 		return ret;
 	}
 
-	int test() {
-		const test_function_pointer jacobi_method_tests[] =
-			{_test_identity_matrix, _test_coursebook_ex, _test_with_generator,
-			 0};
-
-		int num_fails = 0;
-		for (int i = 0; jacobi_method_tests[i]; ++i) {
-			cerr << "  test #" << i << "\n";
-			num_fails += jacobi_method_tests[i]();
-		}
-
-		return num_fails;
-	}
+	const test_function_pointer jacobi_method_tests[] =
+		{_test_identity_matrix, _test_coursebook_ex, _test_with_generator, 0};
 }
 
 #endif // __JACOBI_METHOD_TEST__
