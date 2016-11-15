@@ -9,13 +9,15 @@
 # logs
 *log.txt
 
-# results
-*.png
-gnuplot/*
-data/*
-graphs/*
+# temporary results
+temp_gnuplot/*
+temp_data/*
+temp_graphs/*
 
-# exclude folders for results
-!gnuplot/.gitkeep
-!data/.gitkeep
-!graphs/.gitkeep
+# exclude folders themselves
+!temp_gnuplot/.gitkeep
+!temp_data/.gitkeep
+!temp_graphs/.gitkeep
+
+# exclude results
+!results/*

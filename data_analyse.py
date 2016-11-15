@@ -1,10 +1,10 @@
-import pandas as pd 
-import numpy as np 
-import matplotlib.pyplot as plt 
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
 fit = 2
-def f(x, a, b, c): 
+def f(x, a, b, c):
 	if (fit == 2): return 1.0*a*x**2+b*x
 	if (fit == 3): return 1.0*a*x**3+b*x**2+c*x
 
@@ -20,20 +20,20 @@ x = dict()
 y = dict()
 #data_collected
 for i in range(len-1):
-	data[i] = pd.read_csv("data/data_converged_"+names[i]+".txt", header = None, sep=' ')
+	data[i] = pd.read_csv("temp_data/data_converged_"+names[i]+".txt", header = None, sep=' ')
 	data[i] = data[i].rename(columns={0:"n", 1:"t", 2:"mu"})
 
-data[len-1] = pd.read_csv("data/data_diverged_"+names[len-1]+".txt", header = None, sep=' ') # Jacobi Method
+data[len-1] = pd.read_csv("temp_data/data_diverged_"+names[len-1]+".txt", header = None, sep=' ') # Jacobi Method
 data[len-1] = data[len-1].rename(columns={0:"n", 1:"t", 2:"mu"})
 
 for i in range(len):
 	ax[i] = plt.subplot()
-	
+
 	x[i] = np.arange(0, data[i].n.max(), 1)
 	if (i!= 0) : fit = 2
 	else: fit = 3
 	coeff, covar = curve_fit(f, data[i].n.values, data[i].t.values)
-	
+
 	data[i].drop(data[i][((data[i].t-f(data[i].n*1.0, coeff[0], coeff[1], coeff[2])) > data[i].t*0.2)].index, axis=0, inplace = True)
 
 	coeff, covar = curve_fit(f, data[i].n.values, data[i].t.values)
@@ -49,7 +49,7 @@ for i in range(len):
 	plt.ylabel('T, c')
 	plt.title(names[i])
 	#if (fit == 2): plt.text(data[i].n.max()/2, data[i].t.max()/3, "T = " + str(coeff[0])+r"$\cdot x^2$ + " + str(coeff[1]) + r"$\cdot x$")
-	plt.savefig("graph_python/"+names[i]+"Time(size of matrix).png", dpi=500)
+	plt.savefig("temp_graphs/"+names[i]+"Time(size of matrix).png", dpi=500)
 	plt.clf()
 
 
@@ -63,12 +63,12 @@ plt.grid(True)
 plt.xlabel('size of matrix')
 plt.ylabel('T, c')
 plt.title("Methods")
-plt.savefig("graph_python/All Method.png", dpi=500)
+plt.savefig("temp_graphs/All Methods.png", dpi=500)
 plt.clf()
 	# data[i].plot.scatter(x=2, y = 1)
 	# plt.grid(True)
 	# plt.xlabel('number of conditionality')
 	# plt.ylabel('T, c')
 	# plt.title(names[i])
-	# plt.savefig("graph_python/"+names[i]+"Time(number of conditionality).png", dpi=300)
+	# plt.savefig("temp_graphs/"+names[i]+"Time(number of conditionality).png", dpi=300)
 	# plt.clf()

@@ -1,11 +1,19 @@
 all: main
-	./main 2>log_file.txt
+	./main 2>log.txt
 
 clean:
-	rm -f *.exe model/*.exe *log.txt data/*.txt gnuplot/*.plt graphs/*.png main
+	-rm -f *.exe model/*.exe *log.txt main
+
+clean_results:
+	-rm -f temp_data/*.txt temp_gnuplot/*.plt temp_graphs/*.png
+
+clean_all: clean clean_results
 
 main:
 	g++ -std=gnu++11 -ggdb main.cpp -o main
+
+plot:
+	python data_analyse.py
 
 run: main
 	./main
@@ -15,6 +23,3 @@ test: main
 
 test_run: main
 	./main test_run
-
-plot:
-	python data_analyse.py

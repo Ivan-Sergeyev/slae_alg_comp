@@ -37,7 +37,7 @@ void generate_plotfile(string plot_filename, string graph_filename,
 		string method_name = methods[i]->get_name();
 
 		// TODO: use format string
-		string data_relpath = string("../data/data_converged_") +
+		string data_relpath = string("../temp_data/data_converged_") +
 							  method_name + string(".txt");
 
 		plot_file <<

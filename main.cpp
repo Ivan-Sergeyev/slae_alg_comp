@@ -144,7 +144,7 @@ int main(int argc, char **argv) {
 // perform measurements
 	cerr << "[info] commence measurements\n";
 	// todo: use format strings
-	string data_filename_format = string("./data/data_%s_%s.txt");
+	string data_filename_format = string("./temp_data/data_%s_%s.txt");
 
 	PerformanceComparator p_comp(cerr);
 	p_comp.run_comparison(num_methods, methods,
@@ -161,15 +161,15 @@ int main(int argc, char **argv) {
 	cerr << "[info] commence generating plotfiles\n";
 
 	// todo: use format strings
-	string plot_all = string("./gnuplot/plot_all.plt"),
-		   graph_all_rel = string("../graphs/graph_all.png"),
-		   data_format_rel = string("../data/data_converged_%s.txt");
+	string plot_all = string("./temp_gnuplot/plot_all.plt"),
+		   graph_all_rel = string("../temp_graphs/graph_all.png"),
+		   data_format_rel = string("../temp_data/data_converged_%s.txt");
 
 	generate_plotfile(plot_all, graph_all_rel,
 					  data_format_rel, num_methods, methods);
 
-	string plot_num = string("./gnuplot/plot_num.plt"),
-		   graph_num_rel = string("../graphs/graph_num.png");
+	string plot_num = string("./temp_gnuplot/plot_num.plt"),
+		   graph_num_rel = string("../temp_graphs/graph_num.png");
 
 	generate_plotfile(plot_num, graph_num_rel,
 					  data_format_rel, num_methods - 1, methods);
@@ -180,7 +180,7 @@ int main(int argc, char **argv) {
 	const char gnuplot_call_all[] = "gnuplot plot_all.plt";
 	const char gnuplot_call_num[] = "gnuplot plot_num.plt";
 
-	chdir("./gnuplot/");
+	chdir("./temp_gnuplot/");
 	int status_1 = system(gnuplot_call_all);
 	int status_2 = system(gnuplot_call_num);
 	remove("fit.log");
