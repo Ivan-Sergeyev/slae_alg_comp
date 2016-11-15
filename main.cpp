@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
 	int large_sizes[large_num_sizes];
 	fill_arithm_progr(large_sizes, large_num_sizes, large_start, large_step);
 
-	// populate a list of conditionality numbers
+	// populate a list of condition numbers
 	int num_mus = 10;
 	double mu_start = 2,
 		   mu_mul = 2;
@@ -106,7 +106,7 @@ int main(int argc, char **argv) {
 		large_num_sizes = 0;
 	}
 
-	// set number of runs for each size and number of conditionality
+	// set number of runs for each size and condition number
 	int num_runs = 10;
 
 	// set parameters for numeric algorithms

@@ -498,7 +498,7 @@ public:
 		return t;
 	}
 
-// get matrix' number of conditionality
+// get matrix' condition number
 	double mu() const {
 		return this->norm() * this->inverse().norm();
 	}
