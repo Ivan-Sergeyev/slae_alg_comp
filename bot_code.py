@@ -35,6 +35,7 @@ userList = pd.DataFrame()
 allPhoto = []
 photoUserCurrent = {}
 
+import commands, os, string
 # class Photo():
 #     def __init__(self, file_id):
 #         self.voted_user = []
@@ -171,6 +172,26 @@ def maker(message):
         a = sb.Popen(['make', 'plot'])
         bot.send_message(cid, "Ok")
 
+@bot.message_handler(commands=['pull'])
+def maker(message):
+    cid = message.chat.id
+    if (admin_list[cid]):
+        a = sb.Popen(['git', 'pull'])
+        bot.send_message(cid, "Ok")
+
+
+indicate = 0
+@bot.message_handler(commands =['kill'])
+def maker(message):
+    cid = message.chat.id
+    if (admin_list[cid]):
+        output = commands.getoutput("ps -f|grep main")
+        proginfo = string.split(output)
+        if (len(proginfo)==0):  bot.send_message(cid, "Nothing to kill")    
+        else:
+            a = sb.Popen(['killall', 'main'])
+            bot.send_message(cid, "Killall main")    
+
 
 @bot.message_handler(commands=['graph'])
 def maker(message):
@@ -194,9 +215,28 @@ def maker(message):
 def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
-        #sb.Popen('rm main')
-        #sb.Popen(['make'])
-        bot.send_message(cid, "not work yet")
+        output = commands.getoutput("ls -f|grep main")
+        proginfo = string.split(output)
+        a = dict()
+        a['main'] = 0
+        for i in range(len(proginfo)):
+            a[proginfo[i]] = 1;
+        if (a['main']): sb.Popen(['rm', 'main'])
+        # kill old process
+        output = commands.getoutput("ps -f|grep main")
+        proginfo = string.split(output)
+        if (len(proginfo) > 0):  bot.send_message(cid, "Old process already start, kill them use \kill") 
+        else: 
+            sb.Popen(['make'])
+            bot.send_message(cid, "Program start")
+
+@bot.message_handler(commands=['status'])
+def maker(message):
+    cid = message.chat.id
+    if (admin_list[cid]):
+        output = commands.getoutput("tail -n 10 log_err.txt")
+        bot.send_message(cid, output) 
+        
 # #--------------------
 # def _create_choices_button_for_photo():
 #     markup = types.ReplyKeyboardMarkup()
