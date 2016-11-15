@@ -13,12 +13,10 @@ using std::cerr;
 class JacobiMethod : public GenericMethod {
 private:
 	double _tolerance;  // convergence tolerance
-	int _max_faults;    // divergence criteria
 
 public:
-	JacobiMethod(const double &tolerance, const int &max_faults) :
-		GenericMethod("Jacobi Method"),
-		_tolerance(tolerance), _max_faults(max_faults) {}
+	JacobiMethod(const double &tolerance) :
+		GenericMethod("Jacobi Method"), _tolerance(tolerance) {}
 
 	Vector step(const int &n, const Matrix &A,
 				const Vector &f, const Vector &u) const {
@@ -39,15 +37,13 @@ public:
 	Vector run(const Matrix &A, const Vector &f) const {
 		int n = A.get_size();
 		assert(n == f.get_size());
-		Vector u_cur = Vector(n);
+		Vector u_cur = f;
 		Vector u_next = step(n, A, f, u_cur);
 		double prev_dist = (u_cur - u_next).norm();
 		double cur_dist;
 		u_cur = u_next;
-		int number_faults = 0;
 
 		while(1) {
-			cerr << u_cur << "\n";
 			u_next = step(n, A, f, u_cur);
 			cur_dist = (u_cur - u_next).norm();
 
@@ -60,17 +56,6 @@ public:
 					 << "          !std::isfinite(cur_dist)\n";
 				u_next = Vector(0);
 				return u_next;  // diverged
-			}
-			if (cur_dist >= prev_dist) {
-				++number_faults;
-				if (number_faults > _max_faults) {
-					u_next = Vector(0);
-					cerr << "[warning] " << get_name() << " diverged\n"
-						 << "          number_faults > _max_faults\n";
-					return u_next;  // diverged
-				}
-			} else {
-				number_faults = 0;
 			}
 
 			prev_dist = cur_dist;

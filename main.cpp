@@ -111,7 +111,6 @@ int main(int argc, char **argv) {
 
 	// set parameters for numeric algorithms
 	double tolerance = 0.0078125;  // 2^{-7}
-	int max_faults = 20;
 
 	// populate mathods
 	int num_or_methods = 2 + 3,  // number of overrelaxation methods
@@ -125,12 +124,12 @@ int main(int argc, char **argv) {
 	double tau_step = 1.0l / (num_or_methods - 1);
 	for(; m_idx < num_or_methods; ++m_idx) {
 		tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
-		methods[m_idx] = new OverrelaxationMethod(tau, tolerance, max_faults);
+		methods[m_idx] = new OverrelaxationMethod(tau, tolerance);
 		cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
 	}
 
 	// add jacobi method
-	JacobiMethod jacobi_method(tolerance, max_faults);
+	JacobiMethod jacobi_method(tolerance);
 	methods[m_idx] = &jacobi_method;
 	cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
 	++m_idx;
