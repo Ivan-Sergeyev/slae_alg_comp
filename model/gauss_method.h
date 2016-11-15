@@ -19,10 +19,10 @@ public:
 		double coeff;
 
 		int _size = b.get_size();
-		for( int j = 0; j < _size; j++) {
-			M.find_max_and_swap(&b, j, _size, j);
-			for (int i = j+1; i < _size; i++){
-				coeff = M(i,j)/M(j,j);
+		for(int j = 0; j < _size; ++j) {
+			M.find_max_and_swap(&b, j);
+			for (int i = j + 1; i < _size; ++i){
+				coeff = M(i, j) / M(j, j);
 				M.sub(&b, i, j, coeff);
 			}
 		}

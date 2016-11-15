@@ -150,6 +150,11 @@ public:
 		return 1;
 	}
 
+// inequality check
+	bool operator != (const Vector &other) const {
+		return !(*this == other);
+	}
+
 // binary plus
 	Vector operator + (const Vector &other) {
 		assert(_is_ok());
@@ -272,6 +277,11 @@ public:
 		}
 		rep += to_string(_coord[_size - 1]);
 		return rep;
+	}
+
+// output operator
+	friend std::ostream& operator << (std::ostream &out, const Vector &vector) {
+		return out << vector.repr();
 	}
 };
 
@@ -444,7 +454,7 @@ public:
 		assert(_is_ok());
 
 		if (!_size) {
-			// empty vector
+			// empty matrix
 			return string("");
 		}
 
@@ -453,10 +463,16 @@ public:
 			for (int j = 0; j < _size - 1; ++j) {
 					rep += to_string(_value[i][j]) + string(" ");
 				}
-			rep += to_string(_value[i][_size - 1]) + string("\n");
+			rep += to_string(_value[i][_size - 1]);
+			rep += string((i != _size - 1), '\n');
 		}
 
 		return rep;
+	}
+
+// output operator
+	friend std::ostream& operator << (std::ostream &out, const Matrix &matrix) {
+		return out << matrix.repr();
 	}
 
 // swap two rows
@@ -482,60 +498,75 @@ public:
 		return t;
 	}
 
-// get matrix' number of conditionality
+// get matrix' condition number
 	double mu() const {
 		return this->norm() * this->inverse().norm();
 	}
 
 // specific functions for gauss method -- pending refactor
-	void find_max_and_swap(Vector* b, int from, int to, int in_col) const {
-		int max_index = from;
-		for (int i = from+1; i < to; ++i) if (_value[i][in_col] > _value[max_index][in_col]) max_index = i;
-		if (max_index != from){
-			double temp;
-			for (int i = 0; i < _size; ++i) {
-				temp = _value[in_col][i]; _value[in_col][i] = _value[max_index][i]; _value[max_index][i] = temp;
+// !!! missing description
+// !!! this has to be rewritten
+	void find_max_and_swap(Vector* b, int j) {
+		int max_index = j;
+		for (int i = j + 1; i < _size; ++i) {
+			if (_value[i][j] > _value[max_index][j]) {
+				max_index = i;
 			}
-			temp = (*b)(in_col); (*b)(in_col) = (*b)(max_index); (*b)(max_index) = temp;
+		}
+		if (max_index != j) {
+			double temp;
+			swap_rows(max_index, j);
+			swap((*b)(j), (*b)(max_index));
 		}
 
  	}
+
+// !!! missing description
+// !!! this should not be member of class matrix
  	void sub(Vector* b, int k, int l, double coeff) const{
-		for (int i = 0; i < _size; ++i) _value[k][i] -= _value[l][i]*coeff;
-		(*b)(k) -= (*b)(l)*coeff;
+		for (int i = 0; i < _size; ++i) {
+			_value[k][i] -= _value[l][i] * coeff;
+		}
+		(*b)(k) -= (*b)(l) * coeff;
 	}
 
+// !!! missing description
+// !!! this has to be rewritten
 	Vector get_answer_from_triangle(const Vector &b) {
 		Vector result(_size);
-		double cash;
-		for (int j = _size-1; j >=0; j--){
-			cash = b(j);
-			for (int i = j+1; i < _size; ++i) cash -= _value[j][i] * result(i);
-			result(j) = cash/_value[j][j];
+		double temp;
+		for (int j = _size-1; j >= 0; j--) {
+			temp = b(j);
+			for (int i = j + 1; i < _size; ++i) {
+				temp -= _value[j][i] * result(i);
+			}
+			result(j) = temp / _value[j][j];
 		}
 		return result;
 	}
 
-// inverse matrix
+// calculate inverse matrix using gauss method
+// !!! this has to be rewritten
 	Matrix inverse() const{
-		Vector b(_size);
 		Matrix m;
 		Vector answer(_size);
 		double coeff;
 		double* a = new double [_size*_size];
 		for (int k = 0; k < _size; ++k) {
-			 m = *this;
-			for (int n = 0; n < _size; ++n) if (n == k) b(n) = 1; else b(n) = 0;
+			m = *this;
+			Vector b(_size);
+			b(k) = 1;
+
 			for(int j = 0; j < _size; ++j) {
-				m.find_max_and_swap(&b, j, _size, j);
-				for (int i = j+1; i < _size; ++i){
-					coeff = m(i,j)/m(j,j);
+				m.find_max_and_swap(&b, j);
+				for (int i = j + 1; i < _size; ++i){
+					coeff = m(i, j) / m(j, j);
 					m.sub(&b, i, j, coeff);
 				}
 			}
 			answer = m.get_answer_from_triangle(b);
 			for(int l = 0; l < _size; ++l){
-				a[k+l*_size]=answer(l);
+				a[k + l * _size] = answer(l);
 			}
 		}
 		Matrix M(_size,a);
@@ -544,24 +575,24 @@ public:
 	}
 
 // orthnorm
+// !!! bad description
+// !!! this has to be rewritten
 	Matrix ort() const {
-		double* a = new double [_size*_size];  // !!! never deleted
-		double* add = new double [_size];      // !!! never deleted
+		double* a = new double [_size*_size];
+		double* add = new double [_size];
 		double coeff1;
 		double coeff2;
 		for (int j = 0; j  < _size ; ++j){
-			for (int l = 0; l < _size; l++ ) {
-				add[l] = 0;
-			}
+			fill_n(add, _size, 0);
 
 			for (int k = 0; k < j; ++k){
 				coeff1 = 0;
 				coeff2 = 0;
-				for (int l = 0;  l < _size; ++l){
+				for (int l = 0;  l < _size; ++l) {
 					coeff1 += _value[l][j] * a[l * _size + k];
 					coeff2 += a[l * _size + k] * a[l * _size + k];
 				}
-				coeff1 = coeff1/coeff2;
+				coeff1 = coeff1 / coeff2;
 				for (int l = 0; l < _size; ++l){
 					add[l] -= coeff1 * a[l*_size + k];
 				}
@@ -576,7 +607,7 @@ public:
 			}
 			coeff1 = sqrt(coeff1);
 			for (int l = 0; l < _size; ++l){
-				a[l * _size + j]/=coeff1;
+				a[l * _size + j] /= coeff1;
 			}
 		}
 		Matrix M(_size, a);
