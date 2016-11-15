@@ -37,38 +37,11 @@ int main(int argc, char **argv) {
 // setup
 	cerr << "[info] commence setup\n";
 
-	// populate a list of small sizes
-	int small_num_sizes = 30,
-		small_start = 100,
-		small_step = 100;
-	int small_sizes[small_num_sizes];
-	generators::arithm_progr<int> (small_sizes, small_num_sizes,
-								   small_start, small_step);
-
-	// populate a list of large sizes
-	int large_num_sizes = 50,
-		large_start = 3100,
-		large_step = 100;
-	int large_sizes[large_num_sizes];
-	generators::arithm_progr<int> (large_sizes, large_num_sizes,
-								   large_start, large_step);
-
-	// populate a list of condition numbers
-	int num_mus = 7;
-	double mu_start = 1,
-		   mu_mul = 10;
-	double mus[num_mus];
-	generators::geom_progr<double> (mus, num_mus, mu_start, mu_mul);
-
+	string run_setting = string("full run");
 	if (argc == 2 && string(argv[1]) == string("test_run")) {
-		// only run on small number of tests
-		cerr << "[info] test_run mode enabled\n";
-		small_num_sizes = 1;
-		large_num_sizes = 0;
+		cerr << "[info] test run enabled\n";
+		run_setting = string("test run");
 	}
-
-	// set number of runs for each size and condition number
-	int num_runs = 10;
 
 	// set parameters for numeric algorithms
 	double tolerance = 0.0078125;  // 2^{-7}
@@ -94,28 +67,31 @@ int main(int argc, char **argv) {
 	methods[m_idx] = &jacobi_method;
 	cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
 	++m_idx;
+
 	// add gauss method
 	GaussMethod gauss_method;
 	methods[m_idx] = &gauss_method;
 	cerr << "[info] added " << methods[m_idx]->get_name() << "\n";
 	++m_idx;
+
+	// check that number of added methods is correct
 	assert(m_idx == num_methods);
 
 // perform measurements
 	cerr << "[info] commence measurements\n";
+
 	// todo: use format strings
 	string data_filename_format = string("./temp_data/data_%s_%s.txt");
 
-	PerformanceComparator p_comp(cerr);
-	p_comp.run_comparison(num_methods, methods,
-						  small_num_sizes, small_sizes,
-						  num_mus, mus,
-						  num_runs, data_filename_format);
+	// run on small sizes
+	PerformanceComparator small_comp(cerr,
+									 string("small sizes"), run_setting);
+	small_comp.run_comparison(num_methods, methods, data_filename_format);
 
-	p_comp.run_comparison(num_methods - 1, methods,
-						  large_num_sizes, large_sizes,
-						  num_mus, mus,
-						  num_runs, data_filename_format);
+	// run on large sizes
+	PerformanceComparator large_comp(cerr,
+									 string("large sizes"), run_setting);
+	large_comp.run_comparison(num_methods - 1, methods, data_filename_format);
 
 // prepare plot and run gnuplot
 	cerr << "[info] commence generating plotfiles\n";
