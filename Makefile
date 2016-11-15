@@ -23,3 +23,6 @@ test: main
 
 test_run: main
 	./main test_run
+
+bot: 
+	python bot_code.py 1>1.txt 2>2.txt &
