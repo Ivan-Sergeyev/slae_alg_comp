@@ -225,7 +225,7 @@ def maker(message):
         # kill old process
         output = commands.getoutput("ps -f|grep main")
         proginfo = output.split("\n")
-        if (len(proginfo) <=2 ):  bot.send_message(cid, "Old process already start, kill them use \kill") 
+        if (len(proginfo) > 2 ):  bot.send_message(cid, "Old process already start, kill them use \kill") 
         else: 
             sb.Popen(['make'])
             bot.send_message(cid, "Program start")
