@@ -3,7 +3,6 @@
 #include <string.h>
 #include <unistd.h>
 
-
 #include "model/generators.h"
 #include "model/generic_method.h"
 #include "model/gauss_method.h"
@@ -19,7 +18,7 @@ using std::cerr;
 using std::system;
 
 
-// #define NDEBUG  // disable tests and asserts for release
+// #define NDEBUG  // disable tests and asserts in release build
 
 #ifndef NDEBUG
 #include "test/project_test.h"
@@ -43,23 +42,23 @@ int main(int argc, char **argv) {
 		small_start = 100,
 		small_step = 100;
 	int small_sizes[small_num_sizes];
-	generators::arithm_progr<int>(small_sizes, small_num_sizes,
-								  small_start, small_step);
+	generators::arithm_progr<int> (small_sizes, small_num_sizes,
+								   small_start, small_step);
 
 	// populate a list of large sizes
 	int large_num_sizes = 50,
 		large_start = 3100,
 		large_step = 100;
 	int large_sizes[large_num_sizes];
-	generators::arithm_progr<int>(large_sizes, large_num_sizes,
-								  large_start, large_step);
+	generators::arithm_progr<int> (large_sizes, large_num_sizes,
+								   large_start, large_step);
 
 	// populate a list of condition numbers
 	int num_mus = 7;
 	double mu_start = 1,
 		   mu_mul = 10;
 	double mus[num_mus];
-	generators::geom_progr<double>(mus, num_mus, mu_start, mu_mul);
+	generators::geom_progr<double> (mus, num_mus, mu_start, mu_mul);
 
 	if (argc == 2 && string(argv[1]) == string("test_run")) {
 		// only run on small number of tests
