@@ -22,9 +22,6 @@ namespace overrelaxation_method_test {
 		bool ret = 0;
 
 		double tolerance = 1e-7;
-		double tau = 0.5l;
-		OverrelaxationMethod overrelaxation_method(tau, tolerance);
-
 		const int size = 3;
 		const double a_value[size * size] = {1, 0, 0, 0, 1, 0, 0, 0, 1};
 		const double f_value[size] = {19, 38, 57};
@@ -32,15 +29,25 @@ namespace overrelaxation_method_test {
 		Matrix a(size, a_value);
 		Vector f(size, f_value);
 
-		Vector res = overrelaxation_method.run(a, f);
-		Vector res_ref(f);
+		const int num_or_methods = 5;
 
-		if (res.repr() != res_ref.repr()) {
-			cerr << "  | failure\n"
-				 << "  | result = " << res << "\n"
-				 << "  | should be " << res_ref << "\n";
-			ret = 1;
+		double tau = 0.0l;
+		double tau_step = 1.0l / (num_or_methods - 1);
+		for(int i = 0; i < num_or_methods; ++i) {
+			tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
+			OverrelaxationMethod method(tau, tolerance);
+
+			Vector res = method.run(a, f);
+			Vector res_ref(f);
+
+			if (res.repr() != res_ref.repr()) {
+				cerr << "  | failure for tau=" << tau << "\n"
+					 << "  | result = " << res << "\n"
+					 << "  | should be " << res_ref << "\n";
+				ret = 1;
+			}
 		}
+
 		if (!ret) {
 			cerr << "  | success\n";
 		}
@@ -52,9 +59,6 @@ namespace overrelaxation_method_test {
 		bool ret = 0;
 
 		double tolerance = 1e-7;
-		double tau = 0.5l;
-		OverrelaxationMethod overrelaxation_method(tau, tolerance);
-
 		const int size = 2;
 		const double a_value[size * size] = {2, 1, 1, 2};
 		const double f_value[size] = {1, -1};
@@ -62,15 +66,25 @@ namespace overrelaxation_method_test {
 		Matrix a(size, a_value);
 		Vector f(size, f_value);
 
-		Vector res = overrelaxation_method.run(a, f);
-		Vector res_ref(f);
+		const int num_or_methods = 5;
 
-		if (res.repr() != res_ref.repr()) {
-			cerr << "  | failure\n"
-				 << "  | result = " << res << "\n"
-				 << "  | should be " << res_ref << "\n";
-			ret = 1;
+		double tau = 0.0l;
+		double tau_step = 1.0l / (num_or_methods - 1);
+		for(int i = 0; i < num_or_methods; ++i) {
+			tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
+			OverrelaxationMethod method(tau, tolerance);
+
+			Vector res = method.run(a, f);
+			Vector res_ref(f);
+
+			if (res.repr() != res_ref.repr()) {
+				cerr << "  | failure for tau=" << tau << "\n"
+					 << "  | result = " << res << "\n"
+					 << "  | should be " << res_ref << "\n";
+				ret = 1;
+			}
 		}
+
 		if (!ret) {
 			cerr << "  | success\n";
 		}
@@ -81,33 +95,40 @@ namespace overrelaxation_method_test {
 		cerr << "  | testing OverrelaxationMethod with matrix generator with mu\n";
 		bool ret = 0;
 
-		int size = 10;
 		double tolerance = 1e-7;
-		double tau = 0.5l;
-		OverrelaxationMethod overrelaxation_method(tau, tolerance);
+		int size = 10;
 
-		for(int mu = 1; mu < 400; ++mu) {
-			srand(mu);
-			Vector f = generators::vector_random(size);
-			Matrix A = generators::matrix_with_approximate_mu(size, mu);
-			Vector result = overrelaxation_method.run(A, f);
+		const int num_or_methods = 5;
 
-			if (result.get_size() != size) {
-				cerr << "  | failure\n"
-					 << "  | result has size = " << result.get_size() << "\n"
-					 << "  | vector: " << f << "\n"
-					 << "  | matrix:\n" << A << "\n\n";
-				ret = 1;
-			} else {
-				Vector res_f = A * result;
+		double tau = 0.0l;
+		double tau_step = 1.0l / (num_or_methods - 1);
+		for(int i = 0; i < num_or_methods; ++i) {
+			tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
+			OverrelaxationMethod method(tau, tolerance);
 
-				if ((f - res_f).norm() > 80 * tolerance) {
-					cerr << "  | failure\n"
-						 << "  | answer of overrelaxation method yields RHS = "
-						 << res_f << "\n"
+			for(int mu = 1; mu < 400; ++mu) {
+				srand(mu);
+				Vector f = generators::vector_random(size);
+				Matrix A = generators::matrix_with_approximate_mu(size, mu);
+				Vector result = method.run(A, f);
+
+				if (result.get_size() != size) {
+					cerr << "  | failure for tau=" << tau << "\n"
+						 << "  | result has size = " << result.get_size() << "\n"
 						 << "  | vector: " << f << "\n"
 						 << "  | matrix:\n" << A << "\n\n";
 					ret = 1;
+				} else {
+					Vector res_f = A * result;
+
+					if ((f - res_f).norm() > 80 * tolerance) {
+						cerr << "  | failure for tau=" << tau << "\n"
+							 << "  | answer of overrelaxation method yields RHS = "
+							 << res_f << "\n"
+							 << "  | vector: " << f << "\n"
+							 << "  | matrix:\n" << A << "\n\n";
+						ret = 1;
+					}
 				}
 			}
 		}
