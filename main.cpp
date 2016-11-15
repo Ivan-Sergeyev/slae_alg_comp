@@ -23,24 +23,29 @@ using std::system;
 
 #include "test/linear_algebra_test.h"
 #include "test/jacobi_method_test.h"
+#include "test/overrelaxation_method_test.h"
 
 
 void test() {
 	typedef int (*test_funcion_pointer)();
 
-	const int num_modules = 2;
+	const int num_modules = 3;
 	string module_name[num_modules] = \
-		{string("linear_algebra"), string("jacobi_method")};
+		{string("linear_algebra"), string("jacobi_method"),
+		 string("overrelaxation_method")};
 	test_funcion_pointer module_test[num_modules] =
-		{linear_algebra_test::test, jacobi_method_test::test};
+		{linear_algebra_test::test, jacobi_method_test::test,
+		 overrelaxation_method_test::test};
+
+	string separator(79, '=');
 
 	int total_fails = 0;
 	for (int i = 0; i < num_modules; ++i)
 	{
 		cerr << "testing " << module_name[i] << "\n";
-		cerr << "===========================================================\n";
+		cerr << separator << "\n";
 		int num_fails = module_test[i]();
-		cerr << "===========================================================\n";
+		cerr << separator << "\n";
 		cerr << num_fails << " fails in " << module_name[i] << "\n\n";
 		total_fails += num_fails;
 	}

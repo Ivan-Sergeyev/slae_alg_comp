@@ -186,8 +186,8 @@ def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
         output = commands.getoutput("ps -f|grep main")
-        proginfo = string.split(output)
-        if (len(proginfo)==0):  bot.send_message(cid, "Nothing to kill")    
+        proginfo = output.split("\n")
+        if (len(proginfo)==1):  bot.send_message(cid, "Nothing to kill")    
         else:
             a = sb.Popen(['killall', 'main'])
             bot.send_message(cid, "Killall main")    
@@ -224,8 +224,8 @@ def maker(message):
         if (a['main']): sb.Popen(['rm', 'main'])
         # kill old process
         output = commands.getoutput("ps -f|grep main")
-        proginfo = string.split(output)
-        if (len(proginfo) > 0):  bot.send_message(cid, "Old process already start, kill them use \kill") 
+        proginfo = output.split("\n")
+        if (len(proginfo) <=2 ):  bot.send_message(cid, "Old process already start, kill them use \kill") 
         else: 
             sb.Popen(['make'])
             bot.send_message(cid, "Program start")

@@ -5,13 +5,14 @@
 #include <stdlib.h>
 #include <string>
 
-#include "../model/jacobi_method.h"
-#include "../model/linear_algebra.h"
 #include "../model/generators.h"
+#include "../model/linear_algebra.h"
+#include "../model/jacobi_method.h"
 
 
 using std::cerr;
 using std::string;
+
 
 namespace jacobi_method_test {
 	typedef int (*test_function_pointer)();
@@ -20,7 +21,7 @@ namespace jacobi_method_test {
 		cerr << "  | testing JacobiMethod with identity matrix\n";
 		bool ret = 0;
 
-		double tolerance = 1e-8;
+		double tolerance = 1e-7;
 		JacobiMethod jacobi_method(tolerance);
 
 		const int size = 3;
@@ -49,7 +50,7 @@ namespace jacobi_method_test {
 		cerr << "  | testing JacobiMethod with coursebook example\n";
 		bool ret = 0;
 
-		double tolerance = 1e-8;
+		double tolerance = 1e-7;
 		JacobiMethod jacobi_method(tolerance);
 
 		const int size = 2;
@@ -79,7 +80,7 @@ namespace jacobi_method_test {
 		bool ret = 0;
 
 		int size = 10;
-		double tolerance = 1e-8;
+		double tolerance = 1e-7;
 		JacobiMethod jacobi_method(tolerance);
 
 		for(int mu = 1; mu < 400; ++mu) {
@@ -99,7 +100,8 @@ namespace jacobi_method_test {
 
 				if ((f - res_f).norm() > 10 * tolerance) {
 					cerr << "  | failure\n"
-						 << "  | answer of jacobi method yields RHS = " << res_f << "\n"
+						 << "  | answer of jacobi method yields RHS = "
+						 << res_f << "\n"
 						 << "  | vector: " << f << "\n"
 						 << "  | matrix:\n" << A << "\n\n";
 					ret = 1;
