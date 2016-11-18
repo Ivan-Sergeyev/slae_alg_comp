@@ -272,54 +272,63 @@ private:
 	}
 
 public:
-	PerformanceComparator(ostream &log_file,
-						  string size_setting, string run_setting) :
+	PerformanceComparator(ostream &log_file, string run_setting) :
 			_log_file(log_file) {
 		int small_num_sizes = 30,
 			large_num_sizes = 50;
 
+		// initialize _sizes and _num_sizes
 		if (run_setting == string("test run")) {
 			_progress_filename = string(".progress_test");
-			small_num_sizes = 1;
-			large_num_sizes = 0;
-		} else if (run_setting == string("full run")) {
-			;
-		} else {
-			cerr << "[warning] unknown run setting \"" << run_setting << "\"\n";
-		}
 
-		if (size_setting == string("small sizes")) {
-			if (_progress_filename != string(".progress_test")) {
-				_progress_filename = string(".progress_small");
-			}
+			_num_sizes = 1;
+			int test_start = 100,
+				test_step = 100;
+			_sizes = new int [_num_sizes];
+
+			generators::arithm_progr<int> (_sizes, _num_sizes,
+										   test_start, test_step);
+		} else if (run_setting == string("small sizes")) {
+			_progress_filename = string(".progress_small");
+
 			_num_sizes = small_num_sizes;
 			int small_start = 100,
 				small_step = 100;
 			_sizes = new int [_num_sizes];
+
 			generators::arithm_progr<int> (_sizes, _num_sizes,
 										   small_start, small_step);
-		} else if (size_setting == string("large sizes")) {
+		} else if (run_setting == string("large sizes")) {
 			_progress_filename = string(".progress_large");
+
 			_num_sizes = large_num_sizes;
 			int large_start = 3100,
 				large_step = 100;
 			_sizes = new int [_num_sizes];
+
 			generators::arithm_progr<int> (_sizes, _num_sizes,
 										   large_start, large_step);
 		} else {
-			cerr << "[warning] unknown size setting \"" << size_setting << "\"\n";
+			cerr << "[warning] unknown run setting \"" << run_setting << "\"\n";
+			_num_sizes = 0;
+			_sizes = 0;
 		}
 
+		// initialize _mus and _num_mus
 		if (1) {
 			_num_mus = 7;
 			double mu_start = 1,
 				   mu_mul = 10;
 			_mus = new double [_num_mus];
+
 			generators::geom_progr<double> (_mus, _num_mus, mu_start, mu_mul);
 		} else {
 			// cerr << "[warning] unknown mu setting \"" << mu_setting << "\"\n";
+			_num_mus = 0;
+			_mus = 0;
 		}
 
+		// initialize _num_runs
 		_num_runs = 10;
 	}
 
