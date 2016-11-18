@@ -4,6 +4,9 @@ all: main
 clean:
 	-rm -f *.exe model/*.exe test/*.exe *log.txt main
 
+clean_progress:
+	-rm -f .progress*
+
 clean_results:
 	-rm -f temp_data/*.txt temp_gnuplot/*.plt temp_graphs/*.png
 
@@ -24,5 +27,5 @@ test: main
 test_run: main
 	./main test_run
 
-bot: 
+bot:
 	python bot_code.py 1>1.txt 2>2.txt &

@@ -10,6 +10,7 @@
 *log.txt
 
 # temporary results
+.progress*
 temp_gnuplot/*
 temp_data/*
 temp_graphs/*

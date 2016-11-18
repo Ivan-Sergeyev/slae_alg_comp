@@ -16,8 +16,10 @@
 using namespace std::chrono;
 
 using std::cerr;
-using std::ostream;
+using std::istream;
 using std::fstream;
+using std::ostream;
+using std::stod;
 using std::string;
 using std::to_string;
 
@@ -27,11 +29,51 @@ private:
 	ostream &_log_file;
 	time_point<system_clock> _log_start_time;
 
+	string _progress_filename;
+
 	int _num_sizes;
 	int *_sizes;
 	int _num_mus;
 	double *_mus;
 	int _num_runs;
+
+/* not used
+	 // read vector from file
+	 Vector& _read_vector(FILE* file, int size) { // check for work
+	 	double *coords = new double[size];
+	 	int errc;
+     	for (int j = 0; j < size; ++j) {
+     		errc = fscanf(file, "%lf", &coords[j]);
+    		if ((errc == EOF) || (errc == 0)) return 1;
+     	}
+     	Vector *v = new Vector(size, coords);
+     	delete[] coords;
+     	return *v;
+	 }
+
+	// read matrix from file
+	Matrix& _read_matrix(FILE* file, int size) { //check for work
+	 	int n = size * size;
+	 	double *values = new double[n];
+	 	for (int i = 0; i < n; ++i) {
+	 		errc = fscanf(file, &value[i]);
+	 		if ((errc == EOF) || (errc == 0)) return 1;
+	 	}
+	 	Matrix *m = new Matrix(size, values);
+	 	delete[] values;
+	 	return *m;
+	}
+
+ 	// check that A•answer=b with accurace epsilon (max delta = epsilon)      1 - good; 0 - bad
+ 	int _check_answer(const Vector &answer, const Matrix &M, const Vector &b, const double &epsilon) {
+	    Vector check = M * answer;
+    	double max = 0;
+    	for (int i = 0; i < result.get_size(); ++i) if (std::abs(check(i)-result(i)) > max) max = std::abs(check(i)-result(i));
+    	delete &check;
+    	if (max < epsilon) return 1;
+    	return 0;
+	}
+*/
 
 	string _timestamp(const time_point<system_clock> &time) const {
 		auto time_diff = time - _log_start_time;
@@ -69,49 +111,114 @@ private:
 		_log_file << full_msg;
 	}
 
-/*
-	 // read vector from file
-	 Vector& _read_vector(FILE* file, int size){ // check for work
-	 	double *coords = new double[size];
-	 	int errc;
-     	for (int j = 0; j < size; ++j) {
-     		errc = fscanf(file, "%lf", &coords[j]);
-    		if ((errc == EOF) || (errc == 0)) return 1;
-     	}
-     	Vector *v = new Vector(size, coords);
-     	delete[] coords;
-     	return *v;
-	 }
+	bool _find_sm(int size, double mu, int &s_idx, int &mu_idx) {
+		bool found = 0;
+		for (int i = 0; i < _num_sizes; ++i) {
+			if (_sizes[i] == size) {
+				s_idx = i;
+				found = 1;
+				break;
+			}
+		}
 
-	// read matrix from file
-	Matrix& _read_matrix(FILE* file, int size) { //check for work
-	 	int n = size * size;
-	 	double *values = new double[n];
-	 	for(int i = 0; i < n; ++i) {
-	 		errc = fscanf(file, &value[i]);
-	 		if ((errc == EOF) || (errc == 0)) return 1;
-	 	}
-	 	Matrix *m = new Matrix(size, values);
-	 	delete[] values;
-	 	return *m;
+		if (!found) {
+			cerr << "size " << size << " not found in _sizes\n";
+			return 0;
+		}
+
+		found = 0;
+		for (int i = 0; i < _num_mus; ++i) {
+			if (_mus[i] == mu) {
+				mu_idx = i;
+				found = 1;
+				return 1;
+			}
+		}
+
+		if (!found) {
+			string msg = string("mu ") + to_string(mu) +
+						 string("not found in _mus\n");
+			_write_log(msg);
+			return 0;
+		}
+		return 1;
 	}
 
- 	// check that A•answer=b with accurace epsilon (max delta = epsilon)      1 - good; 0 - bad
- 	int _check_answer(const Vector &answer, const Matrix &M, const Vector &b, const double &epsilon){
-	    Vector check = M * answer;
-    	double max = 0;
-    	for (int i = 0; i < result.get_size(); ++i) if (std::abs(check(i)-result(i)) > max) max = std::abs(check(i)-result(i));
-    	delete &check;
-    	if (max < epsilon) return 1;
-    	return 0;
+	bool _restore_progress(int &s_idx, int &mu_idx, int &r_idx) {
+		std::ifstream progress_file(_progress_filename);
+
+		if (!progress_file.is_open()) {
+			cerr << "progress file does not exist\n";
+			s_idx = mu_idx = r_idx = 0;
+			return 1;
+		}
+
+		bool ret = 1;
+
+		string str[3];
+		double val[3];
+
+		for (int i = 0; i < 3; ++i) {
+			if (!(progress_file >> str[i])) {
+				cerr << "reding from progress file failed\n";
+				ret = 0;
+				break;
+			}
+
+			if (str[i] == string("done")) {
+				cerr << "measurements have already been done\n";
+				ret = 0;
+				break;
+			}
+
+			try {
+				val[i] = stod(str[i]);
+			} catch (...) {
+				cerr << "could not convert \"" << val[i] << "\" to double\n";
+				ret = 0;
+				break;
+			}
+		}
+
+		if (!ret) {
+			progress_file.close();
+			return 0;
+		}
+
+		int size = int(val[0]);
+		double mu = val[1];
+		r_idx = int(val[2]);
+
+		if (!_find_sm(size, mu, s_idx, mu_idx)) {
+			cerr << "one or more indices could not be determined\n";
+			return 0;
+		}
+
+		cerr << "progress restored:"
+			 << " s_idx = " << s_idx
+			 << " mu_idx = " << mu_idx
+			 << " r_idx = " << r_idx << "\n";
+		progress_file.close();
+		return 1;
 	}
-*/
+
+	void _update_progress(int s_idx, int mu_idx, int r_idx) {
+		fstream progress_file(_progress_filename,
+							  ostream::out | ostream::trunc);
+		if (s_idx < _num_sizes) {
+			progress_file << _sizes[s_idx] << " " << _mus[mu_idx] << " "
+						  << r_idx << "\n";
+		} else {
+			progress_file << "done\n";
+		}
+		progress_file.close();
+	}
 
 	void _write_results_to_file(string data_filename, string results) {
 		fstream data_file(data_filename, ostream::out | ostream::app);
 		if (!(data_file.is_open())) {
 			_log_file << "Error opening data file \"" << data_filename << "\"\n"
-					  << "Aborting\n";
+					  << "Data will be discarded\n";
 			return;
 		}
 
@@ -172,6 +279,7 @@ public:
 			large_num_sizes = 50;
 
 		if (run_setting == string("test run")) {
+			_progress_filename = string(".progress_test");
 			small_num_sizes = 1;
 			large_num_sizes = 0;
 		} else if (run_setting == string("full run")) {
@@ -181,6 +289,9 @@ public:
 		}
 
 		if (size_setting == string("small sizes")) {
+			if (_progress_filename != string(".progress_test")) {
+				_progress_filename = string(".progress_small");
+			}
 			_num_sizes = small_num_sizes;
 			int small_start = 100,
 				small_step = 100;
@@ -188,6 +299,7 @@ public:
 			generators::arithm_progr<int> (_sizes, _num_sizes,
 										   small_start, small_step);
 		} else if (size_setting == string("large sizes")) {
+			_progress_filename = string(".progress_large");
 			_num_sizes = large_num_sizes;
 			int large_start = 3100,
 				large_step = 100;
@@ -218,6 +330,33 @@ public:
 
 	void run_comparison(int num_methods, GenericMethod **methods,
 						string data_filename_format) {
+		int s_idx, mu_idx, r_idx;
+		if (!_restore_progress(s_idx, mu_idx, r_idx)) {
+			return;
+		}
+
+		cerr << "starting indices:\n"
+			 << "s_idx = " << s_idx << "\n"
+			 << "mu_idx = " << mu_idx << "\n"
+			 << "r_idx = " << r_idx << "\n\n";
+
+		if (mu_idx == _num_mus) {
+			cerr << "mu_idx reached its limit\n";
+			cerr << "advancing s_idx and resetting mu_idx\n";
+			mu_idx = 0;
+			++s_idx;
+		}
+
+		if (s_idx == _num_sizes) {
+			cerr << "s_idx reached its limit\n";
+			return;
+		}
+
+		cerr << "starting values:\n"
+			 << "size = " << _sizes[s_idx] << "\n"
+			 << "mu = " << _mus[mu_idx] << "\n"
+			 << "run = " << r_idx << "\n\n";
+
 		Matrix A;
 		Vector f;
 		string msg;
@@ -226,18 +365,20 @@ public:
 		const string eol = string("\n");
 
 		// todo: move seed to args?
-		int seed = time(0);
+		const int seed = time(0);
 		srand(seed);
 
 		_log_start_time = system_clock::now();
 
-		for(int s_idx = 0; s_idx < _num_sizes; ++s_idx) {
+		for (; s_idx < _num_sizes; ++s_idx) {
 			const int size = _sizes[s_idx];
 
-			for(int mu_idx = 0; mu_idx < _num_mus; ++mu_idx) {
+			for (; mu_idx < _num_mus; ++mu_idx) {
 				const double mu = _mus[mu_idx];
 
-				for(int r_idx = 0; r_idx < _num_runs; ++r_idx) {
+				for (; r_idx < _num_runs; ++r_idx) {
+					_update_progress(s_idx, mu_idx, r_idx);
+
 					msg = string("run #") + to_string(r_idx);
 					msg += string(" on size = ") + to_string(size);
 					msg += string(" with mu = ") + to_string(mu) + eol;
@@ -254,9 +395,12 @@ public:
 
 					_write_log(sep_dash, 0);
 				}
+				r_idx = 0;
 			}
-		_write_log(sep_ddash, 0);
+			mu_idx = 0;
+			_write_log(sep_ddash, 0);
 		}
+		_update_progress(s_idx, mu_idx, r_idx);
 	}
 };
 

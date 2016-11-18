@@ -88,10 +88,13 @@ int main(int argc, char **argv) {
 									 string("small sizes"), run_setting);
 	small_comp.run_comparison(num_methods, methods, data_filename_format);
 
-	// run on large sizes
-	PerformanceComparator large_comp(cerr,
-									 string("large sizes"), run_setting);
-	large_comp.run_comparison(num_methods - 1, methods, data_filename_format);
+	if (run_setting != string("test run")) {
+		// run on large sizes
+		PerformanceComparator large_comp(cerr,
+										 string("large sizes"), run_setting);
+		large_comp.run_comparison(num_methods - 1, methods,
+								  data_filename_format);
+	}
 
 // prepare plot and run gnuplot
 	cerr << "[info] commence generating plotfiles\n";
