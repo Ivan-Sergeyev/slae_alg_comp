@@ -22,21 +22,21 @@ public:
 				const Vector &f, const Vector &u) const {
 		Vector u_next(n);
 		for (int i = 0; i < n; ++i) {
-			u_next(i) = f(i);
+			u_next._coord[i] = f._coord[i];
 			for (int j = 0; j < i; ++j) {
-				u_next(i) -= A(i, j) * u(j);
+				u_next._coord[i] -= A._value[i][j] * u._coord[j];
 			}
 			for (int j = i + 1; j < n; ++j) {
-				u_next(i) -= A(i, j) * u(j);
+				u_next._coord[i] -= A._value[i][j] * u._coord[j];
 			}
-			u_next(i) /= A(i, i);
+			u_next._coord[i] /= A._value[i][i];
 		}
 		return u_next;
 	}
 
 	Vector run(const Matrix &A, const Vector &f) const {
-		int n = A.get_size();
-		assert(n == f.get_size());
+		int n = A._size;
+		assert(n == f._size);
 		Vector u_cur = f;
 		Vector u_next = step(n, A, f, u_cur);
 		double prev_dist = (u_cur - u_next).norm();
@@ -54,8 +54,7 @@ public:
 			if (!std::isfinite(cur_dist)) {
 				cerr << "[warning] " << get_name() << " diverged\n"
 					 << "          !std::isfinite(cur_dist)\n";
-				u_next = Vector(0);
-				return u_next;  // diverged
+				return Vector(0);  // diverged
 			}
 
 			prev_dist = cur_dist;

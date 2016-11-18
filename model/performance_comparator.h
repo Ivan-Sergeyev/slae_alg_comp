@@ -202,7 +202,7 @@ private:
 						 string(" ") + to_string(mu);
 
 		string verdict;
-		if (answer.get_size() == size) {
+		if (answer._size == size) {
 			verdict = string("converged");
 		} else {
 			verdict = string("diverged");

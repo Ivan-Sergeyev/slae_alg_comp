@@ -16,10 +16,11 @@ using std::to_string;
 
 
 class Vector {
-private:
+public:
 	int _size;       // vector's size
 	double *_coord;  // vector's coordinates
 
+private:
 // hard check if vector's state is ok
 	bool _is_ok() const {
 		return !_size || _coord;
@@ -53,7 +54,7 @@ private:
 
 // make a copy of another vector
 	void _deep_copy(const Vector &other) {
-		_resize(other.get_size());
+		_resize(other._size);
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] = other(i);
 		}
@@ -139,7 +140,7 @@ public:
 // equality check
 	bool operator == (const Vector &other) const {
 		assert(_is_ok());
-		if (_size != other.get_size()) {
+		if (_size != other._size) {
 			return 0;
 		}
 		for (int i = 0; i < _size; ++i) {
@@ -158,7 +159,7 @@ public:
 // binary plus
 	Vector operator + (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		Vector sum(*this);
 		for (int i = 0; i < _size; ++i) {
 			sum(i) += other(i);
@@ -169,7 +170,7 @@ public:
 // binary minus
 	Vector operator - (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		Vector sum(*this);
 		for (int i = 0; i < _size; ++i) {
 			sum(i) -= other(i);
@@ -184,7 +185,7 @@ public:
 
 // unary minus
 	friend Vector operator - (const Vector &vector) {
-		Vector neg(vector.get_size());
+		Vector neg(vector._size);
 		neg -= vector;
 		return neg;
 	}
@@ -192,7 +193,7 @@ public:
 // addition
 	Vector operator += (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] += other(i);
 		}
@@ -202,7 +203,7 @@ public:
 // subtraction
 	Vector operator -= (const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		for (int i = 0; i < _size; ++i) {
 			_coord[i] -= other(i);
 		}
@@ -236,7 +237,7 @@ public:
 // dot product
 	double dot_product(const Vector &other) const {
 		assert(_is_ok());
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		double prod = 0;
 		for (int i = 0; i < _size; ++i) {
 			prod += _coord[i] * other(i);
@@ -252,7 +253,7 @@ public:
 // project this vector on another
 	Vector project(const Vector &other) {
 		assert(_is_ok());
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		double c1 = dot_product(other);
 		double c2 = dot_product(*this);
 		return other * c1 / c2;
@@ -287,10 +288,11 @@ public:
 
 
 class Matrix {
-private:
+public:
 	int _size;        // matrix' size
 	double **_value;  // matrix' values
 
+private:
 // hard check if matrix' state is ok
 	bool _is_ok() const {
 		return !_size || _value;
@@ -307,7 +309,7 @@ private:
 
 // make a copy of another matrix
 	void _deep_copy(const Matrix &other) {
-		_resize(other.get_size());
+		_resize(other._size);
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
 				_value[i][j] = other(i, j);
@@ -425,7 +427,7 @@ public:
 
 // multiplication by a vector
 	Vector operator * (const Vector &other) const {
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		Vector result(_size);
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
@@ -437,7 +439,7 @@ public:
 
 // multiplication by a matrix
 	Matrix operator * (const Matrix &other) const {
-		assert(_size == other.get_size());
+		assert(_size == other._size);
 		Matrix result(_size);
 		for (int i = 0; i < _size; ++i) {
 			for (int j = 0; j < _size; ++j) {
