@@ -119,9 +119,9 @@ private:
 		data_file.close();
 	}
 
-	void _run_measurements(const GenericMethod *method, int size, double mu,
-						   const Matrix &A, const Vector &f,
-						   string data_filename_format) {
+	void _run_method(const GenericMethod *method, int size, double mu,
+					 const Matrix &A, const Vector &f,
+					 string data_filename_format) {
 		auto t_start = high_resolution_clock::now();
 		Vector answer = method->run(A, f);
 		auto t_end = high_resolution_clock::now();
@@ -145,6 +145,23 @@ private:
 			method->get_name() + string(".txt");
 
 		_write_results_to_file(data_filename, results);
+	}
+
+	void _run_methods(int num_methods, GenericMethod **methods,
+					  int size, double mu, Matrix A, Vector f,
+					  string data_filename_format) {
+		string msg = string("running methods") + string("\n");
+		_write_log(msg, 0);
+
+		for (int m_idx = 0; m_idx < num_methods; ++m_idx)
+		{
+			string m_name = methods[m_idx]->get_name();
+			string msg = string("running ") + m_name + string("\n");
+			_write_log(msg, 1);
+
+			_run_method(methods[m_idx], size, mu, A, f,
+						data_filename_format);
+		}
 	}
 
 public:
@@ -204,7 +221,8 @@ public:
 		Matrix A;
 		Vector f;
 		string msg;
-		const string sep = string(79, '=');
+		const string sep_dash = string(79, '-') + string("\n"),
+					 sep_ddash = string(79, '=') + string("\n");
 		const string eol = string("\n");
 
 		// todo: move seed to args?
@@ -231,24 +249,13 @@ public:
 					f = generators::vector_random(size);
 					A = generators::matrix_with_approximate_mu(size, mu);
 
-					msg = string("running methods") + eol;
-					_write_log(msg, 0);
+					_run_methods(num_methods, methods, size, mu, A, f,
+								 data_filename_format);
 
-					for (int m_idx = 0; m_idx < num_methods; ++m_idx)
-					{
-						string m_name = methods[m_idx]->get_name();
-						string msg = string("running ") + m_name + eol;
-						_write_log(msg, 1);
-
-						_run_measurements(methods[m_idx], size, mu, A, f,
-										  data_filename_format);
-						// for m_idx
-					}
-					// for r_idx
+					_write_log(sep_dash, 0);
 				}
-			// for mu_idx
 			}
-		// for s_idx
+		_write_log(sep_ddash, 0);
 		}
 	}
 };
