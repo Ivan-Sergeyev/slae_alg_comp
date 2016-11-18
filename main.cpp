@@ -96,44 +96,6 @@ int main(int argc, char **argv) {
 	}
 #endif  // NDEBUG
 
-// // prepare plot and run gnuplot
-// 	cerr << "[info] commence generating plotfiles\n";
-
-// 	// todo: use format strings
-// 	string plot_all = string("./temp_gnuplot/plot_all.plt"),
-// 		   graph_all_rel = string("../temp_graphs/graph_all.png"),
-// 		   data_format_rel = string("../temp_data/data_converged_%s.txt");
-
-// 	generate_plotfile(plot_all, graph_all_rel,
-// 					  data_format_rel, num_methods, methods);
-
-// 	string plot_num = string("./temp_gnuplot/plot_num.plt"),
-// 		   graph_num_rel = string("../temp_graphs/graph_num.png");
-
-// 	generate_plotfile(plot_num, graph_num_rel,
-// 					  data_format_rel, num_methods - 1, methods);
-
-// // run gnuplot with plot_dir as current directory
-// 	cerr << "[info] commence plotting graphs\n";
-// 	// todo: concatenate commands
-// 	const char gnuplot_call_all[] = "gnuplot plot_all.plt";
-// 	const char gnuplot_call_num[] = "gnuplot plot_num.plt";
-
-// 	chdir("./temp_gnuplot/");
-// 	int status_1 = system(gnuplot_call_all);
-// 	int status_2 = system(gnuplot_call_num);
-// 	remove("fit.log");
-// 	chdir("..");
-
-// 	if (status_1) {
-// 		cerr << "[error] error during system(\"" << gnuplot_call_all << "\")\n"
-// 			 << "        exit status " << status_1 << "\n";
-// 	}
-// 	if (status_2) {
-// 		cerr << "[error] error during system(\"" << gnuplot_call_num << "\")\n"
-// 			 << "        exit status " << status_2 << "\n";
-// 	}
-
 // perform cleanup
 	cerr << "[info] commence cleanup\n";
 	delete[] methods;
