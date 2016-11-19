@@ -238,9 +238,25 @@ def maker(message):
 def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
-        output = commands.getoutput("tail -n 10 log.txt")
-        bot.send_message(cid, output) 
+        output = "status"
+        term = pd.read_csv(".progress_small", header = None, sep = ' ')
+        if (term.shape[1] == 1): output = "small test: done\n"
+        else: output = "small test: size = " + str(term[0].values[0]) + ", mu = " + str(term[1].values[0]) + ", effort = " + str(term[2].values[0])+ "\n"
         
+        term = pd.read_csv(".progress_large", header = None, sep = ' ')
+        if (term.shape[1] == 1): output += "large test: done\n"
+        else: output += "large test: size = " + str(term[0].values[0]) + ", mu = " + str(term[1].values[0]) + ", effort = " + str(term[2].values[0])+ "\n"
+    
+        output += commands.getoutput("tail -n 10 log.txt")
+
+       #check process in ps
+        outcom = commands.getoutput("ps -f|grep main")
+        proginfo = outcom.split("\n")
+        if (len(proginfo) > 2 ):  output += "process have work yet\n"
+        else:  output += "process don't work\n"
+
+        
+        bot.send_message(cid, output) 
 # #--------------------
 # def _create_choices_button_for_photo():
 #     markup = types.ReplyKeyboardMarkup()
