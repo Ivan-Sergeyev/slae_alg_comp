@@ -11,7 +11,7 @@ clean_progress:
 	-rm -f .progress*
 
 clean_results:
-	-rm -f temp_data/*.txt temp_gnuplot/*.plt temp_graphs/*.png
+	-rm -rf temp_data
 
 clean_all: clean clean_results
 
