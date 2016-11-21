@@ -236,9 +236,6 @@ private:
 public:
 	PerformanceComparator(ostream &log_file, string run_setting) :
 			_log_file(log_file) {
-		int small_num_sizes = 30,
-			large_num_sizes = 50;
-
 		// initialize _sizes and _num_sizes
 		if (run_setting == string("test run")) {
 			_progress_filename = string(".progress_test");
@@ -250,10 +247,21 @@ public:
 
 			generators::arithm_progr<int> (_sizes, _num_sizes,
 										   test_start, test_step);
-		} else if (run_setting == string("small sizes")) {
+		} else if (run_setting == string("tiny sizes")) {
+			_progress_filename = string(".progress_tiny");
+
+			_num_sizes = 10;
+			int test_start = 100,
+				test_step = 100;
+			_sizes = new int [_num_sizes];
+
+			generators::arithm_progr<int> (_sizes, _num_sizes,
+										   test_start, test_step);
+		}
+		else if (run_setting == string("small sizes")) {
 			_progress_filename = string(".progress_small");
 
-			_num_sizes = small_num_sizes;
+			_num_sizes = 30;
 			int small_start = 100,
 				small_step = 100;
 			_sizes = new int [_num_sizes];
@@ -263,7 +271,7 @@ public:
 		} else if (run_setting == string("large sizes")) {
 			_progress_filename = string(".progress_large");
 
-			_num_sizes = large_num_sizes;
+			_num_sizes = 50;
 			int large_start = 3100,
 				large_step = 100;
 			_sizes = new int [_num_sizes];
