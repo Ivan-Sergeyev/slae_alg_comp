@@ -68,7 +68,7 @@ int main(int argc, char **argv) {
 
 // perform measurements
 	cerr << "[info] commence measurements\n";
-	system("mkdir temp_data temp_graphs temp_gnuplot");
+	system("mkdir temp_data");
 
 	// todo: use format strings
 	string data_filename_format = string("./temp_data/data_%s_%s.txt");
