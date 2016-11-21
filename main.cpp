@@ -23,10 +23,16 @@ using std::system;
 
 int main(int argc, char **argv) {
 #ifndef NDEBUG
-	if (argc == 2 && string(argv[1]) == string("test")) {
-		cerr << "[info] commence testing\n";
-		project_test();
-		return 0;
+	if (argc == 2) {
+		string option = string(argv[1]);
+		if (option == string("test")) {
+			cerr << "[info] commence testing\n";
+			return project_test();
+		} else if (option == string("test_mu_generator")) {
+			cerr << "[info] commence testing condition number generator\n";
+			// TODO
+			return 0;
+		}
 	}
 #endif  // NDEBUG
 
