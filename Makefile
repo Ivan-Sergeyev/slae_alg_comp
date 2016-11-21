@@ -1,30 +1,28 @@
-all: main
-	./main 2>log.txt 1>1main.txt
+all: build
+	./main 2>log.txt
+
+build:
+	g++ -std=gnu++11 -ggdb model\linear_algebra.cpp main.cpp -o main
 
 clean:
 	-rm -f *.exe model/*.exe test/*.exe *log.txt main
 
-clean_progress:
-	-rm -f .progress*
-
 clean_results:
-	-rm -f temp_data/*.txt temp_gnuplot/*.plt temp_graphs/*.png
+	-rm -f .progress*
+	-rm -rf temp_data
 
 clean_all: clean clean_results
 
-main:
-	g++ -std=gnu++11 -O0 -ggdb main.cpp -o main
-
 plot:
-	python data_analyse.py
+	python data_analyze.py
 
-run: main
+run: build
 	./main
 
-test: main
+test: build
 	./main test
 
-test_run: main
+test_run: build
 	./main test_run
 
 bot:

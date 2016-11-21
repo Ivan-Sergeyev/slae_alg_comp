@@ -1,6 +1,7 @@
 #ifndef __GENERIC_METHOD__
 #define __GENERIC_METHOD__
 
+#include <assert.h>
 #include <algorithm>
 #include <string>
 

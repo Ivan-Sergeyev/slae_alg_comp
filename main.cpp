@@ -1,17 +1,13 @@
-#include <cstdio>
-#include <cstdlib>
-#include <string.h>
-#include <unistd.h>
+#include <assert.h>
+#include <string>
+#include <iostream>
 
-#include "model/generators.h"
 #include "model/generic_method.h"
 #include "model/gauss_method.h"
 #include "model/jacobi_method.h"
 #include "model/overrelaxation_method.h"
 
 #include "model/performance_comparator.h"
-
-#include "model/generate_plotfile.h"
 
 
 using std::cerr;
@@ -73,28 +69,33 @@ int main(int argc, char **argv) {
 
 // perform measurements
 	cerr << "[info] commence measurements\n";
+	system("mkdir temp_data");
 
 	// todo: use format strings
-	string data_filename_format = string("./temp_data/data_%s_%s.txt");
+	string data_fname_fmt = string("./temp_data/data_%s_%s.txt");
 
-#ifndef NDEBUG
-	if (argc == 2 && string(argv[1]) == string("test_run")) {
-		cerr << "[info] performing test run\n";
-		PerformanceComparator test_comp(cerr, string("test run"));
-		test_comp.run_comparison(num_methods, methods, data_filename_format);
-	} else {
-#endif  // NDEBUG
+	if (argc == 2) {  // special run
+		string option = string(argv[1]);
+		if (option == string("test_run")) {
+			cerr << "[info] performing test run\n";
+			PerformanceComparator comp_test(cerr, string("test run"));
+			comp_test.run_comparison(num_methods, methods, data_fname_fmt);
+		} else if (option == string("tiny")) {
+			cerr << "[info] performing run on tiny sizes\n";
+			PerformanceComparator comp_tiny(cerr, string("tiny sizes"));
+			comp_tiny.run_comparison(num_methods, methods, data_fname_fmt);
+		} else {
+			cerr << "[error] option \"" << option << "\" not recognized\n";
+		}
+	} else {  // normal run
 		cerr << "[info] running on small sizes\n";
-		PerformanceComparator small_comp(cerr, string("small sizes"));
-		small_comp.run_comparison(num_methods, methods, data_filename_format);
+		PerformanceComparator comp_small(cerr, string("small sizes"));
+		comp_small.run_comparison(num_methods, methods, data_fname_fmt);
 
 		cerr << "[info] running on large sizes\n";
-		PerformanceComparator large_comp(cerr, string("large sizes"));
-		large_comp.run_comparison(num_methods - 1, methods,
-								  data_filename_format);
-#ifndef NDEBUG
+		PerformanceComparator comp_large(cerr, string("large sizes"));
+		comp_large.run_comparison(num_methods - 1, methods, data_fname_fmt);
 	}
-#endif  // NDEBUG
 
 // perform cleanup
 	cerr << "[info] commence cleanup\n";

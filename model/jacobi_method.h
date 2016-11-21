@@ -1,6 +1,7 @@
 #ifndef __JACOBI_METHOD__
 #define __JACOBI_METHOD__
 
+#include <assert.h>
 #include <cmath>
 #include <iostream>
 
@@ -22,14 +23,14 @@ public:
 				const Vector &f, const Vector &u) const {
 		Vector u_next(n);
 		for (int i = 0; i < n; ++i) {
-			u_next._coord[i] = f._coord[i];
+			u_next._value[i] = f._value[i];
 			for (int j = 0; j < i; ++j) {
-				u_next._coord[i] -= A._value[i][j] * u._coord[j];
+				u_next._value[i] -= A._value[i][j] * u._value[j];
 			}
 			for (int j = i + 1; j < n; ++j) {
-				u_next._coord[i] -= A._value[i][j] * u._coord[j];
+				u_next._value[i] -= A._value[i][j] * u._value[j];
 			}
-			u_next._coord[i] /= A._value[i][i];
+			u_next._value[i] /= A._value[i][i];
 		}
 		return u_next;
 	}
