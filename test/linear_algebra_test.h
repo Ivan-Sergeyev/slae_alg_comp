@@ -67,9 +67,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::Vector(const int size, const double *value)\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 
 		string x_repr = x.repr();
 		string x_repr_ref = string("1.000000 2.000000 3.000000");
@@ -90,9 +90,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::Vector(const Vector &other)\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		Vector z(x);
 
 		string z_repr = z.repr();
@@ -114,9 +114,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::get_size()\n";
 		bool ret = 0;
 		int x_size_ref = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(x_size_ref, x_coord);
+		Vector x(x_size_ref, x_value);
 
 		int x_size = x.get_size();
 
@@ -136,12 +136,12 @@ namespace linear_algebra_test {
 		bool ret = 0;
 		int size = 3;
 		int idx = 2;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 
 		int x_val = x(idx);
-		int x_val_ref = x_coord[idx];
+		int x_val_ref = x_value[idx];
 
 		if (x_val != x_val_ref) {
 			cerr << "  | failure\n"
@@ -160,9 +160,9 @@ namespace linear_algebra_test {
 		int size = 3;
 		int idx = 2;
 		double x_val_ref = 17.0;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		x(idx) = x_val_ref;
 
 		int x_val = x(idx);
@@ -182,9 +182,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::norm()\n";
 		bool ret = 0;
 		int size = 4;
-		double x_coord[] = {0.0, 1.0, -2.0, 3.0};
+		double x_value[] = {0.0, 1.0, -2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 
 		double x_n = x.norm();
 		double x_n_ref = 3.0;
@@ -204,9 +204,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::operator =\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		Vector z;
 		z = x;
 
@@ -229,15 +229,15 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::operator ==\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
-		double y_coord[] = {1.0, 2.0, 3.0};
-		double z_coord[] = {1.0, 2.0, 3.1};
-		double v_coord[] = {1.0};
+		double x_value[] = {1.0, 2.0, 3.0};
+		double y_value[] = {1.0, 2.0, 3.0};
+		double z_value[] = {1.0, 2.0, 3.1};
+		double v_value[] = {1.0};
 
-		Vector x(size, x_coord);
-		Vector y(size, y_coord);
-		Vector z(size, z_coord);
-		Vector v(size, v_coord);
+		Vector x(size, x_value);
+		Vector y(size, y_value);
+		Vector z(size, z_value);
+		Vector v(size, v_value);
 
 		if (!(x == y)) {
 			cerr << "  | failure\n"
@@ -261,11 +261,11 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::binary operator +\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
-		double y_coord[] = {10.0, 20.0, 30.0};
+		double x_value[] = {1.0, 2.0, 3.0};
+		double y_value[] = {10.0, 20.0, 30.0};
 
-		Vector x(size, x_coord);
-		Vector y(size, y_coord);
+		Vector x(size, x_value);
+		Vector y(size, y_value);
 		Vector z = x + y;
 
 		string z_repr = z.repr();
@@ -287,11 +287,11 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::binary operator -\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
-		double y_coord[] = {10.0, 20.0, 30.0};
+		double x_value[] = {1.0, 2.0, 3.0};
+		double y_value[] = {10.0, 20.0, 30.0};
 
-		Vector x(size, x_coord);
-		Vector y(size, y_coord);
+		Vector x(size, x_value);
+		Vector y(size, y_value);
 		Vector z = x - y;
 
 		string z_repr = z.repr();
@@ -313,9 +313,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::unary operator +\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		Vector z = +x;
 
 		string z_repr = z.repr();
@@ -337,9 +337,9 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::unary operator -\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		Vector z;
 		z = -x;
 
@@ -362,11 +362,11 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::operator +=\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
-		double y_coord[] = {10.0, 20.0, 30.0};
+		double x_value[] = {1.0, 2.0, 3.0};
+		double y_value[] = {10.0, 20.0, 30.0};
 
-		Vector x(size, x_coord);
-		Vector y(size, y_coord);
+		Vector x(size, x_value);
+		Vector y(size, y_value);
 		x += y;
 
 		string x_repr = x.repr();
@@ -395,11 +395,11 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::operator -=\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
-		double y_coord[] = {10.0, 20.0, 30.0};
+		double x_value[] = {1.0, 2.0, 3.0};
+		double y_value[] = {10.0, 20.0, 30.0};
 
-		Vector x(size, x_coord);
-		Vector y(size, y_coord);
+		Vector x(size, x_value);
+		Vector y(size, y_value);
 		x -= y;
 
 		string x_repr = x.repr();
@@ -428,10 +428,10 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::operator *=\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 		double a = 10;
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		x *= a;
 
 		string x_repr = x.repr();
@@ -453,10 +453,10 @@ namespace linear_algebra_test {
 		cerr << "  | testing Vector::operator * (Vector, double)\n";
 		bool ret = 0;
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 		double a = 10;
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		Vector y = x * a;
 
 		string y_repr = y.repr();
@@ -479,10 +479,10 @@ namespace linear_algebra_test {
 		bool ret = 0;
 
 		int size = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 		double a = 10;
 
-		Vector x(size, x_coord);
+		Vector x(size, x_value);
 		Vector y = a * x;
 
 		string y_repr = y.repr();
@@ -619,9 +619,9 @@ namespace linear_algebra_test {
 		bool ret = 0;
 
 		int x_size_ref = 3;
-		double x_coord[] = {1.0, 2.0, 3.0};
+		double x_value[] = {1.0, 2.0, 3.0};
 
-		Vector x(x_size_ref, x_coord);
+		Vector x(x_size_ref, x_value);
 
 		int x_size = x.get_size();
 

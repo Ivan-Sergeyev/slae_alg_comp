@@ -1,5 +1,5 @@
-#ifndef __LINEAR_ALGEBRA__
-#define __LINEAR_ALGEBRA__
+#ifndef __LINEAR_ALGEBRA_H__
+#define __LINEAR_ALGEBRA_H__
 
 #include <algorithm>
 #include <assert.h>
@@ -18,20 +18,20 @@ using std::to_string;
 class Vector {
 public:
 	int _size;       // vector's size
-	double *_coord;  // vector's coordinates
+	double *_value;  // vector's coordinates
 
 private:
 // hard check if vector's state is ok
 	bool _is_ok() const {
-		return !_size || _coord;
+		return !_size || _value;
 	}
 
 // erase
 	void _delete() {
-		if (_coord) {  // TODO: check redundancy (unix specific?)
-			delete[] _coord;
+		if (_value) {  // TODO: check redundancy (unix specific?)
+			delete[] _value;
 		}
-		_coord = 0;
+		_value = 0;
 		_size = 0;
 	}
 
@@ -42,28 +42,28 @@ private:
 		}
 		_delete();
 		_size = size;
-		_coord = new double [_size];
+		_value = new double [_size];
 	}
 
 // make a copy of an array of coordinates
 	void _deep_copy(size_t size, const double *value) {
 		assert(!size || value);
 		_resize(size);
-		std::memcpy(_coord, value, sizeof(double) * size);
+		std::memcpy(_value, value, sizeof(double) * size);
 	}
 
 // make a copy of another vector
 	void _deep_copy(const Vector &other) {
 		_resize(other._size);
 		for (int i = 0; i < _size; ++i) {
-			_coord[i] = other(i);
+			_value[i] = other(i);
 		}
 	}
 
 // fill coordinates with zeroes
 	void _fill_zero() {
 		assert(_is_ok());
-		fill_n(_coord, _size, 0);
+		fill_n(_value, _size, 0);
 	}
 
 // hard check if idx is in bounds
@@ -74,18 +74,18 @@ private:
 
 public:
 // constructors
-	Vector() : _size(0), _coord(0) {}
+	Vector() : _size(0), _value(0) {}
 
-	Vector(size_t size) : _size(0), _coord(0) {
+	Vector(size_t size) : _size(0), _value(0) {
 		_resize(size);
 		_fill_zero();
 	}
 
-	Vector(size_t size, const double *value) : _size(0), _coord(0) {
+	Vector(size_t size, const double *value) : _size(0), _value(0) {
 		_deep_copy(size, value);
 	}
 
-	Vector(const Vector &other) : _size(0), _coord(0) {
+	Vector(const Vector &other) : _size(0), _value(0) {
 		_deep_copy(other);
 	}
 
@@ -103,14 +103,14 @@ public:
 	const double operator () (int idx) const {
 		assert(_is_ok());
 		_bounds_check(idx);
-		return _coord[idx];
+		return _value[idx];
 	}
 
 // write access to coordinates
 	double& operator () (int idx) {
 		assert(_is_ok());
 		_bounds_check(idx);
-		return _coord[idx];
+		return _value[idx];
 	}
 
 // get vector's norm
@@ -119,11 +119,11 @@ public:
 		if (!_size) {
 			return 0;
 		}
-		double n = std::abs(_coord[0]);
+		double n = std::abs(_value[0]);
 		for (int i = 1; i < _size; ++i) {
-			double abs_coord = std::abs(_coord[i]);
-			if (abs_coord > n) {
-				n = abs_coord;
+			double abs_value = std::abs(_value[i]);
+			if (abs_value > n) {
+				n = abs_value;
 			}
 		}
 		return n;
@@ -144,7 +144,7 @@ public:
 			return 0;
 		}
 		for (int i = 0; i < _size; ++i) {
-			if (_coord[i] != other(i)) {
+			if (_value[i] != other(i)) {
 				return 0;
 			}
 		}
@@ -195,7 +195,7 @@ public:
 		assert(_is_ok());
 		assert(_size == other._size);
 		for (int i = 0; i < _size; ++i) {
-			_coord[i] += other(i);
+			_value[i] += other(i);
 		}
 		return *this;
 	}
@@ -205,7 +205,7 @@ public:
 		assert(_is_ok());
 		assert(_size == other._size);
 		for (int i = 0; i < _size; ++i) {
-			_coord[i] -= other(i);
+			_value[i] -= other(i);
 		}
 		return *this;
 	}
@@ -214,7 +214,7 @@ public:
 	Vector operator *= (const double &a) {
 		assert(_is_ok());
 		for (int i = 0; i < _size; ++i) {
-			_coord[i] *= a;
+			_value[i] *= a;
 		}
 		return *this;
 	}
@@ -240,7 +240,7 @@ public:
 		assert(_size == other._size);
 		double prod = 0;
 		for (int i = 0; i < _size; ++i) {
-			prod += _coord[i] * other(i);
+			prod += _value[i] * other(i);
 		}
 		return prod;
 	}
@@ -274,9 +274,9 @@ public:
 
 		string rep;
 		for (int i = 0; i < _size - 1; ++i) {
-			rep += to_string(_coord[i]) + string(" ");
+			rep += to_string(_value[i]) + string(" ");
 		}
-		rep += to_string(_coord[_size - 1]);
+		rep += to_string(_value[_size - 1]);
 		return rep;
 	}
 
@@ -619,4 +619,4 @@ public:
 	}
 };
 
-#endif  // __LINEAR_ALGEBRA__
+#endif  // __LINEAR_ALGEBRA_H__
