@@ -2,6 +2,7 @@
 #define __OVERRELAXATION_METHOD__
 
 #include <algorithm>
+#include <assert.h>
 #include <cmath>
 #include <iostream>
 #include <string>

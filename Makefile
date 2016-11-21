@@ -2,7 +2,7 @@ all: build
 	./main 2>log.txt
 
 build:
-	g++ -std=gnu++11 -ggdb main.cpp -o main
+	g++ -std=gnu++11 -ggdb model\linear_algebra.cpp main.cpp -o main
 
 clean:
 	-rm -f *.exe model/*.exe test/*.exe *log.txt main

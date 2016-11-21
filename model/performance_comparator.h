@@ -2,6 +2,7 @@
 #define __PERFORMANCE_COMPARATOR__
 
 #include <algorithm>
+#include <assert.h>
 #include <chrono>
 #include <iostream>
 #include <fstream>

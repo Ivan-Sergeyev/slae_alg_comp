@@ -1,6 +1,7 @@
 #ifndef __JACOBI_METHOD__
 #define __JACOBI_METHOD__
 
+#include <assert.h>
 #include <cmath>
 #include <iostream>
 

@@ -19,7 +19,7 @@ public:
 
 		int _size = b._size;
 		for(int j = 0; j < _size; ++j) {
-			M.find_max_and_swap(&b, j);
+			M.find_max_and_swap(b, j);
 			for (int i = j + 1; i < _size; ++i){
 				coeff = M._value[i][j] / M._value[j][j];
 				M.sub(&b, i, j, coeff);
