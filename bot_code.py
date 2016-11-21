@@ -197,21 +197,23 @@ def maker(message):
 def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
-        photo = open('temp_graphs/Gauss MethodTime(size of matrix).png', 'rb')
-        bot.send_photo(cid, photo)
         photo = open('temp_graphs/All Methods.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/Jacobi MethodTime(size of matrix).png', 'rb')
+        photo = open('temp_graphs/all/Gauss Method Full.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/Overrelaxation Method with tau=0.500000Time(size of matrix).png', 'rb')
+        photo = open('temp_graphs/all/Jacobi Method Full.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/Overrelaxation Method with tau=1.250000Time(size of matrix).png', 'rb')
+        photo = open('temp_graphs/all/Overrelaxation Method with tau=0.500000 Full.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/Overrelaxation Method with tau=1.500000Time(size of matrix).png', 'rb')
+        photo = open('temp_graphs/all/Overrelaxation Method with tau=1.250000 Full.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/Overrelaxation Method with tau=1.750000Time(size of matrix).png', 'rb')
+        photo = open('temp_graphs/all/Overrelaxation Method with tau=1.500000 Full.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/Seidel MethodTime(size of matrix).png', 'rb')
+        photo = open('temp_graphs/all/Overrelaxation Method with tau=1.750000 Full.png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('temp_graphs/all/Seidel Method Full.png', 'rb')
+        bot.send_photo(cid, photo)
+        photo = open('temp_graphs/Overrelaxation Methods.png', 'rb')
         bot.send_photo(cid, photo)
         bot.send_message(cid, "Everything is ok")
 
@@ -247,13 +249,15 @@ def maker(message):
         if (term.shape[1] == 1): output += "large test: done\n"
         else: output += "large test: size = " + str(term[0].values[0]) + ", mu = " + str(term[1].values[0]) + ", effort = " + str(term[2].values[0])+ "\n"
     
-        output += commands.getoutput("tail -n 10 log.txt")
 
        #check process in ps
         outcom = commands.getoutput("ps -f|grep main")
         proginfo = outcom.split("\n")
         if (len(proginfo) > 2 ):  output += "process have work yet\n"
         else:  output += "process don't work\n"
+
+        output += "cat log.txt: \n\n"+commands.getoutput("tail -n 10 log.txt")
+
 
         
         bot.send_message(cid, output) 
