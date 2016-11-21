@@ -24,7 +24,7 @@ run: build
 test: build
 	./main test
 
-test_run: main
+test_run: build
 	./main test_run
 
 bot:
