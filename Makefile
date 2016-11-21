@@ -7,16 +7,14 @@ build:
 clean:
 	-rm -f *.exe model/*.exe test/*.exe *log.txt main
 
-clean_progress:
-	-rm -f .progress*
-
 clean_results:
+	-rm -f .progress*
 	-rm -rf temp_data
 
 clean_all: clean clean_results
 
 plot:
-	python data_analyse.py
+	python data_analyze.py
 
 run: build
 	./main
