@@ -5,7 +5,6 @@
 #include <cmath>
 #include <time.h>
 
-#include "linear_algebra.h"
 #include "generic_method.h"
 
 
