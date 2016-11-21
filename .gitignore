@@ -11,14 +11,7 @@
 
 # temporary results
 .progress*
-temp_gnuplot/*
 temp_data/*
-temp_graphs/*
 
-# exclude folders themselves
-!temp_gnuplot/.gitkeep
-!temp_data/.gitkeep
-!temp_graphs/.gitkeep
-
-# exclude results
+# exclude final results
 !results/*
