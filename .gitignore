@@ -2,6 +2,9 @@
 *.exe
 *.out
 
+# python cache
+*.pyc
+
 # bat and batch files
 *.bat
 *.sh
