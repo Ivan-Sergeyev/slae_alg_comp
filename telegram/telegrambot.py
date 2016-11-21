@@ -81,7 +81,7 @@ def comm_help(message):
 def maker(message):
     cid = message.chat.id
     if (admin_list[cid]):
-        a = sb.Popen(['make', 'plot'])
+        sb.Popen(['python', 'data_analyser.py'])
         bot.send_message(cid, "Ok")
 
 @bot.message_handler(commands=['pull'])
@@ -111,7 +111,7 @@ def maker(message):
     if (admin_list[cid]):
         photo = open('temp_graphs/All Methods.png', 'rb')
         bot.send_photo(cid, photo)
-        photo = open('temp_graphs/all/Gauss Method Full.png', 'rb')
+        photo = open('temp_graphs/all/Gauss Method fast Full.png', 'rb')
         bot.send_photo(cid, photo)
         photo = open('temp_graphs/all/Jacobi Method Full.png', 'rb')
         bot.send_photo(cid, photo)
@@ -173,6 +173,6 @@ def maker(message):
 
         
         bot.send_message(cid, output) 
-        
+
 bot.polling()
 
