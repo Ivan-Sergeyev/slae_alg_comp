@@ -1,5 +1,8 @@
-all: main
+all: build
 	./main 2>log.txt
+
+build:
+	g++ -std=gnu++11 -ggdb main.cpp -o main
 
 clean:
 	-rm -f *.exe model/*.exe test/*.exe *log.txt main
@@ -12,16 +15,13 @@ clean_results:
 
 clean_all: clean clean_results
 
-main:
-	g++ -std=gnu++11 -ggdb main.cpp -o main
-
 plot:
 	python data_analyse.py
 
-run: main
+run: build
 	./main
 
-test: main
+test: build
 	./main test
 
 test_run: main
