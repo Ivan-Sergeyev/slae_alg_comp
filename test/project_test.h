@@ -5,6 +5,8 @@
 #include <string>
 
 #include "linear_algebra_test.h"
+
+#include "gauss_method_test.h"
 #include "jacobi_method_test.h"
 #include "overrelaxation_method_test.h"
 
@@ -16,22 +18,27 @@ using std::string;
 void project_test() {
 	typedef int (*test_funcion_pointer)();
 
-	const int num_modules = 4;
-	string module_name[num_modules] =
-		{string("Vector"), string("Matrix"), /*, string("Gauss Method") */
-		 string("Jacobi Method"), string("OverrelaxationMethod")};
+	const string module_name[] =
+		{string("Vector"),
+		 string("Matrix"),
+		 string("Gauss Method"),
+		 string("Jacobi Method"),
+		 string("OverrelaxationMethod"),
+		 string("None")};
 
 	const test_funcion_pointer *module_tests[] =
-		{linear_algebra_test::vector_tests, linear_algebra_test::matrix_tests,
+		{linear_algebra_test::vector_tests,
+		 linear_algebra_test::matrix_tests,
+		 gauss_method_test::gauss_method_tests,
 		 jacobi_method_test::jacobi_method_tests,
-		 overrelaxation_method_test::overrelaxation_method_tests};
+		 overrelaxation_method_test::overrelaxation_method_tests, 0};
 
 
 	string separator(79, '=');
 
 	int total_fails = 0;
 
-	for(int module_idx = 0; module_idx < num_modules; ++module_idx) {
+	for(int module_idx = 0; module_tests[module_idx]; ++module_idx) {
 		string module = module_name[module_idx];
 		int num_fails = 0;
 
