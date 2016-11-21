@@ -11,6 +11,7 @@
 
 
 using std::cerr;
+using std::endl;
 using std::system;
 
 
@@ -32,15 +33,22 @@ int main(int argc, char **argv) {
 		} else if (option == string("test_mu_generator")) {
 			cerr << "[info] commence testing condition number generator\n";
 
-			const int size = 100;
+			const int size = 1000;
 			const int num_runs = 10;
-			const double mu = 100;
+			const double mu = 1000;
 			Matrix m;
 
 			for (int i = 0; i < num_runs; ++i) {
+				cerr << "[info] generating for " << i << "th time..." << endl;
 				m = generators::matrix_with_approximate_mu(size, mu);
-				cerr << "generated matrix with condition number " << mu
-					 << ", its condition number = " << m.mu() << "\n";
+				cerr << "[info] generation finished" << endl;
+
+				cerr << "[info] calculating exact condition number..." << endl;
+				double exact_mu = m.mu();
+				cerr << "[info] calculation finished" << endl;
+
+				cerr << "approximate mu = " << mu
+					 << ", exact mu = " << exact_mu << endl;
 			}
 
 			return 0;
