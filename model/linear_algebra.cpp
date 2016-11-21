@@ -187,7 +187,7 @@ Vector operator * (const double a, const Vector &vector) {
 
 Vector Vector::operator * (const double a) const {
 	Vector mul(*this);
-	for(int i = 0; i < _size; ++i) {
+	for (int i = 0; i < _size; ++i) {
 		mul(i) *= a;
 	}
 	return mul;
@@ -386,7 +386,7 @@ Matrix Matrix::operator * (const Matrix &other) const {
 	Matrix result(_size);
 	for (int i = 0; i < _size; ++i) {
 		for (int j = 0; j < _size; ++j) {
-			for (int k = 0; k < _size; ++k){
+			for (int k = 0; k < _size; ++k) {
 				result(i, j) += _value[i][k] * other(k, j);
 			}
 		}
@@ -419,14 +419,14 @@ std::ostream& operator << (std::ostream &out, const Matrix &matrix) {
 }
 
 void Matrix::swap_rows(const size_t i, const size_t j) {
-	for(int k = 0; k < _size; ++k) {
+	for (int k = 0; k < _size; ++k) {
 		swap(_value[i][k], _value[j][k]);
 	}
 }
 
 void Matrix::transpose() {
-	for(int i = 0; i < _size; ++i){
-		for (int j = 0; j < _size; ++j){
+	for (int i = 0; i < _size; ++i) {
+		for (int j = 0; j < _size; ++j) {
 			swap(_value[i][j], _value[j][i]);
 		}
 	}
@@ -480,15 +480,15 @@ Matrix Matrix::inverse() const{
 		Vector b(_size);
 		b(k) = 1;
 
-		for(int j = 0; j < _size; ++j) {
+		for (int j = 0; j < _size; ++j) {
 			m.find_max_and_swap(b, j);
-			for (int i = j + 1; i < _size; ++i){
+			for (int i = j + 1; i < _size; ++i) {
 				coeff = m(i, j) / m(j, j);
 				m.sub(&b, i, j, coeff);
 			}
 		}
 		answer = m.get_answer_from_triangle(b);
-		for(int l = 0; l < _size; ++l){
+		for (int l = 0; l < _size; ++l) {
 			a[k + l * _size] = answer(l);
 		}
 	}
@@ -502,10 +502,10 @@ Matrix Matrix::ort() const {
 	double* add = new double [_size];
 	double coeff1;
 	double coeff2;
-	for (int j = 0; j  < _size ; ++j){
+	for (int j = 0; j  < _size ; ++j) {
 		fill_n(add, _size, 0);
 
-		for (int k = 0; k < j; ++k){
+		for (int k = 0; k < j; ++k) {
 			coeff1 = 0;
 			coeff2 = 0;
 			for (int l = 0;  l < _size; ++l) {
@@ -513,20 +513,20 @@ Matrix Matrix::ort() const {
 				coeff2 += a[l * _size + k] * a[l * _size + k];
 			}
 			coeff1 = coeff1 / coeff2;
-			for (int l = 0; l < _size; ++l){
+			for (int l = 0; l < _size; ++l) {
 				add[l] -= coeff1 * a[l*_size + k];
 			}
 		}
 
-		for(int l = 0; l < _size; ++l){
+		for (int l = 0; l < _size; ++l) {
 			a[l * _size + j] = _value[l][j] + add[l];
 		}
 		coeff1 = 0;
-		for (int l = 0; l < _size; ++l){
+		for (int l = 0; l < _size; ++l) {
 			coeff1 += a[l * _size + j] * a[l * _size + j];
 		}
 		coeff1 = sqrt(coeff1);
-		for (int l = 0; l < _size; ++l){
+		for (int l = 0; l < _size; ++l) {
 			a[l * _size + j] /= coeff1;
 		}
 	}
