@@ -18,7 +18,7 @@ namespace generators {
 		return m;
 	}
 
-	Matrix matrix_diagonal(int size, double min_ev, double max_ev){
+	Matrix matrix_diagonal(int size, double min_ev, double max_ev) {
     	Matrix M(size);
 	    M(0, 0) = min_ev,
 	    M(1, 1) = max_ev;
@@ -28,7 +28,7 @@ namespace generators {
 	    return M;
 	}
 
-	Matrix matrix_with_exact_mu(int size, double mu){
+	Matrix matrix_with_exact_mu(int size, double mu) {
 		Matrix M = matrix_random(size);
 	    double min_ev = 1;
 	    double max_ev = min_ev * mu;
@@ -36,7 +36,7 @@ namespace generators {
 		return M;
 	}
 
-	Matrix matrix_with_approximate_mu(int size, double mu){
+	Matrix matrix_with_approximate_mu(int size, double mu) {
 		if (size == 1) {
 			double value = 1;
 			return Matrix(1, &value);

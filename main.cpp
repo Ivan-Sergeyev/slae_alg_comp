@@ -23,10 +23,28 @@ using std::system;
 
 int main(int argc, char **argv) {
 #ifndef NDEBUG
-	if (argc == 2 && string(argv[1]) == string("test")) {
-		cerr << "[info] commence testing\n";
-		project_test();
-		return 0;
+	if (argc == 2) {
+		string option = string(argv[1]);
+
+		if (option == string("test")) {
+			cerr << "[info] commence testing\n";
+			return project_test();
+		} else if (option == string("test_mu_generator")) {
+			cerr << "[info] commence testing condition number generator\n";
+
+			const int size = 100;
+			const int num_runs = 10;
+			const double mu = 100;
+			Matrix m;
+
+			for (int i = 0; i < num_runs; ++i) {
+				m = generators::matrix_with_approximate_mu(size, mu);
+				cerr << "generated matrix with condition number " << mu
+					 << ", its condition number = " << m.mu() << "\n";
+			}
+
+			return 0;
+		}
 	}
 #endif  // NDEBUG
 
@@ -46,7 +64,7 @@ int main(int argc, char **argv) {
 	// add overrelaxation methods
 	double tau = 0.0l;
 	double tau_step = 1.0l / (num_or_methods - 1);
-	for(; m_idx < num_or_methods; ++m_idx) {
+	for (; m_idx < num_or_methods; ++m_idx) {
 		tau += (tau < 1.0l) * 0.5l + (tau >= 1.0l) * tau_step;
 		methods[m_idx] = new OverrelaxationMethod(tau, tolerance);
 		cerr << "[info] added " << methods[m_idx]->get_name() << "\n";

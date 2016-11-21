@@ -15,7 +15,7 @@ using std::cerr;
 using std::string;
 
 
-void project_test() {
+int project_test() {
 	typedef int (*test_funcion_pointer)();
 
 	const string module_name[] =
@@ -55,6 +55,7 @@ void project_test() {
 	}
 
 	cerr << "total fails: " << total_fails << "\n";
+	return total_fails;
 }
 
 

@@ -22,6 +22,9 @@ run: build
 test: build
 	./main test
 
+test_mu_generator: build
+	./main test_mu_generator
+
 test_run: build
 	./main test_run
 
