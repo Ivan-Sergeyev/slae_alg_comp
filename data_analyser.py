@@ -9,10 +9,12 @@ import subprocess as sb
 fit = 2
 
 
-graph_dirs = ["temp_graphs/all/", "temp_graphs/fast/", "temp_graphs/mu/",
-			  "temp_graphs/for_all_mu/", "temp_graphs/gif_tau/"]
+data_dir = "temp_data/"
+pic_dir = "temp_graphs/"
+graph_dirs = [pic_dir+"all/", pic_dir+"fast/", pic_dir+"mu/",
+			  pic_dir+"for_all_mu/", pic_dir+"gif_tau/"]
 for directory in graph_dirs:
-	os.makedirs(directory, exist_ok=True)
+	os.makedirs(directory)
 
 
 def f(x, a, b, c):
@@ -55,23 +57,23 @@ data_python = dict()
 data_slow = dict()
 #data_collected
 for i in range(len):
-	data[i] = pd.read_csv("temp_data/data_converged_"+names[i]+".txt", header = None, sep=' ')
+	data[i] = pd.read_csv(data_dir+"data_converged_"+names[i]+".txt", header = None, sep=' ')
 	data[i] = data[i].rename(columns={0:"n", 1:"t", 2:"mu"})
 
 for i in range(python_len):
-	data_python[i] = pd.read_csv("temp_data/python/data_converged_"+python_names[i]+".txt", header = None, sep=' ')
+	data_python[i] = pd.read_csv(data_dir+"python/data_converged_"+python_names[i]+".txt", header = None, sep=' ')
 	data_python[i] = data_python[i].rename(columns={0:"n", 1:"t"})
 
 for i in range(slow_len):
-	data_slow[i] = pd.read_csv("temp_data/slow/data_converged_"+slow_names[i]+".txt", header = None, sep=' ')
+	data_slow[i] = pd.read_csv(data_dir+"slow/data_converged_"+slow_names[i]+".txt", header = None, sep=' ')
 	data_slow[i] = data_slow[i].rename(columns={0:"n", 1:"t", 2:"mu"})
 
 data_tau = dict()
 
 for i in range(tau_len):
-	data_tau[i] = pd.read_csv("temp_data/data_converged_Overrelaxation Method with tau="+tau_str[i]+".txt", header = None, sep=' ')
+	data_tau[i] = pd.read_csv(data_dir+"data_converged_Overrelaxation Method with tau="+tau_str[i]+".txt", header = None, sep=' ')
 	data_tau[i] = data_tau[i].rename(columns={0:"n", 1:"t", 2:"mu"})
-#data[len-1] = pd.read_csv("temp_data/data_diverged_"+names[len-1]+".txt", header = None, sep=' ') # Jacobi Method
+#data[len-1] = pd.read_csv(data_dir+"data_diverged_"+names[len-1]+".txt", header = None, sep=' ') # Jacobi Method
 #data[len-1] = data[len-1].rename(columns={0:"n", 1:"t", 2:"mu"})
 
 #print all program in one graph
@@ -137,7 +139,7 @@ def all_methods():
 		plt.ylabel('T, c')
 		plt.title(names[i]+ "(methods on python,\nuse finction to get value in class (slow method), forward get value)")
 		#if (fit == 2): plt.text(data[i].n.max()/2, data[i].t.max()/3, "T = " + str(coeff[0])+r"$\cdot x^2$ + " + str(coeff[1]) + r"$\cdot x$")
-		plt.savefig("temp_graphs/all/"+names[i]+" Full.png", dpi=500)
+		plt.savefig(pic_dir+"all/"+names[i]+" Full.png", dpi=500)
 		plt.clf()
 
 #print only latest fast program in graph
@@ -175,7 +177,7 @@ def only_fast_methods():
 		plt.ylabel('T, c')
 		plt.title(names[i] + "(only fast method)")
 		#if (fit == 2): plt.text(data[i].n.max()/2, data[i].t.max()/3, "T = " + str(coeff[0])+r"$\cdot x^2$ + " + str(coeff[1]) + r"$\cdot x$")
-		plt.savefig("temp_graphs/fast/"+names[i]+" only fast.png", dpi=500)
+		plt.savefig(pic_dir+"fast/"+names[i]+" only fast.png", dpi=500)
 		plt.close()
 
 #print only latest fast program and every mu for every graph
@@ -213,7 +215,7 @@ def for_all_mu():
 			plt.xlabel('size of matrix')
 			plt.ylabel('T, c')
 			plt.title(names[i] + " (mu =" + str(n) + ")")
-			plt.savefig("temp_graphs/for_all_mu/"+names[i]+" mu = " + str(n) + ".png", dpi=500)
+			plt.savefig(pic_dir+"for_all_mu/"+names[i]+" mu = " + str(n) + ".png", dpi=500)
 			plt.close()
 
 
@@ -221,7 +223,6 @@ def a_mu():
 	global fit
 	print "\n\na(mu):\n"
 	for i in range(len):
-		ax[i] = plt.subplot()
 
 		if (i!= 0) : fit = 2
 		else: fit = 3
@@ -232,8 +233,6 @@ def a_mu():
 		print "| - - approximate"
 		#aproximate
 		for k in range(mu_len):
-
-			ax[i] = plt.subplot()
 
 			n = 10**k
 			print "| - - - mu =", n
@@ -259,7 +258,7 @@ def a_mu():
 		else: plt.ylabel(r'$a$ in $a\cdot x^3 + b\cdot x^2 + c*x + d$')
 		plt.title(names[i] + "\n" + r"$\log_{10}$(number of conditionality)")
 		#if (fit == 2): plt.text(data[i].n.max()/2, data[i].t.max()/3, "T = " + str(coeff[0])+r"$\cdot x^2$ + " + str(coeff[1]) + r"$\cdot x$")
-		plt.savefig("temp_graphs/mu/"+names[i]+" mu.png", dpi=500)
+		plt.savefig(pic_dir+"mu/"+names[i]+" mu.png", dpi=500)
 		plt.clf()
 
 def plot_all_in_one():
@@ -302,7 +301,7 @@ def plot_all_in_one():
 	plt.xlabel('size of matrix')
 	plt.ylabel('T, c')
 	plt.title("Methods")
-	plt.savefig("temp_graphs/All Methods.png", dpi=500)
+	plt.savefig(pic_dir+"All Methods.png", dpi=500)
 	plt.clf()
 
 	print "without point:"
@@ -349,7 +348,7 @@ def plot_all_in_one():
 	plt.xlabel('size of matrix')
 	plt.ylabel('T, c')
 	plt.title("Methods")
-	plt.savefig("temp_graphs/All Methods (without point).png", dpi=500)
+	plt.savefig(pic_dir+"All Methods (without point).png", dpi=500)
 	plt.clf()
 
 def plot_over_gif():
@@ -371,7 +370,7 @@ def plot_over_gif():
 		plt.xlabel('size of matrix')
 		plt.ylabel('T, c')
 		plt.title("Methods")
-		plt.savefig("temp_graphs/gif_tau/"+str(i)+".png", dpi=500)
+		plt.savefig(pic_dir+"gif_tau/"+str(i)+".png", dpi=500)
 		plt.clf()
 	sb.Popen(['convert', '-background', 'white', '-alpha', 'remove', '-layers', 'OptimizePlus', '-delay', '50', 'temp_graphs/gif_tau/*.png', '-loop', '1', 'temp_graphs/tau.gif'])
 
@@ -413,7 +412,7 @@ def plot_over_gif():
 	# plt.xlabel('size of matrix')
 	# plt.ylabel('T, c')
 	# plt.title("Methods")
-	# plt.savefig("temp_graphs/All Methods (without point and shot).png", dpi=500)
+	# plt.savefig(pic_dir+"All Methods (without point and shot).png", dpi=500)
 	# plt.clf()
 
 #work with tau
@@ -428,7 +427,7 @@ def tau_dependense():
 		coeff_tau.append(poeff[0])
 	#seidel (tau = 1)
 	i = tau_len
-	data_tau[i] = pd.read_csv("temp_data/data_converged_Seidel Method.txt", header = None, sep=' ')
+	data_tau[i] = pd.read_csv(data_dir+"data_converged_Seidel Method.txt", header = None, sep=' ')
 	data_tau[i] = data_tau[i].rename(columns={0:"n", 1:"t", 2:"mu"})
 	poeff, povar = curve_fit(f, data_tau[i].n.values, data_tau[i].t.values)
 	coeff_tau.append(poeff[0])
@@ -451,7 +450,7 @@ def tau_dependense():
 	plt.xlabel(r'$\tau$')
 	plt.ylabel('coeff')
 	plt.title("Overrelaxation Methods")
-	plt.savefig("temp_graphs/Overrelaxation Methods.png", dpi=500)
+	plt.savefig(pic_dir+"Overrelaxation Methods.png", dpi=500)
 	plt.clf()
 
 #all_methods()
