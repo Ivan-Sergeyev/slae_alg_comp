@@ -4,7 +4,6 @@
 ## Compilation
 
 use `make build` to compile the code
-c++11 is used
 
 see [Makefile](Makefile) for more options
 
