@@ -11,7 +11,7 @@ see [Makefile](Makefile) for more options
 ## Directory structure
 
     .
-    ├───bot
+	├───bot
 	├───graph_python
 	├───presentations
 	│   ├───ver 0 - english
@@ -19,7 +19,7 @@ see [Makefile](Makefile) for more options
 	│   └───ver 2 - report draft
 	│       └───img
 	├───results
-	│   └───ivan_data
+	│   └───2016_11_22_09_00_00
 	├───src
 	├───telegram
 	├───temp_graphs
