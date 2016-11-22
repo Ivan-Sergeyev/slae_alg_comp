@@ -8,14 +8,21 @@ import subprocess as sb
 
 fit = 2
 
+
+graph_dirs = ["temp_graphs/all/", "temp_graphs/fast/", "temp_graphs/mu/",
+			  "temp_graphs/for_all_mu/", "temp_graphs/gif_tau/"]
+for directory in graph_dirs:
+	os.makedirs(directory, exist_ok=True)
+
+
 def f(x, a, b, c):
 	global fit
-	if (fit == 2): 
+	if (fit == 2):
 		return 1.0*a*x**2+b*x
-	if (fit == 3): 
+	if (fit == 3):
 		return 1.0*a*x**3+b*x**2+c*x
 
-tau_str = ["0.500000","0.600000","0.800000", "1.000000", "1.200000","1.250000","1.400000", "1.500000","1.750000"] 
+tau_str = ["0.500000","0.600000","0.800000", "1.000000", "1.200000","1.250000","1.400000", "1.500000","1.750000"]
 tau_num = []
 for i in range(len(tau_str)): tau_num.append(float(tau_str[i]))
 
@@ -68,7 +75,7 @@ for i in range(tau_len):
 #data[len-1] = data[len-1].rename(columns={0:"n", 1:"t", 2:"mu"})
 
 #print all program in one graph
-def all_methods(): 
+def all_methods():
 	global fit
 	print "\n\nAll Methods: \n"
 	for i in range(len):
@@ -78,7 +85,7 @@ def all_methods():
 		else: fit = 3
 		maxT = data[i].t.max()
 		print "| - ", names[i], ":"
-		
+
 		print "| - - fast"
 		#full graph
 		for k in range(mu_len):
@@ -139,9 +146,9 @@ def only_fast_methods():
 	print "\n\nOnly fast methods:\n"
 	for i in range(len):
 
-		if (i!= 0) : 
+		if (i!= 0) :
 			fit = 2
-		else: 
+		else:
 			fit = 3
 
 		ax[i] = plt.subplot()
@@ -161,7 +168,7 @@ def only_fast_methods():
 		maxT = int(maxT/10)*10+10
 		if (i > 0): plt.axis([0,6000, 0, maxT])
 		else : plt.axis([0,3000, 0, maxT])
-			
+
 		plt.legend(loc=2, fontsize='xx-small')
 		plt.grid(True)
 		plt.xlabel('size of matrix')
@@ -177,7 +184,7 @@ def for_all_mu():
 	global fit
 	for i in range(len):
 
-		if (i!= 0) : 
+		if (i!= 0) :
 			fit = 2
 		else:
 			fit = 3
@@ -200,7 +207,7 @@ def for_all_mu():
 			if (i > 0): plt.axis([0,6000, 0, maxT])
 			else : plt.axis([0,3000, 0, maxT])
 
-			
+
 			plt.legend(loc=2, fontsize='xx-small')
 			plt.grid(True)
 			plt.xlabel('size of matrix')
@@ -219,9 +226,9 @@ def a_mu():
 		if (i!= 0) : fit = 2
 		else: fit = 3
 
-		
-		print "| - ", names[i], ":"		
-		
+
+		print "| - ", names[i], ":"
+
 		print "| - - approximate"
 		#aproximate
 		for k in range(mu_len):
@@ -268,8 +275,8 @@ def plot_all_in_one():
 		if (i!= 0) : fit = 2
 		else: fit = 3
 
-		print "| - ", names[i], ":"		
-		
+		print "| - ", names[i], ":"
+
 		x[i*mu_len] = np.arange(0, data[i].n.max(), 1)
 		coeff[i*mu_len], covar = curve_fit(f, data[i].n.values, data[i].t.values)
 		y[i*mu_len] = f(x[i*mu_len], coeff[i*mu_len][0], coeff[i*mu_len][1], coeff[i*mu_len][2])
@@ -289,7 +296,7 @@ def plot_all_in_one():
 	maxT = int(maxT/10)*10+10
 	if (i > 0): plt.axis([0,6000, 0, maxT])
 	else : plt.axis([0,3000, 0, maxT])
-		
+
 	plt.legend(loc=2, fontsize='xx-small')
 	plt.grid(True)
 	plt.xlabel('size of matrix')
@@ -301,7 +308,7 @@ def plot_all_in_one():
 	print "without point:"
 
 	com = plt.subplot();
-	
+
 	maxT = 0
 	i = len-1
 
@@ -310,9 +317,9 @@ def plot_all_in_one():
 	if (i!= 0) : fit = 2
 	else: fit = 3
 
-	
-	print "| - ", names[i], ":"		
-	
+
+	print "| - ", names[i], ":"
+
 	print "| - - approximate"
 	#aproximate
 	for k in range(mu_len):
@@ -336,7 +343,7 @@ def plot_all_in_one():
 	maxT = int(maxT/10)*10+10
 	if (i > 0): plt.axis([0,6000, 0, maxT])
 	else : plt.axis([0,3000, 0, maxT])
-		
+
 	plt.legend(loc=2, fontsize='xx-small')
 	plt.grid(True)
 	plt.xlabel('size of matrix')
@@ -371,7 +378,7 @@ def plot_over_gif():
 	# print "without point:"
 
 	# com = plt.subplot();
-	
+
 	# for i in range(1, len):
 
 	# 	ax[i] = plt.subplot()
@@ -379,9 +386,9 @@ def plot_over_gif():
 	# 	if (i!= 0) : fit = 2
 	# 	else: fit = 3
 
-		
-	# 	print "| - ", names[i], ":"		
-		
+
+	# 	print "| - ", names[i], ":"
+
 	# 	print "| - - approximate"
 	# 	#aproximate
 	# 	for k in range(mu_len):
