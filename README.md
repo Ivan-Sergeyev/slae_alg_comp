@@ -12,15 +12,16 @@ see [Makefile](Makefile) for more options
 ## Directory structure
 
     .
-    ├── src               # C++ source code
-    ├── presentations     # self-explanatory
-    ├── results           # final results
-    ├── telegram          # telegram bot code
-    ├── temp_data         # results of current measurement session
-    ├── temp_graphs       # graphs of current measurement session
-    ├── test              # tests for critical code segments
-    ├── .gitignore
-    ├── data_analyzer.py  # creates graphs of current measurement session
-    ├── main.cpp
-    ├── Makefile
-    └── README.md
+    ├───bot
+	├───graph_python
+	├───presentations
+	│   ├───ver 0 - english
+	│   ├───ver 1 - python results
+	│   └───ver 2 - report draft
+	│       └───img
+	├───results
+	│   └───ivan_data
+	├───src
+	├───telegram
+	├───temp_graphs
+	└───test
