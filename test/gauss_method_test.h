@@ -5,9 +5,9 @@
 #include <stdlib.h>
 #include <string>
 
-#include "../model/generators.h"
-#include "../model/linear_algebra.h"
-#include "../model/gauss_method.h"
+#include "../src/generators.h"
+#include "../src/linear_algebra.h"
+#include "../src/gauss_method.h"
 
 
 using std::cerr;

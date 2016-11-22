@@ -2,12 +2,12 @@
 #include <string>
 #include <iostream>
 
-#include "model/generic_method.h"
-#include "model/gauss_method.h"
-#include "model/jacobi_method.h"
-#include "model/overrelaxation_method.h"
+#include "src/generic_method.h"
+#include "src/gauss_method.h"
+#include "src/jacobi_method.h"
+#include "src/overrelaxation_method.h"
 
-#include "model/performance_comparator.h"
+#include "src/performance_comparator.h"
 
 
 using std::cerr;

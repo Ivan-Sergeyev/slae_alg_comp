@@ -4,7 +4,7 @@
 #include <iostream>
 #include <string>
 
-#include "../model/linear_algebra.h"
+#include "../src/linear_algebra.h"
 
 
 using std::cerr;
