@@ -22,5 +22,4 @@ see [Makefile](Makefile) for more options
 	│   └───graph_python
 	├───src
 	├───telegram
-	├───temp_graphs
 	└───test
