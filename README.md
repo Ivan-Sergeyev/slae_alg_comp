@@ -15,7 +15,7 @@ see [Makefile](Makefile) for more options
 	├───presentations
 	│   ├───ver 0 - english
 	│   ├───ver 1 - python results
-	│   └───ver 2 - report draft
+	│   └───ver 2 - report final
 	│       └───img
 	├───results
 	│   ├───2016_11_22_09_00_00
