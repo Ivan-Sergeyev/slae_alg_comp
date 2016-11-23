@@ -1,6 +1,6 @@
 ﻿from telebot import types
 
-TOKEN = "173564814:AAGa7wka0WesdgCGxLuszv4FHp8vNtC-e08"
+
 
 commandss = {  # command description used in the "help" command
               'start': 'Вы добавлены',
